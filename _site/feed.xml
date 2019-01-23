@@ -5,8 +5,8 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 23 Jan 2019 15:42:23 +0800</pubDate>
-    <lastBuildDate>Wed, 23 Jan 2019 15:42:23 +0800</lastBuildDate>
+    <pubDate>Wed, 23 Jan 2019 23:02:05 +0800</pubDate>
+    <lastBuildDate>Wed, 23 Jan 2019 23:02:05 +0800</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
@@ -111,6 +111,26 @@
         
         
         <category>JavaScript</category>
+        
+      </item>
+    
+      <item>
+        <title>Hive入门学习随笔</title>
+        <description>
+test
+</description>
+        <pubDate>Tue, 21 Mar 2017 23:14:54 +0800</pubDate>
+        <link>http://localhost:4000/2017/03/21/Hive%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/03/21/Hive%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94/</guid>
+        
+        <category>大数据技术</category>
+        
+        <category>hive</category>
+        
+        <category>数据仓库</category>
+        
+        
+        <category>大数据技术</category>
         
       </item>
     
@@ -272,31 +292,6 @@
         <category>函数</category>
         
         <category>JavaScript</category>
-        
-        
-        <category>JavaScript</category>
-        
-      </item>
-    
-      <item>
-        <title>JavaScript 语言精粹笔记2-继承、数组、正则表达式</title>
-        <description>
-记录一下阅读蝴蝶书的笔记，本篇为书中以下章节的笔记：继承、数组和正则表达式。
-
-</description>
-        <pubDate>Wed, 08 Jun 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2016/06/08/JavaScript-good-parts-note2/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/06/08/JavaScript-good-parts-note2/</guid>
-        
-        <category>继承</category>
-        
-        <category>对象</category>
-        
-        <category>原型</category>
-        
-        <category>Array</category>
-        
-        <category>正则</category>
         
         
         <category>JavaScript</category>
