@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Java调用R语言</title>
+    <meta name="description" content="  (一) Rserve的方式  1.1 介绍  1.2 操作步骤  1.3 可能出现的错误  (二)JRI 的方式  2.1 介绍  2.2  重要的一步 Spring MVC的项目中调用语言  3.3 可能出现的错误R是统计计算的强大工具，而JAVA是做应用系统的主流语言，两者天然具有整合的需要。关于整合，一...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2017/04/13/R1/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Java调用R语言</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-04-13
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#R" title="Category: R" rel="category">R</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#R" title="Tag: R" rel="tag">R</a-->
+        <a href="/tag/#R" title="Tag: R" rel="tag">R</a>&nbsp;
+    
+        <!--a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a-->
+        <a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#一-rserve的方式" id="markdown-toc-一-rserve的方式">(一) Rserve的方式</a></li>
+  <li><a href="#11-介绍" id="markdown-toc-11-介绍">1.1 介绍</a></li>
+  <li><a href="#12-操作步骤" id="markdown-toc-12-操作步骤">1.2 操作步骤</a></li>
+  <li><a href="#13-可能出现的错误" id="markdown-toc-13-可能出现的错误">1.3 可能出现的错误</a></li>
+  <li><a href="#二jri-的方式" id="markdown-toc-二jri-的方式">(二)JRI 的方式</a></li>
+  <li><a href="#21-介绍" id="markdown-toc-21-介绍">2.1 介绍</a></li>
+  <li><a href="#22-重要的一步-spring-mvc的项目中调用语言" id="markdown-toc-22-重要的一步-spring-mvc的项目中调用语言">2.2  重要的一步 Spring MVC的项目中调用语言</a></li>
+  <li><a href="#33-可能出现的错误" id="markdown-toc-33-可能出现的错误">3.3 可能出现的错误</a></li>
+</ul>
+<p>R是统计计算的强大工具，而JAVA是做应用系统的主流语言，两者天然具有整合的需要。关于整合，一方面，R中可以创建JAVA对象调用JAVA方法，另一方面，JAVA中可以转换R的数据类型调用R的函数，互相取长补短。现在也有一个项目JGR，用JAVA做R的图形界面，可以实现高亮显示自动补全等，还能让JAVA和R互相调用。</p>
+
+<p>关于R中调用JAVA，我想主要是为了利用其面向对象的特性，毕竟R语言近来很致力于向面向对象发展，有个很好的项目rJava可以实现，在www.rforge.net/rJava上。R中调JAVA对我似乎意义不大，本文主要介绍JAVA中调用R。
+　JAVA很适合开发应用系统，但是数学建模和计算能力非其所长，如果该系统需要进行大量的统计或者优化的计算，调用R是一种很好的方式。JAVA负责系统的构建，R用来做运算引擎，从而实现应用型和分析性相结合的系统。
+　
+ 目前网上有两种方式使用java调用R。</p>
+<h2 id="一-rserve的方式">(一) Rserve的方式</h2>
+<h2 id="11-介绍">1.1 介绍</h2>
+<p>首先要介绍的是Rserve的方式，这是一个基于TCP/IP的服务器，通过二进制协议传输数据，可以提供远程连接，使得客户端语言能够调用R。目前Rserve作为一个package发布在CRAN上，可以直接使用install.packages(“Rserve”)进行安装。需要使用时在R控制台下加载该包，然后输入命令Rserve()，开启服务器，就可以供客户端调用。</p>
+
+<p>其客户端可以有多种，这里只介绍JAVA客户端。最早的客户端包是JRclient，在www.rosuda.org/Rserve上还可以下载到，但是现在该项目全部移到了www.rforge.net/Rserve，使用REngine作客户端（和JRI一致），在该网站下可以下载到REngine.jar和RserveEngine.jar两个文件。如果用eclipse开发的话，在工程属性中导入这两个外部的jar包，就可以正常使用了。</p>
+
+<p>首先建立一个新的连接，然后就可以使用eval之类的方法将R中的表达式传到服务器端，通过R求值后传回JAVA中REXP类型的变量，然后打印出来，整个过程非常简单。由于不需要对R进行初始化，因此速度会比较快。在其他系统下可以同时建立多个连接，但是在Windows下只允许同时打开一个连接，后续的连接都会共有相同的命名空间。官网上不建议在Windows下使用Rserve，因为会丧失很多性能，他们推荐可以考虑DCOM的方式。不过DCOM那个工程没有现成的jar包可用，其实如果是拿R做分析系统中的运算引擎，单连接够用了。</p>
+<h2 id="12-操作步骤">1.2 操作步骤</h2>
+<p>(1)在R里下载“Rserve”包，并安装
+安装好后，运行如下命令启动“Rserver”
+library(Rserve)
+Rserve()
+Starting Rserve…
+“D:\PROGRA~1\R\R-30~1.1\library\Rserve\libs\i386\Rserve.exe”
+(2) 建立java工程，导入必要的包，写出测试用例
+Test.java 内容</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>package com.rTest;
+import org.rosuda.REngine.REXP;
+import org.rosuda.REngine.Rserve.RConnection;
+public class Test {
+public static void main(String[] args) {
+try {
+ RConnection c = new RConnection();
+REXP x = c.eval("R.version.string");
+System.out.println(x.asString());
+ } catch (Exception e) {
+e.printStackTrace();
+}}}
+</code></pre></div></div>
+<p>运行即可</p>
+<h2 id="13-可能出现的错误">1.3 可能出现的错误</h2>
+<p>2.3.1  Connection refused: connect
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused: connect
+    at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+    at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+    at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:44)
+    at com.rTest.Test.main(Test.java:9)
+ 
+这是由于“Rserve” 服务器没有启动起来的原因，试试在R内运行如下语句
+ </init></init></init></p>
+<blockquote>
+  <p>library(Rserve)
+Rserve()
+———————</p>
+  <h2 id="二jri-的方式">(二)JRI 的方式</h2>
+  <h2 id="21-介绍">2.1 介绍</h2>
+  <p>另一种方式是JRI，全名是Java/R Interface，这是一种完全不同的方式，通过调用R的动态链接库从而利用R中的函数等。目前该项目已经成了rJava的子项目，不再提供单独的JRI的版本。因此使用时简单地通过install.packages(“rJava”)安装rJava就行，在安装文件夹中，可以看到一个jri的子文件夹，里面有自带的例子可以用来测试。</p>
+</blockquote>
+
+<p>装好后要修改系统的环境变量，在PATH中添加%R_HOME%/bin和%R_HOME%/library/rJava/jri，注意R_HOME的路径要正确，重启系统使之生效。使用时同样在eclipse里导入外部的jar包（在www.rforge.net/rJava下载JRI.jar、REngine.jar和JRIEngine.jar这三个文件），在rJava包安装目录下的jri/examples里有现成的例子（rtest.java和rtest2.java），可以测试是否成功。
+2.1.1 install.packages(“rJava”)安装rJava（如第一种方式一样选择镜像安装）
+2.1.2 安装完成后再安装目录可以在R的安装目录看到如下的目录结构：
+2.1.3 接下来依据这个目录结构设置环境变量：
+R_HOME=C:\Program Files\R\R-3.3.1
+PATH后添加C:\Program Files\R\R-3.3.1\bin\x64;C:\Program Files\R\R-3.3.1\library\rJava\jri;（可以用%R_HOME%的写法），但是要特别注意“bin\x64”，系统是64就指定x64文件夹，32位就指定i386文件夹，否则会找不到依赖库；同理rJava\jri下用的dll文件也要与计算机位数一致；
+3.1.4 环境变量配置完成后把安装目录下jri文件夹下的JRI.jar、REngine.jar和JRIEngine.jar放进Java工程添加到编译路径。到这里Java调用R的桥梁就搭建好了；</p>
+<h2 id="22-重要的一步-spring-mvc的项目中调用语言">2.2  重要的一步 Spring MVC的项目中调用语言</h2>
+<p>  可以说大多数的开发人员最重要的目的就是把这个rjava运用到项目中去。在这个步骤中，我将这个调用的方法写成了一个工具类，但是我遇见了两个大的问题，第一个，因为在项目是在tomcat中发布的，所以tomcat在加载的时候没有找到R的.dll文件，这个问题可以通过System.out.println(System.getProperty(“java.library.path”));这句话，找到你用的那个tomcat下面加载文件的目录，将这个jri.dll放进去，重新运行这个就行了。第二个，是我在写工具类的时候发生的一个错误，我没有考虑到自己会多次使用到这个工具，从而导致我的电脑启动了很多个JVM，内存溢出，死机。这个问题，是通过一个单例模式的建立来解决的，我只让这个Rengine在项目中被实例化一次，这样子，他就只能被启动一次，不会导致电脑死机等等   
+一定要注意jdk的配置路径，确保环境变量的正确性。</p>
+<h2 id="33-可能出现的错误">3.3 可能出现的错误</h2>
+<p>3.3.1  Cannot find JRI native library!
+Press <Enter> to continue (time to attach the debugger if necessary)
+Creating Rengine (with arguments)
+Cannot find JRI native library!
+Please make sure that the JRI native library is in a directory listed in java.library.path.
+java.lang.UnsatisfiedLinkError: no jri in java.library.path
+    at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1860)
+    at java.lang.Runtime.loadLibrary0(Runtime.java:845)
+    at java.lang.System.loadLibrary(System.java:1084)
+    at org.rosuda.JRI.Rengine.<clinit>(Rengine.java:19)
+    at com.rTest.rtest2.main(rtest2.java:73)
+检查下path是否正确，如果正确 ，如果配置环境正确，1）用System.out.println(System.getProperty("java.library.path"));输出java.library.path，结果如下：
+D:\develop\Java\jdk1.7.0_40\bin;D:\develop\Java\apache-tomcat-8.0.0-RC5\bin
+这个信息中的前者是java的安装目录，后者是tomcat的安装目录，把jri.dll分别拷到这两个目录。然后测试问题是否解决。</clinit></Enter></p>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2017/04/06/arraysfind/">剑指offer：二维数组中的查找</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2017/05/06/regular-expression-group/">浅谈正则表达式中的分组和引用</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2017/04/13/R1/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2017/04/13/R1/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

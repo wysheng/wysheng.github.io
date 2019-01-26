@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>centos 7 下 安装配置 caravel</title>
+    <meta name="description" content="  一、pip安装  tar xf Python-2.7.9.tar.xz  cd Python-2.7.9  make &amp;&amp; make altinstall  ln -s /usr/local/bin/python2.7 /usr/local/bin/python  python -V  ./c...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2017/12/08/caravel/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>centos 7 下 安装配置 caravel</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-12-08
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#数据分析" title="Category: 数据分析" rel="category">数据分析</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90" title="Tag: 数据分析" rel="tag">数据分析</a-->
+        <a href="/tag/#数据分析" title="Tag: 数据分析" rel="tag">数据分析</a>&nbsp;
+    
+        <!--a href="/tag/#%E5%8F%AF%E8%A7%86%E5%8C%96" title="Tag: 可视化" rel="tag">可视化</a-->
+        <a href="/tag/#可视化" title="Tag: 可视化" rel="tag">可视化</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#一pip安装" id="markdown-toc-一pip安装">一、pip安装</a></li>
+  <li><a href="#tar-xf-python-279tarxz" id="markdown-toc-tar-xf-python-279tarxz">tar xf Python-2.7.9.tar.xz</a></li>
+  <li><a href="#cd-python-279" id="markdown-toc-cd-python-279">cd Python-2.7.9</a></li>
+  <li><a href="#make--make-altinstall" id="markdown-toc-make--make-altinstall">make &amp;&amp; make altinstall</a></li>
+  <li><a href="#ln--s-usrlocalbinpython27-usrlocalbinpython" id="markdown-toc-ln--s-usrlocalbinpython27-usrlocalbinpython">ln -s /usr/local/bin/python2.7 /usr/local/bin/python</a></li>
+  <li><a href="#python--v" id="markdown-toc-python--v">python -V</a></li>
+  <li><a href="#configure-prefixusrlocal" id="markdown-toc-configure-prefixusrlocal">./configure –prefix=/usr/local</a></li>
+  <li><a href="#yum-install-epel-release" id="markdown-toc-yum-install-epel-release">yum install epel-release</a></li>
+  <li><a href="#yum-install-python-pip" id="markdown-toc-yum-install-python-pip">yum install python-pip</a></li>
+  <li><a href="#wget-httpsgithubcomairbnbcaravelarchivemasterzip" id="markdown-toc-wget-httpsgithubcomairbnbcaravelarchivemasterzip">wget https://github.com/airbnb/caravel/archive/master.zip</a></li>
+  <li><a href="#unzip-caravel-masterzip" id="markdown-toc-unzip-caravel-masterzip">unzip caravel-master.zip</a></li>
+  <li><a href="#pip-install---i-httpspypitunatsinghuaeducnsimple" id="markdown-toc-pip-install---i-httpspypitunatsinghuaeducnsimple">pip install . -i https://pypi.tuna.tsinghua.edu.cn/simple/</a>    <ul>
+      <li><a href="#二nmp安装" id="markdown-toc-二nmp安装">二、nmp安装</a></li>
+    </ul>
+  </li>
+  <li><a href="#configure-prefixusrlocal-1" id="markdown-toc-configure-prefixusrlocal-1">./configure –prefix=/usr/local</a></li>
+  <li><a href="#make" id="markdown-toc-make">make</a></li>
+  <li><a href="#make-install" id="markdown-toc-make-install">make install</a></li>
+  <li><a href="#ln--s-usrlocalbinnode-usrbinnode" id="markdown-toc-ln--s-usrlocalbinnode-usrbinnode">ln -s /usr/local/bin/node /usr/bin/node</a></li>
+  <li><a href="#sh-installsh" id="markdown-toc-sh-installsh">sh install.sh</a></li>
+  <li><a href="#npm-install-express--g" id="markdown-toc-npm-install-express--g">npm install express -g</a>    <ul>
+      <li><a href="#assuming-caravel_home-as-the-root-of-the-repo" id="markdown-toc-assuming-caravel_home-as-the-root-of-the-repo">assuming $CARAVEL_HOME as the root of the repo</a></li>
+    </ul>
+  </li>
+  <li><a href="#cd-caravel_homecaravelassets" id="markdown-toc-cd-caravel_homecaravelassets">cd $CARAVEL_HOME/caravel/assets</a></li>
+  <li><a href="#npm-install" id="markdown-toc-npm-install">npm install</a></li>
+  <li><a href="#npm-run-prod" id="markdown-toc-npm-run-prod">npm run prod</a></li>
+  <li><a href="#cd-caravel_home" id="markdown-toc-cd-caravel_home">cd $CARAVEL_HOME</a></li>
+  <li><a href="#python-setuppy-install" id="markdown-toc-python-setuppy-install">python setup.py install</a>    <ul>
+      <li><a href="#三初始化运行" id="markdown-toc-三初始化运行">三、初始化运行</a></li>
+    </ul>
+  </li>
+  <li><a href="#fabmanager-create-admin-app-caravel" id="markdown-toc-fabmanager-create-admin-app-caravel">fabmanager create-admin –app caravel</a></li>
+  <li><a href="#caravel-db-upgrade" id="markdown-toc-caravel-db-upgrade">caravel db upgrade</a></li>
+  <li><a href="#caravel-init" id="markdown-toc-caravel-init">caravel init</a></li>
+  <li><a href="#caravel-load_examples" id="markdown-toc-caravel-load_examples">caravel load_examples</a></li>
+  <li><a href="#caravel-runserver--p-8088" id="markdown-toc-caravel-runserver--p-8088">caravel runserver -p 8088</a>    <ul>
+      <li><a href="#四连接数据源" id="markdown-toc-四连接数据源">四、连接数据源</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>安装基础包：yum groupinstall “Development tools”</p>
+<h2 id="一pip安装">一、pip安装</h2>
+<ol>
+  <li>安装python
+需要2.7版本的python，如果centOS自带的是2.7的则不需安装（centOS7自带了2.7.5）
+① 下载 python
+https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tar.xz
+    <h1 id="tar-xf-python-279tarxz">tar xf Python-2.7.9.tar.xz</h1>
+    <h1 id="cd-python-279">cd Python-2.7.9</h1>
+    <h1 id="make--make-altinstall">make &amp;&amp; make altinstall</h1>
+    <h1 id="ln--s-usrlocalbinpython27-usrlocalbinpython">ln -s /usr/local/bin/python2.7 /usr/local/bin/python</h1>
+    <p>④ 测试</p>
+    <h1 id="python--v">python -V</h1>
+    <p>② 解压
+③ 编译安装</p>
+    <h1 id="configure-prefixusrlocal">./configure –prefix=/usr/local</h1>
+  </li>
+  <li>安装pip
+首先
+    <h1 id="yum-install-epel-release">yum install epel-release</h1>
+    <p>然后</p>
+    <h1 id="yum-install-python-pip">yum install python-pip</h1>
+  </li>
+  <li>安装caravel
+① 获得caravel源码
+    <h1 id="wget-httpsgithubcomairbnbcaravelarchivemasterzip">wget https://github.com/airbnb/caravel/archive/master.zip</h1>
+    <p>② 解压</p>
+    <h1 id="unzip-caravel-masterzip">unzip caravel-master.zip</h1>
+    <p>③ 安装
+进入根目录，使用pip命令安装（考虑到境外服务器太慢，这里使用清华大学的源）</p>
+    <h1 id="pip-install---i-httpspypitunatsinghuaeducnsimple">pip install . -i https://pypi.tuna.tsinghua.edu.cn/simple/</h1>
+  </li>
+  <li>错误（如果有错误执行下面的）
+① cffi
+yum install libffi-devel
+② sasl
+yum install libgsasl-devel
+yum install libmemcached-devel
+③ python
+yum install python-devel
+④ openssl
+yum install openssl-devel
+⑤ pytz
+pip install –upgrade pytz
+⑥ npy_math.py
+yum install numpy</li>
+</ol>
+
+<p>yum install openssl</p>
+
+<h2 id="二nmp安装">二、nmp安装</h2>
+<ol>
+  <li>安装nodejs
+下载node-v4.5.0.tar.gz（官网）
+解压
+    <h1 id="configure-prefixusrlocal-1">./configure –prefix=/usr/local</h1>
+    <h1 id="make">make</h1>
+    <h1 id="make-install">make install</h1>
+    <h1 id="ln--s-usrlocalbinnode-usrbinnode">ln -s /usr/local/bin/node /usr/bin/node</h1>
+  </li>
+  <li>安装npm
+根据网址下载 install.sh （https://npmjs.org/install.sh）
+    <h1 id="sh-installsh">sh install.sh</h1>
+  </li>
+  <li>安装express
+    <h1 id="npm-install-express--g">npm install express -g</h1>
+  </li>
+  <li>安装caravel（源码安装）
+    <h2 id="assuming-caravel_home-as-the-root-of-the-repo">assuming $CARAVEL_HOME as the root of the repo</h2>
+    <h1 id="cd-caravel_homecaravelassets">cd $CARAVEL_HOME/caravel/assets</h1>
+    <h1 id="npm-install">npm install</h1>
+    <h1 id="npm-run-prod">npm run prod</h1>
+    <h1 id="cd-caravel_home">cd $CARAVEL_HOME</h1>
+    <h1 id="python-setuppy-install">python setup.py install</h1>
+  </li>
+</ol>
+
+<h2 id="三初始化运行">三、初始化运行</h2>
+<p>创建admin用户</p>
+<h1 id="fabmanager-create-admin-app-caravel">fabmanager create-admin –app caravel</h1>
+<p>初始化caravel元数据</p>
+<h1 id="caravel-db-upgrade">caravel db upgrade</h1>
+<p>初始化caravel默认的用户角色和权限</p>
+<h1 id="caravel-init">caravel init</h1>
+<p>加载示例数据</p>
+<h1 id="caravel-load_examples">caravel load_examples</h1>
+<p>定义运行端口</p>
+<h1 id="caravel-runserver--p-8088">caravel runserver -p 8088</h1>
+<p>通过http://localhost:8088就可访问</p>
+<h2 id="四连接数据源">四、连接数据源</h2>
+<ol>
+  <li>postgresql
+   yum install build-dep python-psycopg2
+pip install psycopg2</li>
+  <li>mysql
+    yum install MySQL-python
+database	pypi package	SQLAlchemy URI prefix
+MySQL	pip install mysqlclient	mysql://
+Postgres	pip install psycopg2	postgresql+psycopg2://
+Presto	pip install pyhive	presto://
+Oracle	pip install cx_Oracle	oracle://
+sqlite	 	sqlite://
+Redshift	pip install sqlalchemy-redshift	redshift+psycopg2://
+MSSQL	pip install pymssql	mssql://
+Impala	pip install impyla	impala://
+SparkSQL	pip install pyhive	jdbc+hive://
+注意如果连接数据源报错如连接mysql数据源报错 importError no moduel MySQLdb解决办法如下：
+linux环境下安装MySQL-python的两种方式
+第一种 简单：yum install MySQL-python
+第二种：复杂：需要自己源码编译，依赖包比较多
+a.   gcc</li>
+</ol>
+
+<p>b.   setuptools
+c.  python-dev
+第二章详细步骤如下：
+ 
+A.下载：wget http://sourceforge.net/projects/mysql-python/files/latest/download 
+ 
+B.
+ 
+$ tar xfz MySQL-python-1.2.3.tar.gz
+$ cd MySQL-python-1.2.3
+ </p>
+
+<p>$whereis  mysql_config 
+ </p>
+
+<p>mysql_config: /usr/bin/mysql_config
+$ vim site.cfg
+修改mysql_config为mysql配置文件的路径 /usr/bin/mysql_config 
+ </p>
+
+<p>还要修改
+ 
+ threadsafe = False
+$ python setup.py build
+$ sudo python setup.py install
+在python环境下</p>
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>import MySQLdb
+/usr/local/lib/python2.7/site-packages/MySQL_python-1.2.5-py2.7-linux-x86_64.egg/_mysql.py:3: UserWarning: Module _mysql was already imported from /usr/local/lib/python2.7/site-packages/MySQL_python-1.2.5-py2.7-linux-x86_64.egg/_mysql.pyc, but /app/MySQL-python-1.2.5 is being added to sys.path
+安装成功
+——————————————————————————————————————————-
+安装过程中报，error: command ‘gcc’ failed with exit status 1
+用yum install gcc 显示已经是安装最新版本
+未安装mysql-devel包
+解决方法：yum install mysql-devel
+参考地址：http://blog.csdn.net/wklken/article/details/7271019
+http://blog.csdn.net/agoago_2009/article/details/9492765</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p> 参考文件 
+http://www.aboutyun.com/thread-19402-1-1.html</p>
+
+<p>http://blog.csdn.net/csulfy/article/details/51833407</p>
+
+<p>http://lxw1234.com/archives/2016/06/681.htm</p>
+
+<p>http://km-moon11.iteye.com/blog/2213527</p>
+
+<p>http://airbnb.io/caravel/installation.html</p>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2017/11/28/dl1/">情感分析知识点汇总</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/01/11/python5/">Python3网络爬虫(四)：Python3安装Scrapy</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2017/12/08/caravel/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2017/12/08/caravel/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

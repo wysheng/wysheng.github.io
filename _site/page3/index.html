@@ -141,6 +141,14 @@
                 
                     
                 
+                    
+                
+                    
+                
+                    
+                
+                    
+                
             </ul>
         </nav>
     </div>
@@ -155,11 +163,11 @@
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2017/05/16/1-Algorams1/">跳台阶/ 变态跳台阶问题</a>
+                  <a class="post-link" href="/2018/05/18/dl/">用神经网络训练一个文本分类器</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-05-16
+                        <i class="fa fa-calendar"></i>2018-05-18
                     </div>
                     <div class="label-card">
                         
@@ -177,7 +185,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#算法和数据结构" title="Category: 算法和数据结构" rel="category">算法和数据结构</a>
+        <a href="/category/#深度学习" title="Category: 深度学习" rel="category">深度学习</a>
     
   
 
@@ -194,13 +202,9 @@
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#数据结构" title="Tag: 数据结构" rel="tag">数据结构</a>&nbsp;
+        <a href="/tag/#深度学习" title="Tag: 深度学习" rel="tag">深度学习</a>&nbsp;
     
-        <a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a>&nbsp;
-    
-        <a href="/tag/#剑指offer" title="Tag: 剑指offer" rel="tag">剑指offer</a>&nbsp;
-    
-        <a href="/tag/#面试" title="Tag: 面试" rel="tag">面试</a>
+        <a href="/tag/#神经网络" title="Tag: 神经网络" rel="tag">神经网络</a>
     
   
 
@@ -209,461 +213,308 @@
                     </div>
                 </div>
                 <div class="excerpt">
-                    <ul id="markdown-toc">
-  <li><a href="#题目描述" id="markdown-toc-题目描述">题目描述</a></li>
-  <li><a href="#思路" id="markdown-toc-思路">思路</a></li>
-</ul>
+                    
+<p>理解聊天机器人的工作原理是非常重要的。聊天机器人内部一个非常重要的组件就是文本分类器。我们看一下文本分类器的神经网络（ANN）的内部工作原理。
+<img src="http://jbcdn2.b0.upaiyun.com/2017/08/3f0fc87336415b5dec8a04dc523db2ac.png" alt="" />
+我们将会使用2层网络（1个隐层）和一个“词包”的方法来组织我们的训练数据。文本分类有3个特点：模式匹配、算法、神经网络。虽然使用多项朴素贝叶斯算法的方法非常有效，但是它有3个致命的缺陷：</p>
 
-<h2 id="题目描述">题目描述</h2>
+<p>(1)这个算法输出一个分数而不是一个概率。我们可以使用概率来忽略特定阈值以下的预测结果。这类似于忽略收音机中的噪声。
+(2)这个算法从一个样本中学习一个分类中包含什么，而不是一个分类中不包含什么。一个分类中不包含什么的的学习模式往往也很重要。
+(3)不成比例的大训练集的分类将会导致扭曲的分类分数，迫使算法相对于分类规模来调整输出分数，这并不理想。
+和它“天真”的对手一样，这种分类器并不试图去理解句子的含义，而仅仅对它进行分类。事实上，所谓的“人工智能聊天机器人”并不理解语言，但那是另一个故事。
+如果你刚接触人工神经网络，这是它的工作原理。
+理解分类算法，请看这里。
+我们来逐个分析文本分类器的每个部分。我们将按照以下顺序：</p>
 
-<p>题目来自 [剑指offer] <br />
-1, 一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
-2, 如果青蛙一次可以跳上1级台阶, 2级台阶…….. n级台阶. 求该青蛙跳上一个n级台阶总共有多少中跳法.</p>
-<h2 id="思路">思路</h2>
-<p>1, 递归,斐波那契数列
-2, 递归思路:
-因为n级台阶，第一步有n种跳法：跳1级、跳2级、到跳n级 * 跳1级，剩下n-1级，则剩下跳法是f(n-1)
-跳2级，剩下n-2级，则剩下跳法是f(n-2) * 所以f(n)=f(n-1)+f(n-2)+…+f(1)
-因为f(n-1)=f(n-2)+f(n-3)+…+f(1)
-所以f(n)=2*f(n-1)
-Java代码如下：</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JumpFloorTest</span> <span class="o">{</span>
-    <span class="cm">/**
-     * 题目描述:
-     * 跳台阶,每次跳一级或者每次跳两级
-     *
-     * 解决方法:递归,斐波那契数列
-     * @param n
-     * @return
-     */</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">jumpFloor</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">){</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">){</span>
-            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span> <span class="o">||</span> <span class="n">n</span><span class="o">==</span><span class="mi">2</span><span class="o">){</span>
-            <span class="k">return</span> <span class="n">n</span><span class="o">;</span>
-        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-          <span class="k">return</span> <span class="nf">jumpFloor</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">jumpFloor</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="o">);</span>
-        <span class="o">}</span>
-
-    <span class="o">}</span>
-
-    <span class="cm">/**
-     * 题目描述:
-     * 一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
-     *
-     * 解决方法:
-     * 因为n级台阶，第一步有n种跳法：跳1级、跳2级、到跳n级
-     * 跳1级，剩下n-1级，则剩下跳法是f(n-1)
-     * 跳2级，剩下n-2级，则剩下跳法是f(n-2)
-     * 所以f(n)=f(n-1)+f(n-2)+...+f(1)
-     * 因为f(n-1)=f(n-2)+f(n-3)+...+f(1)
-     * 所以f(n)=2*f(n-1)
-     *
-     */</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">jumpFloorII</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">){</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">){</span>
-            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span> <span class="o">||</span> <span class="n">n</span><span class="o">==</span><span class="mi">2</span><span class="o">){</span>
-            <span class="k">return</span> <span class="n">n</span><span class="o">;</span>
-        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-            <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">jumpFloorII</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">jumpFloor</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">jumpFloorII</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
-    <span class="o">}</span>
-<span class="o">}</span>
+<p>1.引用需要的库
+2.提供训练集
+3.整理数据
+4.迭代：编写代码+测试预测结果+调整模型
+5.抽象
+代码在这里，我们使用ipython notebook这个在数据科学项目上非常高效的工具。代码语法是python。
+我们首先导入自然语言工具包。我们需要一个可靠的方法将句子切分成词并且将单词词干化处理。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># use natural language toolkit
+import nltk
+from nltk.stem.lancaster import LancasterStemmer
+import os
+import json
+import datetime
+stemmer = LancasterStemmer()
+</code></pre></div></div>
+<p>下面是我们的训练集，12个句子属于3个类别（“意图”）。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 3 classes of training data
+training_data = []
+training_data.append({"class":"greeting", "sentence":"how are you?"})
+training_data.append({"class":"greeting", "sentence":"how is your day?"})
+training_data.append({"class":"greeting", "sentence":"good day"})
+training_data.append({"class":"greeting", "sentence":"how is it going today?"})
+ 
+training_data.append({"class":"goodbye", "sentence":"have a nice day"})
+training_data.append({"class":"goodbye", "sentence":"see you later"})
+training_data.append({"class":"goodbye", "sentence":"have a nice day"})
+training_data.append({"class":"goodbye", "sentence":"talk to you soon"})
+ 
+training_data.append({"class":"sandwich", "sentence":"make me a sandwich"})
+training_data.append({"class":"sandwich", "sentence":"can you make a sandwich?"})
+training_data.append({"class":"sandwich", "sentence":"having a sandwich today?"})
+training_data.append({"class":"sandwich", "sentence":"what's for lunch?"})
+print ("%s sentences in training data" % len(training_data))
 
 </code></pre></div></div>
-<hr />
-
-                </div>
-                <div class="read-all">
-                    <a  href="/2017/05/16/1-Algorams1/"><i class="fa fa-newspaper-o"></i>Read All</a>
-                </div>
-                <hr>
-              </li>
-            
-              <li>
-                <h2>
-                  <a class="post-link" href="/2017/05/06/TreeNode1/">剑指offer：重建二叉树</a>
-                </h2>
-                <div class="label">
-                    <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-05-06
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-
-                    <div class="label-card">
-                    
-
-
-<!-- <span class="point">•</span> -->
-<span class="categories">
-  <i class="fa fa-th-list"></i>
-  
-    
-        <a href="/category/#算法和数据结构" title="Category: 算法和数据结构" rel="category">算法和数据结构</a>
-    
-  
-
-  <!-- <span class="point">•</span> -->
-</span>
-
-
-                    </div>
-
-                    <div class="label-card">
-                    
-<!-- <span class="point">•</span> -->
-<span class="pageTag">
-  <i class="fa fa-tags"></i>
-  
-    
-        <a href="/tag/#数据结构" title="Tag: 数据结构" rel="tag">数据结构</a>&nbsp;
-    
-        <a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a>&nbsp;
-    
-        <a href="/tag/#剑指offer" title="Tag: 剑指offer" rel="tag">剑指offer</a>&nbsp;
-    
-        <a href="/tag/#面试" title="Tag: 面试" rel="tag">面试</a>
-    
-  
-
-</span>
-
-                    </div>
-                </div>
-                <div class="excerpt">
-                    <ul id="markdown-toc">
-  <li><a href="#题目描述" id="markdown-toc-题目描述">题目描述</a></li>
-  <li><a href="#思路" id="markdown-toc-思路">思路</a></li>
-</ul>
-
-<h2 id="题目描述">题目描述</h2>
-
-<p>题目来自 [剑指offer] <br />
-输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。</p>
-<h2 id="思路">思路</h2>
-<p>1.取前序遍历第一个数字,该数字是跟节点;
-2.在中序遍历中找到跟节点,则该跟节点左边是左子数,右边为右子数;
-3.以此遍历,进行递归;</p>
-
-<p>Java代码如下：</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
- * 题目描述:
- * 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
- * 例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
- *
- */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TreeNodeTest</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">TreeNode</span> <span class="nf">reConstructBinaryTree</span><span class="o">(</span><span class="kt">int</span> <span class="o">[]</span> <span class="n">pre</span><span class="o">,</span><span class="kt">int</span> <span class="o">[]</span> <span class="n">in</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">pre</span><span class="o">==</span><span class="kc">null</span><span class="o">||</span><span class="n">in</span><span class="o">==</span><span class="kc">null</span><span class="o">){</span>
-            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="n">TreeNode</span> <span class="n">tree</span> <span class="o">=</span> <span class="n">reConstructCore</span><span class="o">(</span><span class="n">pre</span><span class="o">,</span><span class="n">in</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="n">pre</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="n">in</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
-        <span class="k">return</span> <span class="n">tree</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="cm">/**
-     *核心算法，preStart和preEnd是起始下标和结束下标
-     **/</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">TreeNode</span> <span class="nf">reConstructCore</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">pre</span><span class="o">,</span><span class="kt">int</span><span class="o">[]</span> <span class="n">in</span><span class="o">,</span><span class="kt">int</span> <span class="n">preStart</span><span class="o">,</span><span class="kt">int</span> <span class="n">preEnd</span><span class="o">,</span><span class="kt">int</span> <span class="n">inStart</span><span class="o">,</span><span class="kt">int</span> <span class="n">inEnd</span><span class="o">){</span>
-        <span class="n">TreeNode</span> <span class="n">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">pre</span><span class="o">[</span><span class="n">preStart</span><span class="o">]);</span>
-        <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="n">tree</span><span class="o">.</span><span class="na">right</span><span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-
-        <span class="k">if</span><span class="o">(</span><span class="n">preStart</span><span class="o">==</span><span class="n">preEnd</span><span class="o">&amp;&amp;</span><span class="n">inStart</span><span class="o">==</span><span class="n">inEnd</span><span class="o">){</span>
-            <span class="k">return</span> <span class="n">tree</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="c1">//记录中序遍历中等于前序遍历的第一位的下标</span>
-        <span class="kt">int</span> <span class="n">inCenter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="k">for</span><span class="o">(</span><span class="n">inCenter</span> <span class="o">=</span> <span class="n">inStart</span><span class="o">;</span><span class="n">inCenter</span><span class="o">&lt;</span><span class="n">inEnd</span><span class="o">;</span><span class="n">inCenter</span><span class="o">++){</span>
-            <span class="k">if</span><span class="o">(</span><span class="n">in</span><span class="o">[</span><span class="n">inCenter</span><span class="o">]==</span><span class="n">pre</span><span class="o">[</span><span class="n">preStart</span><span class="o">]){</span>
-                <span class="k">break</span><span class="o">;</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-        <span class="c1">//左子树的长度</span>
-        <span class="kt">int</span> <span class="n">leftTreeLength</span> <span class="o">=</span> <span class="n">inCenter</span><span class="o">-</span><span class="n">inStart</span><span class="o">;</span>
-        <span class="c1">//右子数的长度</span>
-        <span class="kt">int</span> <span class="n">rightTreeLength</span> <span class="o">=</span> <span class="n">inEnd</span><span class="o">-</span><span class="n">inCenter</span><span class="o">;</span>
-
-        <span class="k">if</span><span class="o">(</span><span class="n">leftTreeLength</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">){</span>
-            <span class="n">tree</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">reConstructCore</span><span class="o">(</span><span class="n">pre</span><span class="o">,</span><span class="n">in</span><span class="o">,</span><span class="n">preStart</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span><span class="n">preStart</span><span class="o">+</span><span class="n">leftTreeLength</span><span class="o">,</span><span class="n">inStart</span><span class="o">,</span><span class="n">inCenter</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
-        <span class="o">}</span>
-
-        <span class="k">if</span><span class="o">(</span><span class="n">rightTreeLength</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">){</span>
-            <span class="n">tree</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">reConstructCore</span><span class="o">(</span><span class="n">pre</span><span class="o">,</span><span class="n">in</span><span class="o">,</span><span class="n">preStart</span><span class="o">+</span><span class="n">leftTreeLength</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span><span class="n">preEnd</span><span class="o">,</span><span class="n">inCenter</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span><span class="n">inEnd</span><span class="o">);</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="n">tree</span><span class="o">;</span>
-
-    <span class="o">}</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">traverseBinTreeRDL</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">node</span><span class="o">){</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">return</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">left</span><span class="o">!=</span><span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">traverseBinTreeRDL</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
-        <span class="o">}</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">right</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
-            <span class="n">traverseBinTreeRDL</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
-        <span class="o">}</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
-    <span class="o">}</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">pre</span><span class="o">[]</span> <span class="o">=</span> <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">7</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="mi">8</span><span class="o">,</span><span class="mi">9</span><span class="o">,</span><span class="mi">6</span><span class="o">};</span>
-        <span class="kt">int</span> <span class="n">in</span><span class="o">[]</span>  <span class="o">=</span> <span class="o">{</span><span class="mi">4</span><span class="o">,</span><span class="mi">7</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">8</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="mi">9</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">6</span><span class="o">};</span>
-        <span class="n">TreeNode</span> <span class="n">tree</span> <span class="o">=</span> <span class="n">reConstructBinaryTree</span><span class="o">(</span><span class="n">pre</span><span class="o">,</span> <span class="n">in</span><span class="o">);</span>
-        <span class="n">traverseBinTreeRDL</span><span class="o">(</span><span class="n">tree</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>12 sentences in training data
 </code></pre></div></div>
-<hr />
-
-                </div>
-                <div class="read-all">
-                    <a  href="/2017/05/06/TreeNode1/"><i class="fa fa-newspaper-o"></i>Read All</a>
-                </div>
-                <hr>
-              </li>
-            
-              <li>
-                <h2>
-                  <a class="post-link" href="/2017/05/06/regular-expression-group/">浅谈正则表达式中的分组和引用</a>
-                </h2>
-                <div class="label">
-                    <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-05-06
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-
-                    <div class="label-card">
-                    
-
-
-<!-- <span class="point">•</span> -->
-<span class="categories">
-  <i class="fa fa-th-list"></i>
-  
-    
-        <a href="/category/#JavaScript" title="Category: JavaScript" rel="category">JavaScript</a>
-    
-  
-
-  <!-- <span class="point">•</span> -->
-</span>
-
-
-                    </div>
-
-                    <div class="label-card">
-                    
-<!-- <span class="point">•</span> -->
-<span class="pageTag">
-  <i class="fa fa-tags"></i>
-  
-    
-        <a href="/tag/#正则" title="Tag: 正则" rel="tag">正则</a>&nbsp;
-    
-        <a href="/tag/#Regular" title="Tag: Regular" rel="tag">Regular</a>
-    
-  
-
-</span>
-
-                    </div>
-                </div>
-                <div class="excerpt">
-                    <ul id="markdown-toc">
-  <li><a href="#问题" id="markdown-toc-问题">问题</a></li>
-</ul>
-
-<p>由正则表达式如何匹配相同字符出发，讲讲正则表达式中的选择、分组和引用。</p>
-
-<h2 id="问题">问题</h2>
-
-<p>在外刊君读者群中看到有人提出这样的一个需求：</p>
-
-<blockquote>
-  <p>把字符串切成连续相同字符的正则怎么写？比如<code class="highlighter-rouge">abbcccdddd</code>切成<code class="highlighter-rouge">a,bb,ccc,dddd</code></p>
-</blockquote>
-
-<p>之前我对正则表达式也是略有研究，想尝试一下。其实我对正则表达式的学习基本完全来源于犀牛书的第10章，真正看懂这一章，我觉得操作正则表达式应该不在话下。</p>
-
-
-                </div>
-                <div class="read-all">
-                    <a  href="/2017/05/06/regular-expression-group/"><i class="fa fa-newspaper-o"></i>Read All</a>
-                </div>
-                <hr>
-              </li>
-            
-              <li>
-                <h2>
-                  <a class="post-link" href="/2017/04/06/arraysfind/">剑指offer：二维数组中的查找</a>
-                </h2>
-                <div class="label">
-                    <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-04-06
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-
-                    <div class="label-card">
-                    
-
-
-<!-- <span class="point">•</span> -->
-<span class="categories">
-  <i class="fa fa-th-list"></i>
-  
-    
-        <a href="/category/#算法和数据结构" title="Category: 算法和数据结构" rel="category">算法和数据结构</a>
-    
-  
-
-  <!-- <span class="point">•</span> -->
-</span>
-
-
-                    </div>
-
-                    <div class="label-card">
-                    
-<!-- <span class="point">•</span> -->
-<span class="pageTag">
-  <i class="fa fa-tags"></i>
-  
-    
-        <a href="/tag/#数据结构" title="Tag: 数据结构" rel="tag">数据结构</a>&nbsp;
-    
-        <a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a>&nbsp;
-    
-        <a href="/tag/#剑指offer" title="Tag: 剑指offer" rel="tag">剑指offer</a>&nbsp;
-    
-        <a href="/tag/#面试" title="Tag: 面试" rel="tag">面试</a>
-    
-  
-
-</span>
-
-                    </div>
-                </div>
-                <div class="excerpt">
-                    <ul id="markdown-toc">
-  <li><a href="#题目描述" id="markdown-toc-题目描述">题目描述</a></li>
-  <li><a href="#思路" id="markdown-toc-思路">思路</a></li>
-</ul>
-
-<h2 id="题目描述">题目描述</h2>
-
-<p>题目来自 [剑指offer] <br />
-在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。</p>
-<h2 id="思路">思路</h2>
-<p>选取右上角元素，
-  元素大于Key–》剔除整列，
-  元素小于key–》剔除整行*/</p>
-
-<p>注意点就是循环的条件
-对于row行 从上0开始递增，停止的条件是小于行的长度
-对于column列，从右边列的长度开始递减，停止的条件是大于等于零
-（因为查询最右下角的元素时，第0列是允许的不能停止。）
-<img src="https://img-blog.csdn.net/201807201033365?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4Mjc3MDMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="avatar" /></p>
-
-<p>Java代码如下：</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
- * 问题描述:
- *
- *   在一个二维数组中，每一行都按照从左到右递增的顺序排序，
- * 每一列都按照从上到下递增的顺序排序。请完成一个函数，
- * 输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
- *
- * 输入描述:
- * array: 待查找的二维数组
- * target: 查找的数字
- *
- * 输出描述:
- * 查找到返回true,查找不到返回false
- */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MatrixSearch</span> <span class="o">{</span>
-
-    <span class="cm">/**
-     * 解决方法:
-     * 将target与二维数组array第一行最后一个数做比较,如果target大于该行数,则不考虑第一行,相反不考虑最后一列,相等返回true
-     *
-     * @param array
-     * @param target
-     * @return
-     */</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">find</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">array</span><span class="o">,</span><span class="kt">int</span> <span class="n">target</span><span class="o">){</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">array</span><span class="o">==</span><span class="kc">null</span> <span class="o">||</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">&lt;</span><span class="mi">1</span> <span class="o">||</span>  <span class="n">array</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">){</span>
-            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="kt">int</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
-        <span class="kt">int</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
-        <span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="kt">int</span> <span class="n">col</span> <span class="o">=</span> <span class="n">cols</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">row</span><span class="o">&lt;</span><span class="n">rows</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">&lt;</span><span class="n">cols</span> <span class="o">&amp;&amp;</span> <span class="n">row</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">){</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">col</span><span class="o">]</span> <span class="o">==</span> <span class="n">target</span><span class="o">){</span>
-                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-            <span class="o">}</span><span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">col</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">target</span><span class="o">){</span>
-                <span class="n">col</span><span class="o">--;</span>
-            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                <span class="n">row</span><span class="o">++;</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kt">int</span><span class="o">[][]</span> <span class="n">array</span> <span class="o">=</span> <span class="o">{</span>
-                <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">8</span><span class="o">,</span><span class="mi">9</span><span class="o">},</span>
-                <span class="o">{</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">9</span><span class="o">,</span><span class="mi">12</span><span class="o">},</span>
-                <span class="o">{</span><span class="mi">4</span><span class="o">,</span><span class="mi">7</span><span class="o">,</span><span class="mi">10</span><span class="o">,</span><span class="mi">13</span><span class="o">},</span>
-                <span class="o">{</span><span class="mi">6</span><span class="o">,</span><span class="mi">8</span><span class="o">,</span><span class="mi">11</span><span class="o">,</span><span class="mi">15</span><span class="o">}</span>
-        <span class="o">};</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">find</span><span class="o">(</span><span class="n">array</span><span class="o">,</span><span class="mi">22</span><span class="o">));</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">find</span><span class="o">(</span><span class="n">array</span><span class="o">,</span><span class="mi">12</span><span class="o">));</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">find</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span><span class="mi">10</span><span class="o">));</span>
-    <span class="o">}</span>
-<span class="o">}</span>
+<p>现在我们可以将数据结构组织为：documents, classes 和words.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>words = []
+classes = []
+documents = []
+ignore_words = ['?']
+# loop through each sentence in our training data
+for pattern in training_data:
+    # tokenize each word in the sentence
+    w = nltk.word_tokenize(pattern['sentence'])
+    # add to our words list
+    words.extend(w)
+    # add to documents in our corpus
+    documents.append((w, pattern['class']))
+    # add to our classes list
+    if pattern['class'] not in classes:
+        classes.append(pattern['class'])
+ 
+# stem and lower each word and remove duplicates
+words = [stemmer.stem(w.lower()) for w in words if w not in ignore_words]
+words = list(set(words))
+ 
+# remove duplicates
+classes = list(set(classes))
+ 
+print (len(documents), "documents")
+print (len(classes), "classes", classes)
+print (len(words), "unique stemmed words", words)
 </code></pre></div></div>
-<hr />
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>12 documents
+3 classes ['greeting', 'goodbye', 'sandwich']
+26 unique stemmed words ['sandwich', 'hav', 'a', 'how', 'for', 'ar', 'good', 'mak', 'me', 'it', 'day', 'soon', 'nic', 'lat', 'going', 'you', 'today', 'can', 'lunch', 'is', "'s", 'see', 'to', 'talk', 'yo', 'what']
+</code></pre></div></div>
+<p>注意每个单词都是词根并且小写。词根有助于机器将“have”和“having”等同起来。同时我们也不关心大小写。
+<img src="http://jbcdn2.b0.upaiyun.com/2017/08/339dcac37e068d2783eff6ec4e21eb24.png" alt="" />
+我们将训练集中的每个句子转换为词包。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># create our training data
+training = []
+output = []
+# create an empty array for our output
+output_empty = [0] * len(classes)
+
+# training set, bag of words for each sentence
+for doc in documents:
+    # initialize our bag of words
+    bag = []
+    # list of tokenized words for the pattern
+    pattern_words = doc[0]
+    # stem each word
+    pattern_words = [stemmer.stem(word.lower()) for word in pattern_words]
+    # create our bag of words array
+    for w in words:
+        bag.append(1) if w in pattern_words else bag.append(0)
+
+    training.append(bag)
+    # output is a '0' for each tag and '1' for current tag
+    output_row = list(output_empty)
+    output_row[classes.index(doc[1])] = 1
+    output.append(output_row)
+
+# sample training/output
+i = 0
+w = documents[i][0]
+print ([stemmer.stem(word.lower()) for word in w])
+print (training[i])
+print (output[i])
+</code></pre></div></div>
+<p>’’’
+[‘how’, ‘ar’, ‘you’, ‘?’]
+[0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[1, 0, 0]
+‘’’
+上面的步骤是文本分类中的一个经典步骤：每个训练句子被转化为一个包含0和1的数组，而不是语料库中包含独特单词的数组。
+[‘how’, ‘are’, ‘you’, ‘?’]
+被词干化为：
+[[‘how’, ‘ar’, ‘you’, ‘?’]
+然后转换为输入词包的形式：1代表单词存在于词包中（忽略问号？）
+[0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+输出：第一类
+[1, 0, 0]
+注意：一个句子可以有多个分类，也可以没有。确保理解上面的内容，仔细阅读代码直到你理解它。
+机器学习的第一步是要有干净的数据
+<img src="http://jbcdn2.b0.upaiyun.com/2017/08/0f3abe8c32b873ad8ffa8c728a59102d.png" alt="" />
+接下来我们的学习2层神经网络的核心功能。
+如果你是人工神经网络新手，这里是它的工作原理
+我们使用numpy，原因是它可以提供快速的矩阵乘法运算。
+<img src="http://jbcdn2.b0.upaiyun.com/2017/08/f397d71e69f5ebeaf6a3bf0522861d69.png" alt="" />
+我们使用sigmoid函数对值进行归一化，用其导数来衡量错误率。通过不断迭代和调整，直到错误率低到一个可以接受的值。</p>
+
+<p>下面我们也实现了bag-of-words函数，将输入的一个句子转化为一个包含0和1的数组。这就是转换训练数据，得到正确的转换数据至关重要。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import numpy as np
+import time
+
+# compute sigmoid nonlinearity
+def sigmoid(x):
+    output = 1/(1+np.exp(-x))
+    return output
+
+# convert output of sigmoid function to its derivative
+def sigmoid_output_to_derivative(output):
+    return output*(1-output)
+
+def clean_up_sentence(sentence):
+    # tokenize the pattern
+    sentence_words = nltk.word_tokenize(sentence)
+    # stem each word
+    sentence_words = [stemmer.stem(word.lower()) for word in sentence_words]
+    return sentence_words
+
+# return bag of words array: 0 or 1 for each word in the bag that exists in the sentence
+def bow(sentence, words, show_details=False):
+    # tokenize the pattern
+    sentence_words = clean_up_sentence(sentence)
+    # bag of words
+    bag = [0]*len(words)  
+    for s in sentence_words:
+        for i,w in enumerate(words):
+            if w == s: 
+                bag[i] = 1
+                if show_details:
+                    print ("found in bag: %s" % w)
+
+    return(np.array(bag))
+
+def think(sentence, show_details=False):
+    x = bow(sentence.lower(), words, show_details)
+    if show_details:
+        print ("sentence:", sentence, "n bow:", x)
+    # input layer is our bag of words
+    l0 = x
+    # matrix multiplication of input and hidden layer
+    l1 = sigmoid(np.dot(l0, synapse_0))
+    # output layer
+    l2 = sigmoid(np.dot(l1, synapse_1))
+    return l2
+</code></pre></div></div>
+<p>现在我们对神经网络训练函数进行编码，创造连接权重。别太激动，这主要是矩阵乘法——来自中学数学课堂。
+<img src="http://jbcdn2.b0.upaiyun.com/2017/02/e0e648def4862d31563d98fa1d9e60a4.jpg" alt="" />
+我们现在准备去构建我们的神经网络模型，我们将连接权重保存为json文件。</p>
+
+<p>你应该尝试不同的“α”（梯度下降参数），看看它是如何影响错误率。此参数有助于错误调整，并找到最低错误率：</p>
+
+<p>synapse_0 += alpha * synapse_0_weight_update
+<img src="http://jbcdn2.b0.upaiyun.com/2017/08/41e84709aaf122cd41527923403b8e99.png" alt="" />
+我们在隐藏层使用了20个神经元，你可以很容易地调整。这些参数将随着于您的训练数据规模的不同而不同，将错误率调整到低于10 ^ – 3是比较合理的。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>X = np.array(training)
+y = np.array(output)
+
+start_time = time.time()
+
+train(X, y, hidden_neurons=20, alpha=0.1, epochs=100000, dropout=False, dropout_percent=0.2)
+
+elapsed_time = time.time() - start_time
+print ("processing time:", elapsed_time, "seconds")
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Training with 20 neurons, alpha:0.1, dropout:False 
+Input matrix: 12x26    Output matrix: 1x3
+delta after 10000 iterations:0.0062613597435
+delta after 20000 iterations:0.00428296074919
+delta after 30000 iterations:0.00343930779307
+delta after 40000 iterations:0.00294648034566
+delta after 50000 iterations:0.00261467859609
+delta after 60000 iterations:0.00237219554105
+delta after 70000 iterations:0.00218521899378
+delta after 80000 iterations:0.00203547284581
+delta after 90000 iterations:0.00191211022401
+delta after 100000 iterations:0.00180823798397
+saved synapses to: synapses.json
+processing time: 6.501226902008057 seconds
+</code></pre></div></div>
+<p>synapse.json文件中包含了全部的连接权重，这就是我们的模型。
+一旦连接权重已经计算完成，对于分类来说只需要classify()函数了：大约15行代码</p>
+
+<p>备注：如果训练集有变化，我们的模型需要重新计算。对于非常大的数据集，这需要较长的时间。</p>
+
+<p>现在我们可以生成一个句子属于一个或者多个分类的概率了。它的速度非常快，这是因为我们之前定义的think()函数中的点积运算。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># probability threshold
+ERROR_THRESHOLD = 0.2
+# load our calculated synapse values
+synapse_file = 'synapses.json' 
+with open(synapse_file) as data_file: 
+    synapse = json.load(data_file) 
+    synapse_0 = np.asarray(synapse['synapse0']) 
+    synapse_1 = np.asarray(synapse['synapse1'])
+
+def classify(sentence, show_details=False):
+    results = think(sentence, show_details)
+
+    results = [[i,r] for i,r in enumerate(results) if r&gt;ERROR_THRESHOLD ] 
+    results.sort(key=lambda x: x[1], reverse=True) 
+    return_results =[[classes[r[0]],r[1]] for r in results]
+    print ("%s n classification: %s" % (sentence, return_results))
+    return return_results
+
+classify("sudo make me a sandwich")
+classify("how are you today?")
+classify("talk to you tomorrow")
+classify("who are you?")
+classify("make me some lunch")
+classify("how was your lunch today?")
+print()
+classify("good day", show_details=True)
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;strong&gt;sudo make me a sandwich &lt;/strong&gt;
+ [['sandwich', 0.99917711814437993]]
+&lt;strong&gt;how are you today? &lt;/strong&gt;
+ [['greeting', 0.99864563257858363]]
+&lt;strong&gt;talk to you tomorrow &lt;/strong&gt;
+ [['goodbye', 0.95647479275905511]]
+&lt;strong&gt;who are you? &lt;/strong&gt;
+ [['greeting', 0.8964283843977312]]
+&lt;strong&gt;make me some lunch&lt;/strong&gt; 
+ [['sandwich', 0.95371924052636048]]
+&lt;strong&gt;how was your lunch today? &lt;/strong&gt;
+ [['greeting', 0.99120883810944971], ['sandwich', 0.31626066870883057]]
+</code></pre></div></div>
+<p>你可以用其它语句、不同概率来试验几次，也可以添加训练数据来改进／扩展当前的模型。尤其注意用很少的训练数据就得到稳定的预测结果。</p>
+
+<p>有一些句子将会产生多个预测结果（高于阈值）。你需要给你的程序设定一个合适的阈值。并非所有的文本分类方案都是相同的：一些预测情况比其他预测需要更高的置信水平。</p>
+
+<p>最后这个分类结果展示了一些内部的细节：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>found in bag: good
+found in bag: day
+sentence: **good day** 
+ bow: [0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+good day 
+ [['greeting', 0.99664077655648697]]
+</code></pre></div></div>
+<p>从这个句子的词包中可以看到，有两个单词和我们的词库是匹配的。同时我们的神经网络从这些 0 代表的非匹配词语中学习了。
+如果提供一个仅仅有一个常用单词 ‘a’ 被匹配的句子，那我们会得到一个低概率的分类结果A：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>found in bag: a
+sentence: **a burrito! **
+ bow: [0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+a burrito! 
+ [['sandwich', 0.61776860634647834]]
+</code></pre></div></div>
+<p>现在你已经掌握了构建聊天机器人的一些基础知识结构，它能处理大量不同的意图，并且对于有限或者海量的训练数据都能很好的适配。想要为某个意图添加一个或者多个响应实在轻而易举，就不必多讲了</p>
+
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2017/04/06/arraysfind/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/05/18/dl/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2017/03/26/sublimeLinter/">代码校验工具 SublimeLinter 的安装与使用</a>
+                  <a class="post-link" href="/2018/03/19/dl2/">基于DNN的情感分析模型</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-03-26
+                        <i class="fa fa-calendar"></i>2018-03-19
                     </div>
                     <div class="label-card">
                         
@@ -681,7 +532,7 @@ Java代码如下：</p>
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#开发工具" title="Category: 开发工具" rel="category">开发工具</a>
+        <a href="/category/#深度学习" title="Category: 深度学习" rel="category">深度学习</a>
     
   
 
@@ -698,9 +549,9 @@ Java代码如下：</p>
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#开发工具" title="Tag: 开发工具" rel="tag">开发工具</a>&nbsp;
+        <a href="/tag/#DNN" title="Tag: DNN" rel="tag">DNN</a>&nbsp;
     
-        <a href="/tag/#Sublime" title="Tag: Sublime" rel="tag">Sublime</a>
+        <a href="/tag/#情感分析" title="Tag: 情感分析" rel="tag">情感分析</a>
     
   
 
@@ -709,26 +560,123 @@ Java代码如下：</p>
                     </div>
                 </div>
                 <div class="excerpt">
-                    
-<p>本文我将讲述一下 SublimeLinter 的安装过程。其组件 jshint 的安装与使用。其组件 csslint 的安装与使用。我将基于 <a href="http://sublimetext.com/3">Sublime Text 3</a> 来安装。使用 Sublime Text 2 的用户阅读本文是没有帮助的。</p>
+                    <p>这里我是直接使用Anaconda 进行环境搭建，使用Ipython Notebook 进行编码和心得的记录，很方便！！！！！</p>
 
-<p>SublimeLinter 是 Sublime 的插件，它的作用是检查代码语法是否有错误，并提示。习惯了 IDE 下写代码的人一定需要一款在 Sublime 上类似的语法检查工具。下面我们开始。</p>
+<p>这里的寻来数据来自：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>train_url = 'https://storage.googleapis.com/mledu-datasets/sparse-data-embedding/train.tfrecord'
+train_path = tf.keras.utils.get_file(train_url.split('/')[-1], train_url)
+test_url = 'https://storage.googleapis.com/mledu-datasets/sparse-data-embedding/test.tfrecord'
+test_path = tf.keras.utils.get_file(test_url.split('/')[-1], test_url)
 
+</code></pre></div></div>
+<p>术语表链接：https://storage.googleapis.com/mledu-datasets/sparse-data-embedding/terms.txt 
+之前, 先导入各种库：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import collections
+import math
+ 
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+from IPython import display
+from sklearn import metrics
+ 
+tf.logging.set_verbosity(tf.logging.ERROR)
+
+</code></pre></div></div>
+<p>下面是基本的模型构建和训练验证，里面有详细说明：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import sys
+from importlib import reload
+reload(sys)
+# sys.setdefaultencoding("utf-8")
+# 这里好像没什么用！！暂时改为二进制方式读取
+ 
+informative_terms = None
+with open("terms.txt", "rb") as f:
+    informative_terms = list(set(f.read().split()))
+print (informative_terms[:20])
+ 
+# 下面是构造嵌入列
+# 第一步是构造分类了的特征列
+# 第二步 生成嵌入特征列
+terms_features_column = tf.feature_column.categorical_column_with_vocabulary_list(key="terms", vocabulary_list=informative_terms)
+terms_embedding_column = tf.feature_column.embedding_column(terms_features_column, dimension=2)
+ 
+# 这里只是使用了这一个特征列， 没有其他特征列，所以就是只有一个元素
+# 如果需要其他类型的特征列的话，可以直接加入
+ 
+feature_columns = [terms_embedding_column]
+ 
+# 下面是构建优化器
+# 第一步是构建一个学习速率是0.1 的优化器，学习速率也就是每次的步长
+# 第二步是对对梯度进行规约，防止梯度爆炸
+my_optimizer = tf.train.AdagradOptimizer(learning_rate=0.1)
+my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
+ 
+# 接下来就是构建训练模型了，这里是构建的DNN分类器模型
+# estimator 又称为估计量，评价者，这里包含了很多的类型的估计量可供使用, 
+# DNN 模型的一些重要参数有
+#  特征列，隐藏层，优化器，配置等等参数，如需用到可查阅相关api
+classifier = tf.estimator.DNNClassifier(
+    feature_columns=feature_columns,
+    hidden_units=[20,20],
+    optimizer=my_optimizer
+)
+ 
+# 然后，有了训练模型之后，就该训练这个模型了
+# 关于训练模型可评价模型，或者是根据训练好的魔心进行推理，都离不开输入函数
+# 这里是先不对输入函数进行讨论，下一篇中会有一些介绍
+# 对模型的训练很简单，只需要调用api 的train 函数就行
+# 一般常用的参数有input_fn 也就是输入函数，然后是输入对应的总的步数，
+# 这里，总的步数对训练出来的模型也有一定的影响
+ 
+classifier.train(
+    input_fn=lambda:_input_fn([train_path]),
+    steps=1000
+)
+ 
+# 在对模型训练完成之后，一般的需要对模型进行评估和测试
+# 这里是需要使用训练数据和评估数据分别对模型进行评估
+# 然后需要使用测试数据截，对模型进行最终测试，以此检验最终效果
+# 这里为什么要把数据集分为评估数据集合测试数据集呢？
+# 原因是，评估数据集来源于训练数据分割之后的，经过多次训练，可能发生过拟合的情况
+# 然后再添加一个测试数据集，这个测试数据集就是更加普遍的数据
+# 用它对模型进行泛化的检验可以很好的估计出 模型是否过拟合与验证数据集
+# 这里的验证数据截呢 就是为了方式模型 过拟合与训练数据集
+# 这样 经过两层的检验，可以更好的得出优质的模型，也能更好的得出模型的泛化能力
+ 
+# 评估和训练一样也需要输入函数
+evaluation_metrics = classifier.evaluate(input_fn=lambda:_input_fn([train_path]), steps=1000)
+print ("Training set metrics")
+for item in evaluation_metrics:
+    print (item, evaluation_metrics[item])
+print ("-" * 20)
+ 
+# 同样，对验证数据集进行验证
+evaluation_metrics = classifier.evaluate(input_fn=lambda:_input_fn([test_path]), steps=1000)
+print ("Test(validate) set metrics")
+for item in evaluation_metrics:
+    print (item, evaluation_metrics[item])
+print ("-" * 20)
+ 
+# 步数增加，产生了过拟合的情况！，建议是1000 就行了
+
+</code></pre></div></div>
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2017/03/26/sublimeLinter/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/03/19/dl2/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2017/03/12/jekyll-theme-version-2.0/">对这个 jekyll 博客主题的改版和重构</a>
+                  <a class="post-link" href="/2018/03/16/ml/">如何实现一个基本的微信文章分类器</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-03-12
+                        <i class="fa fa-calendar"></i>2018-03-16
                     </div>
                     <div class="label-card">
                         
@@ -746,7 +694,7 @@ Java代码如下：</p>
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#jekyll" title="Category: jekyll" rel="category">jekyll</a>
+        <a href="/category/#机器学习" title="Category: 机器学习" rel="category">机器学习</a>
     
   
 
@@ -763,9 +711,9 @@ Java代码如下：</p>
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#jekyll" title="Tag: jekyll" rel="tag">jekyll</a>&nbsp;
+        <a href="/tag/#机器学习" title="Tag: 机器学习" rel="tag">机器学习</a>&nbsp;
     
-        <a href="/tag/#markdown" title="Tag: markdown" rel="tag">markdown</a>
+        <a href="/tag/#特征选择" title="Tag: 特征选择" rel="tag">特征选择</a>
     
   
 
@@ -774,15 +722,1217 @@ Java代码如下：</p>
                     </div>
                 </div>
                 <div class="excerpt">
-                    
-<p>本文主要说明对这个博客主题的改版和代码重构的过程。这个简洁高雅的博客主题受到了很多朋友的喜欢。在写第一版界面时，我对前端并不是很熟悉，对<code class="highlighter-rouge">Jekyll</code>也不熟悉。现在距离当时也一年了，对自己当时写的代码也不太满意了，同时<code class="highlighter-rouge">Jekyll</code>如今也已经升级了，目前最新版为3.1.2。因此我在临近毕业尚未入职前做一下博客主题的代码重构和改版吧。</p>
+                    <ul id="markdown-toc">
+  <li><a href="#一文本分类器的概述" id="markdown-toc-一文本分类器的概述">一、文本分类器的概述</a></li>
+  <li><a href="#二准备训练语料" id="markdown-toc-二准备训练语料">二、准备训练语料</a></li>
+  <li><a href="#三特征选择" id="markdown-toc-三特征选择">三、特征选择</a></li>
+  <li><a href="#31-信息增益" id="markdown-toc-31-信息增益">3.1 信息增益</a></li>
+  <li><a href="#32-卡方检验" id="markdown-toc-32-卡方检验">3.2 卡方检验</a></li>
+  <li><a href="#33-算法实现" id="markdown-toc-33-算法实现">3.3 算法实现</a></li>
+  <li><a href="#四朴素贝叶斯模型" id="markdown-toc-四朴素贝叶斯模型">四、朴素贝叶斯模型</a></li>
+  <li><a href="#五训练模型" id="markdown-toc-五训练模型">五、训练模型</a></li>
+  <li><a href="#六测试模型" id="markdown-toc-六测试模型">六，测试模型</a></li>
+  <li><a href="#七参考文献与引用" id="markdown-toc-七参考文献与引用">七、参考文献与引用</a></li>
+</ul>
 
-<p>主要想做这些事情有：添加归档，添加标签，添加分类页面，主页显示文章摘要，代码去除 jQuery 和 BootStrap，优化移动端显示，将所有变量写入配置文件<code class="highlighter-rouge">_config.yml</code>中等。再优化一些细节吧。希望更多人会喜欢。</p>
+<p>微信公众号发布的文章和一般门户网站的新闻文本类型有所不同，通常不能用现有的文本分类器直接对这些文章进行分类，不过文本分类的原理是相通的，本文以微信公众号文章为对象，介绍朴素贝叶斯分类器的实现过程。
+文本分类的科学原理和数学证明在网上有很多，这里就不做赘述，本文尽量使用通熟易懂的表述方式，简明扼要地梳理一下文本分类器的各个知识点。
+参考了一下Github，发现少有Java 8风格的实现，所以这里的实现尽量利用Java 8的特性，相比之前优势有很多，例如stream在统计聚合等运算上比较方便，代码不仅简洁，而且更加语义化，另外在多线程并行控制上也省去不少的工作。</p>
+<h2 id="一文本分类器的概述">一、文本分类器的概述</h2>
+<p>文本分类器可以看作是一个预测函数，在给定的文本时，在预定的类别集合中，判断该文本最可能属于哪个类。
+这里需要注意两个问题：
+在文本中含有比较多的标点符号和停用词（的，是，了等），直接使用整段文本处理肯定会产生很多不必要的计算，而且计算量也非常大，因此需要把给定的文本有效地进行表示，也就是选择一系列的特征词来代表这篇文本，这些特征词既可以比较好地反应所属文本的内容，又可以对不同文本有比较好的区分能力。
+在进行文本表示之后，如何对这些特征词进行预测，这就是分类器的算法设计问题了，比较常见的模型有朴素贝叶斯，基于支持向量机（SVM），K-近邻（KNN），决策树等分类算法。这里我们选择简单易懂的朴素贝叶斯算法。在机器学习中，朴素贝叶斯建模属于有监督学习，因此需要收集大量的文本作为训练语料，并标注分类结果
+综上，实现一个分类器通常分为以下几个步骤：
+（1）收集并处理训练语料，以及最后测试用的测试语料
+（2）在训练集上进行特征选择，得到一系列的特征项（词），这些特征项组成了所谓的特征空间
+（3）为了表示某个特征项在不同文档中的重要程度，计算该特征项的权重，常用的计算方法有TF-IDF，本文采用的是“经典”朴素贝叶斯模型，这里不考虑特征项的权重（当然，一定要做也可以）
+（4）训练模型，对于朴素贝叶斯模型来说，主要的是计算每个特征项在不同类别中的条件概率，这点下面再做解释。
+（5）预测文本，模型训练完成之后可以保存到文件中，在预测时直接读入模型的数据进行计算</p>
+<h2 id="二准备训练语料">二、准备训练语料</h2>
+<p>这里需要的语料就是微信公众号的文章，我们可以抓取搜狗微信搜索网站（http://weixin.sogou.com/）首页上已经分类好的文章，直接采用其分类结果，这样也省去了标注的工作。至于如何开发爬虫去抓取文章，这里就不再讨论了。
+<img src="http://wx2.sinaimg.cn/large/7cc829d3ly1fyvkj09hp0j20q006tdi1.jpg" alt="" /></p>
+
+<p>“热门”这类别下的文章不具有一般性，因此不把它当作一个类别。剔除“热门”类别之后，最终我们抓取了30410篇文章，总共20个类别，每个类别的文章数并不均衡，其中最多 的是“养生堂”类别，有2569篇文章，最少的是“军事”类别，有654篇，大体符合微信上文章的分布情况。在保存时，我们保留了文章的标题，公众号名称，文章正文。</p>
+<h2 id="三特征选择">三、特征选择</h2>
+<p>如前文所述，特征选择的目的是降低特征空间的维度，避免维度灾难。简单地说，假设我们选择了2万个特征词，也就是说计算机通过学习，得到了一张有2万个词的“单词表”，以后它遇到的所有文本可以够用这张单词表中的词去表示其内容大意。这些特征词针对不同的类别有一定的区分能力，举例来说，“歼击机”可能来自“军事”，“越位”可能来自“体育”，“涨停”可能来自“财经”等等，而通常中文词汇量要比这个数字大得多，一本常见的汉语词典收录的词条数可达数十万。</p>
+
+<p>常见的特征选择方法有两个，信息增益法和卡方检验法。</p>
+
+<h2 id="31-信息增益">3.1 信息增益</h2>
+<p>信息增益法的衡量标准是，这个特征项可以为分类系统带来多少信息量，所谓的信息增益就是该特征项包含的能够帮预测类别的信息量，这里所说的信息量可以用熵来衡量，计算信息增益时还需要引入条件熵的概念，公式如下
+<img src="http://wx4.sinaimg.cn/large/7cc829d3ly1fyvkj3pe4dj20qv07zq3k.jpg" alt="" />
+可能有些见到公式就头大的小伙伴不太友好，不过这个公式虽然看起来有点复杂，其实在计算中还是比较简单的，解释一下：</p>
+
+<p>P(Cj)：Cj类文档在整个语料中出现的概率；</p>
+
+<p>P(ti)：语料中包含特征项ti的文档的概率，取反就是不包含特征项ti的文档的概率；</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>P(Cj</td>
+      <td>ti)：文档包含特征项ti且属于Cj类的条件概率，取反就是文档不包含特征项ti且属于Cj类的条件概率</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>上面几个概率值，都可以比较方便地从训练语料上统计得到。若还有不明白的小伙伴，推荐阅读这篇博客：文本分类入门（十一）特征选择方法之信息增益</p>
+<h2 id="32-卡方检验">3.2 卡方检验</h2>
+<p>卡方检验，基于χ2统计量(CHI)来衡量特征项ti和类别Cj之间的相关联程度，CHI统计值越高，该特征项与该类的相关性越大，如果两者相互独立，则CHI统计值接近零。计算时需要根据一张相依表（contingency table），公式也比较简单：
+<img src="http://wx4.sinaimg.cn/large/7cc829d3ly1fyvkj6sz6ej20th053wfa.jpg" alt="" />
+<img src="http://wx3.sinaimg.cn/large/7cc829d3ly1fyvkjasdrbj20ed02i3ym.jpg" alt="" />
+其中N就是文档总数，如果想继续讨论这个公式，推荐阅读这篇博客：<a href="https://www.deeplearn.me/1446.html">特征选择（3）-卡方检验</a></p>
+<h2 id="33-算法实现">3.3 算法实现</h2>
+<p>不论何种方式都需要对每个特征项进行估算，然后根据所得的数值进行筛选，通常可以设定一个阈值，低于阈值的特征项可以直接从特征空间中移除，另外也可以按照数值从高到低排序，并指定选择前N个。这里我们采用后者，总共截取前2万个特征项。
+特征选择实现类的代码如下，其中，不同特征选择方法需实现Strategy接口，以获得不同方法计算得到的估值，这里在截取特征项时为了避免不必要的麻烦，剔除了字符串长度为1的词。
+Doc对象表示一篇文档，其中包含了该文档的所属分类，以及分词结果（已经滤掉了停用词等），即Term集合；
+Term对象主要包含3个字段，词本身的字符串，词性（用于过滤），词频TF；
+Feature表示特征项，一个特征项对应一个Term对象，还包含两个hashmap，一个用来统计不同类别下该特征项出现的文档数量（categoryDocCounter），另一个用来统计不同类别下该特征项出现的频度（categoryTermCounter）（对应朴素贝叶斯两种不同模型，下文详述）</p>
+
+<p>统计时引入FeatureCounter对象，使用stream的reduce方法进行归约。主要的思想就是把每一个文档中的Term集合，映射为Term和Feature的键值对，然后再和已有的Map进行合并，合并时如果遇到相同的Term，则调用Feature的Merge方法，该方法会将双方term的词频，以及categoryDocCounter和categoryTermCounter中的统计结果进行累加。最终将所有文档全部统计完成返回Feature集合。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class FeatureSelection {
+    interface Strategy {
+        Feature estimate(Feature feature);
+    }
+    private final Strategy strategy;
+    private final static int FEATURE_SIZE = 20000;
+    public List select(List docs) {
+        return createFeatureSpace(docs.stream())
+                .stream()
+                .map(strategy::estimate)
+                .filter(f -&gt; f.getTerm().getWord().length() &gt; 1)
+                .sorted(comparing(Feature::getScore).reversed())
+                .limit(FEATURE_SIZE)
+                .collect(toList());
+    }
+    private Collection createFeatureSpace(Stream docs) {
+        @AllArgsConstructor
+        class FeatureCounter {
+            private final Map featureMap;
+ 
+            private FeatureCounter accumulate(Doc doc) {
+                Map temp = doc.getTerms().parallelStream()
+                        .map(t -&gt; new Feature(t, doc.getCategory()))
+                        .collect(toMap(Feature::getTerm, Function.identity()));
+                if (!featureMap.isEmpty())
+                    featureMap.values().forEach(f -&gt; temp.merge(f.getTerm(), f, Feature::merge));
+                return new FeatureCounter(temp);
+            }
+            private FeatureCounter combine(FeatureCounter featureCounter) {
+                Map temp = Maps.newHashMap(featureMap);
+                featureCounter.featureMap.values().forEach(f -&gt; temp.merge(f.getTerm(), f, Feature::merge));
+                return new FeatureCounter(temp);
+            }
+        }
+        FeatureCounter counter = docs.parallel()
+                .reduce(new FeatureCounter(Maps.newHashMap()),
+                        FeatureCounter::accumulate,
+                        FeatureCounter::combine);
+        return counter.featureMap.values();
+    }
+}
+public class Feature {
+    public Feature merge(Feature feature) {
+        if (this.term.equals(feature.getTerm())) {
+            this.term.setTf(this.term.getTf() + feature.getTerm().getTf());
+            feature.getCategoryDocCounter()
+                    .forEach((k, v) -&gt; categoryDocCounter.merge(k, v, (oldValue, newValue) -&gt; oldValue + newValue));
+            feature.getCategoryTermCounter()
+                    .forEach((k, v) -&gt; categoryTermCounter.merge(k, v, (oldValue, newValue) -&gt; oldValue + newValue));
+        }
+        return this;
+    }
+}
+</code></pre></div></div>
+<p>信息增益实现如下，在计算条件熵时，利用了stream的collect方法，将包含和不包含特征项的两种情况用一个hashmap分开再进行归约。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@AllArgsConstructor
+public class IGStrategy implements FeatureSelection.Strategy {
+ 
+    private final Collection categories;
+ 
+    private final int total;
+ 
+    public Feature estimate(Feature feature) {
+        double totalEntropy = calcTotalEntropy();
+        double conditionalEntrogy = calcConditionEntropy(feature);
+        feature.setScore(totalEntropy - conditionalEntrogy);
+        return feature;
+    }
+    private double calcTotalEntropy() {
+        return Calculator.entropy(categories.stream().map(c -&gt; (double) c.getDocCount() / total).collect(toList()));
+    }
+ 
+    private double calcConditionEntropy(Feature feature) {
+        int featureCount = feature.getFeatureCount();
+        double Pfeature = (double) featureCount / total;
+ 
+        Map&gt; Pcondition = categories.parallelStream().collect(() -&gt; new HashMap&gt;() , (map, category) -&gt; {
+                    int countDocWithFeature = feature.getDocCountByCategory(category);
+                    //出现该特征词且属于类别key的文档数量/出现该特征词的文档总数量
+                    map.get(true).add((double) countDocWithFeature / featureCount);
+                    //未出现该特征词且属于类别key的文档数量/未出现该特征词的文档总数量
+                    map.get(false).add((double) (category.getDocCount() - countDocWithFeature) / (total - featureCount));
+                },
+                (map1, map2) -&gt; {
+                    map1.get(true).addAll(map2.get(true));
+                    map1.get(false).addAll(map2.get(false));
+                }
+        );
+        return Calculator.conditionalEntrogy(Pfeature, Pcondition.get(true), Pcondition.get(false));
+    }
+}
+</code></pre></div></div>
+<p>卡方检验实现如下，每个特征项要在每个类别上分别计算CHI值，最终保留其最大值</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@AllArgsConstructor
+public class ChiSquaredStrategy implements Strategy {
+ 
+    private final Collection categories;
+ 
+    private final int total;
+ 
+    @ Override
+    public Feature estimate(Feature feature) {
+        class ContingencyTable {
+            private final int A, B, C, D;
+            private ContingencyTable(Feature feature, Category category) {
+                A = feature.getDocCountByCategory(category);
+                B = feature.getFeatureCount() - A;
+                C = category.getDocCount() - A;
+                D = total - A - B - C;
+            }
+        }
+        Double chisquared = categories.stream()
+                .map(c -&gt; new ContingencyTable(feature, c))
+                .map(ct -&gt; Calculator.chisquare(ct.A, ct.B, ct.C, ct.D))
+                .max(Comparator.comparingDouble(Double::valueOf)).get();
+        feature.setScore(chisquared);
+        return feature;
+    }
+}
+</code></pre></div></div>
+<h2 id="四朴素贝叶斯模型">四、朴素贝叶斯模型</h2>
+<p>4.1 原理简介
+朴素贝叶斯模型之所以称之“朴素”，是因为其假设特征之间是相互独立的，在文本分类中，也就是说，一篇文档中出现的词都是相互独立，彼此没有关联，显然文档中出现的词都是有逻辑性的，这种假设在现实中几乎是不成立的，但是这种假设却大大简化了计算，根据贝叶斯公式，文档Doc属于类别Ci的概率为：
+<img src="http://wx4.sinaimg.cn/large/7cc829d3ly1fyvkje9ldnj20b902edft.jpg" alt="" />
+P(Ci|Doc)是所求的后验概率，我们在判定分类时，根据每个类别计算P(Ci|Doc)，最终把P(Ci|Doc)取得最大值的那个分类作为文档的类别。其中，P(Doc)对于类别Ci来说是常量，在比较大小时可以不用参与计算，而P(Ci)表示类别Ci出现的概率，我们称之为先验概率，这可以方便地从训练集中统计得出，至于P(Doc|Ci)，也就是类别的条件概率，如果没有朴素贝叶斯的假设，那么计算是非常困难的。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>举例来说，假设有一篇文章，内容为“王者荣耀：两款传说品质皮肤将优化，李白最新模型海报爆料”，经过特征选择，文档可以表示为Doc=(王者荣耀，传说，品质，皮肤，优化，李白，最新，模型，海报，爆料)，那么在预测时需要计算P(王者荣耀，传说，品质，皮肤，优化，李白，最新，模型，海报，爆料</td>
+      <td>Ci)，这样一个条件概率是不可计算的，因为第一个特征取值为“王者荣耀”，第二个特征取值“传说”……第十个特征取值“爆料”的文档很可能为没有，那么概率就为零，而基于朴素贝叶斯的假设，这个条件概率可以转化为：</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td>P(王者荣耀，传说，品质，皮肤，优化，李白，最新，模型，海报，爆料</td>
+      <td>Ci)=P(王者荣耀</td>
+      <td>Ci)P(传说</td>
+      <td>Ci)……P(爆料</td>
+      <td>Ci)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>于是我们就可以统计这些特征词在每个类别中出现的概率了，在这个例子中，游戏类别中“王者荣耀”这个特征项会频繁出现，因此P(王者荣耀|游戏)的条件概率要明显高于其他类别，这就是朴素贝叶斯模型的朴素之处，粗鲁的聪明。
+4.2 多项式模型与伯努利模型
+在具体实现中，朴素贝叶斯又可以分为两种模型，多项式模型（Multinomial）和伯努利模型（Bernoulli），另外还有高斯模型，主要用于处理连续型变量，在文本分类中不讨论。</p>
+
+<p>多项式模型和伯努利模型的区别在于对词频的考察，在多项式模型中文档中特征项的频度是参与计算的，这对于长文本来说是比较公平的，例如上面的例子，“王者荣耀”在游戏类的文档中频度会比较高，而伯努利模型中，所有特征词都均等地对待，只要出现就记为1，未出现就记为0，两者公式如下：
+<img src="http://wx4.sinaimg.cn/large/7cc829d3ly1fyvkjo4z21j20kz06mt9f.jpg" alt="" />
+在伯努利模型计算公式中，N(Doc(tj)|Ci)表示Ci类文档中特征tj出现的文档数，|D|表示类别Ci的文档数，P(Ci)可以用类别Ci的文档数/文档总数来计算，</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>在多项式模型计算公式中，TF(ti,Doc)是文档Doc中特征ti出现的频度，TF(ti,Ci)就表示类别Ci中特征ti出现的频度，</td>
+      <td>V</td>
+      <td>表示特征空间的大小，也就是特征选择之后，不同（即去掉重复之后）的特征项的总个数，而P(Ci)可以用类别Ci中特征词的总数/所有特征词的总数，所有特征词的总数也就是所有特征词的词频之和。</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>至于分子和分母都加上一定的常量，这是为了防止数据稀疏而产生结果为零的现象，这种操作称为拉普拉斯平滑，至于背后的原理，推荐阅读这篇博客：<a href="https://zhuanlan.zhihu.com/p/24291822">贝叶斯统计观点下的拉普拉斯平滑</a>
+4.3 算法实现
+这里使用了枚举类来封装两个模型，并实现了分类器NaiveBayesClassifier和训练器NaiveBayesLearner中的两个接口，其中Pprior和Pcondition是训练器所需的方法，前者用来计算先验概率，后者用来计算不同特征项在不同类别下的条件概率；getConditionProbability是分类器所需的方法，NaiveBayesKnowledgeBase对象是模型数据的容器，它的getPconditionByWord方法就是用于查询不同特征词在不同类别下的条件概率</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public enum NaiveBayesModels implements NaiveBayesClassifier.Model, NaiveBayesLearner.Model {
+    Bernoulli {
+        @ Override
+        public double Pprior(int total, Category category) {
+            int Nc = category.getDocCount();
+            return Math.log((double) Nc / total);
+        }
+        @ Override
+        public double Pcondition(Feature feature, Category category, double smoothing) {
+            int Ncf = feature.getDocCountByCategory(category);
+            int Nc = category.getDocCount();
+            return Math.log((double) (1 + Ncf) / (Nc + smoothing));
+        }
+        @ Override
+        public List getConditionProbability(String category, List terms, final NaiveBayesKnowledgeBase knowledgeBase) {
+            return terms.stream().map(term -&gt; knowledgeBase.getPconditionByWord(category, term.getWord())).collect(toList());
+        }
+    },
+    Multinomial {
+        @ Override
+        public double Pprior(int total, Category category) {
+            int Nt = category.getTermCount();
+            return Math.log((double) Nt / total);
+        }
+ 
+        @ Override
+        public double Pcondition(Feature feature, Category category, double smoothing) {
+            int Ntf = feature.getTermCountByCategory(category);
+            int Nt = category.getTermCount();
+            return Math.log((double) (1 + Ntf) / (Nt + smoothing));
+        }
+        @ Override
+        public List getConditionProbability(String category, List terms, final NaiveBayesKnowledgeBase knowledgeBase) {
+            return terms.stream().map(term -&gt; term.getTf() * knowledgeBase.getPconditionByWord(category, term.getWord())).collect(toList());
+        }
+    };
+}
+</code></pre></div></div>
+<h2 id="五训练模型">五、训练模型</h2>
+<p>根据朴素贝叶斯模型的定义，训练模型的过程就是计算每个类的先验概率，以及每个特征项在不同类别下的条件概率，NaiveBayesKnowledgeBase对象将训练器在训练时得到的结果都保存起来，训练完成时写入文件，启动分类时从文件中读入数据交由分类器使用，那么在分类时就可以直接参与到计算过程中。</p>
+
+<p>训练器的实现如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class NaiveBayesLearner {
+    ……
+    ……
+    public NaiveBayesLearner statistics() {
+        log.info("开始统计...");
+        this.total = total();
+        log.info("total : " + total);
+        this.categorySet = trainSet.getCategorySet();
+        featureSet.forEach(f -&gt; f.getCategoryTermCounter().forEach((category, count) -&gt; category.setTermCount(category.getTermCount() + count)));
+        return this;
+    }
+ 
+    public NaiveBayesKnowledgeBase build() {
+        this.knowledgeBase.setCategories(createCategorySummaries(categorySet));
+        this.knowledgeBase.setFeatures(createFeatureSummaries(featureSet, categorySet));
+        return knowledgeBase;
+    }
+ 
+    private Map createFeatureSummaries(final Set featureSet, final Set categorySet) {
+        return featureSet.parallelStream()
+                .map(f -&gt; knowledgeBase.createFeatureSummary(f, getPconditions(f, categorySet)))
+                .collect(toMap(NaiveBayesKnowledgeBase.FeatureSummary::getWord, Function.identity()));
+    }
+ 
+    private Map createCategorySummaries(final Set categorySet) {
+        return categorySet.stream().collect(toMap(Category::getName, c -&gt; model.Pprior(total, c)));
+    }
+ 
+    private Map getPconditions(final Feature feature, final Set categorySet) {
+        final double smoothing = smoothing();
+        return categorySet.stream()
+                .collect(toMap(Category::getName, c -&gt; model.Pcondition(feature, c, smoothing)));
+    }
+ 
+    private int total() {
+        if (model == Multinomial)
+            return featureSet.parallelStream().map(Feature::getTerm).mapToInt(Term::getTf).sum();//总词频数
+        else if (model == Bernoulli)
+            return trainSet.getTotalDoc();//总文档数
+        return 0;
+    }
+ 
+    private double smoothing() {
+        if (model == Multinomial)
+            return this.featureSet.size();
+        else if (model == Bernoulli)
+            return 2.0;
+        return 0.0;
+    }
+ 
+    public static void main(String[] args) {
+        TrainSet trainSet = new TrainSet(System.getProperty("user.dir") + "/trainset/");
+ 
+        log.info("特征选择开始...");
+        FeatureSelection featureSelection = new FeatureSelection(new ChiSquaredStrategy(trainSet.getCategorySet(), trainSet.getTotalDoc()));
+        List features = featureSelection.select(trainSet.getDocs());
+        log.info("特征选择完成,特征数:[" + features.size() + "]");
+ 
+        NaiveBayesModels model = NaiveBayesModels.Multinomial;
+        NaiveBayesLearner learner = new NaiveBayesLearner(model, trainSet, Sets.newHashSet(features));
+        learner.statistics().build().write(model.getModelPath());
+        log.info("模型文件写入完成,路径:" + model.getModelPath());
+    }
+}
+</code></pre></div></div>
+<p>在main函数中执行整个训练过程，首先执行特征选择，这里使用卡方检验法，然后将得到特征空间，朴素贝叶斯模型（多项式模型），以及训练集TrainSet对象作为参数，初始化训练器，接着训练器开始进行统计的工作，事实上有一部分的统计工作，在初始化训练集对象时，就已经完成了，例如总文档数，每个类别下的文档数等，这些可以直接拿过来使用，最终将数据都装载到NaiveBayesKnowledgeBase对象当中去，并写入文件，格式为第一行是不同类别的先验概率，余下每一行对应一个特征项，每一列对应不同类别的条件概率值。</p>
+
+<h2 id="六测试模型">六，测试模型</h2>
+<p>分类器预测过程就相对于比较简单了，通过NaiveBayesKnowledgeBase读入数据，然后将指定的文本进行分词，匹配特征项，然后计算在不同类别下的后验概率，返回取得最大值对应的那个类别。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class NaiveBayesClassifier {
+    ……
+    private final Model model;
+ 
+    private final NaiveBayesKnowledgeBase knowledgeBase;
+ 
+    public NaiveBayesClassifier(Model model) {
+        this.model = model;
+        this.knowledgeBase = new NaiveBayesKnowledgeBase(model.getModelPath());
+    }
+ 
+    public String predict(String content) {
+        Set allFeatures = knowledgeBase.getFeatures().keySet();
+        List terms = NLPTools.instance().segment(content).stream()
+                .filter(t -&gt; allFeatures.contains(t.getWord())).distinct().collect(toList());
+ 
+        @AllArgsConstructor
+        class Result {
+            final String category;
+            final double probability;
+        }
+ 
+        Result result = knowledgeBase.getCategories().keySet().stream()
+                .map(c -&gt; new Result(c, Calculator.Ppost(knowledgeBase.getCategoryProbability(c),
+                        model.getConditionProbability(c, terms, knowledgeBase))))
+                .max(Comparator.comparingDouble(r -&gt; r.probability)).get();
+        return result.category;
+    }
+}
+</code></pre></div></div>
+<p>在实际测试时，我们又单独抓取了搜狗微信搜索网站上的文章，按照100篇一组，一共30组进行分类的测试，最终结果每一组的准确率均在90%以上，最高达98%，效果良好。当然正规的评测需要同时评估准确率和召回率，这里就偷懒不做了。</p>
+
+<p>另外还需要说明一点的是，由于训练集是来源于搜狗微信搜索网站的文章，类别仅限于这20个，这不足以覆盖所有微信公众号文章的类别，因此在测试其他来源的微信文章准确率一定会有所影响。当然如果有更加丰富的微信文章训练集的话，也可以利用这个模型重新训练，那么效果也会越来越好。</p>
+
+<h2 id="七参考文献与引用">七、参考文献与引用</h2>
+<p>宗成庆. 统计自然语言处理[M]. 清华大学出版社, 2013.
+T.M.Mitchell. 机器学习[M]. 机械工业出版社, 2003.
+吴军. 数学之美[M]. 人民邮电出版社, 2012.
+Raoul-Gabriel Urma, Mario Fusco, Alan Mycroft. Java 8 实战[M]. 人民邮电出版社, 2016.
+Ansj中文分词器，https://github.com/NLPchina/a…
+HanLP中文分词器，https://github.com/hankcs/HanLP</p>
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2018/03/16/ml/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
+                  <a class="post-link" href="/2018/02/19/ml/">机器学习各种算法对比总结</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2018-02-19
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#机器学习" title="Category: 机器学习" rel="category">机器学习</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#机器学习" title="Tag: 机器学习" rel="tag">机器学习</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <ul id="markdown-toc">
+  <li><a href="#近邻-nearest-neighbor" id="markdown-toc-近邻-nearest-neighbor">近邻 (Nearest Neighbor)</a></li>
+  <li><a href="#贝叶斯-bayesian" id="markdown-toc-贝叶斯-bayesian">贝叶斯 (Bayesian)</a></li>
+  <li><a href="#决策树-decision-tree" id="markdown-toc-决策树-decision-tree">决策树 (Decision tree)</a></li>
+  <li><a href="#随机森林-random-forest" id="markdown-toc-随机森林-random-forest">随机森林 (Random forest)</a></li>
+  <li><a href="#svm-support-vector-machine" id="markdown-toc-svm-support-vector-machine">SVM (Support vector machine)</a></li>
+  <li><a href="#逻辑斯蒂回归-logistic-regression" id="markdown-toc-逻辑斯蒂回归-logistic-regression">逻辑斯蒂回归 (Logistic regression)</a></li>
+  <li><a href="#判别分析-discriminant-analysis" id="markdown-toc-判别分析-discriminant-analysis">判别分析 (Discriminant analysis)</a></li>
+  <li><a href="#神经网络-neural-network" id="markdown-toc-神经网络-neural-network">神经网络 (Neural network)</a></li>
+  <li><a href="#rule-based-methods" id="markdown-toc-rule-based-methods">Rule-based methods</a></li>
+  <li><a href="#提升算法boosting" id="markdown-toc-提升算法boosting">提升算法（Boosting）</a></li>
+  <li><a href="#装袋算法bagging" id="markdown-toc-装袋算法bagging">装袋算法（Bagging）</a></li>
+  <li><a href="#stacking" id="markdown-toc-stacking">Stacking</a></li>
+  <li><a href="#多专家模型mixture-of-experts" id="markdown-toc-多专家模型mixture-of-experts">多专家模型（Mixture of Experts）</a></li>
+  <li><a href="#最大熵模型-maximum-entropy-model" id="markdown-toc-最大熵模型-maximum-entropy-model">最大熵模型 (Maximum entropy model)</a></li>
+  <li><a href="#lr其实就是使用最大熵模型作为优化目标的一个算法4" id="markdown-toc-lr其实就是使用最大熵模型作为优化目标的一个算法4">LR其实就是使用最大熵模型作为优化目标的一个算法4。</a></li>
+  <li><a href="#em" id="markdown-toc-em">EM</a></li>
+  <li><a href="#隐马尔科夫-hidden-markov-model" id="markdown-toc-隐马尔科夫-hidden-markov-model">隐马尔科夫 (Hidden Markov model)</a></li>
+  <li><a href="#1决策树decision-trees的优缺点" id="markdown-toc-1决策树decision-trees的优缺点">1决策树（Decision Trees）的优缺点</a></li>
+</ul>
+<p>各种机器学习的应用场景分别是什么？例如，k近邻,贝叶斯，决策树，svm，逻辑斯蒂回归和最大熵模型。
+k近邻,贝叶斯，决策树，svm，逻辑斯蒂回归和最大熵模型,隐马尔科夫，条件随机场，adaboost，em 这些在一般工作中，分别用到的频率多大？一般用…</p>
+
+<p>关于这个问题我今天正好看到了这个文章。讲的正是各个算法的优劣分析，很中肯。</p>
+
+<p>https://zhuanlan.zhihu.com/p/25327755</p>
+
+<p>正好14年的时候有人做过一个实验<a href="Do we need hundreds of classifiers to solve real world classification problems.">1</a>，比较在不同数据集上（121个），不同的分类器（179个）的实际效果。</p>
+
+<p>论文题为：Do we Need Hundreds of Classifiers to Solve Real World Classification Problems?</p>
+
+<p>实验时间有点早，我尝试着结合我自己的理解、一些最近的实验，来谈一谈吧。主要针对分类器(Classifier)。</p>
+
+<p>写给懒得看的人：</p>
+
+<p>没有最好的分类器，只有最合适的分类器。
+随机森林平均来说最强，但也只在9.9%的数据集上拿到了第一，优点是鲜有短板。</p>
+
+<p>SVM的平均水平紧随其后，在10.7%的数据集上拿到第一。</p>
+
+<p>神经网络（13.2%）和boosting（~9%）表现不错。</p>
+
+<p>数据维度越高，随机森林就比AdaBoost强越多，但是整体不及SVM<a href="An empirical evaluation of supervised learning in high dimensions.">2</a>。</p>
+
+<p>数据量越大，神经网络就越强。</p>
+
+<h2 id="近邻-nearest-neighbor">近邻 (Nearest Neighbor)</h2>
+<p>典型的例子是KNN，它的思路就是——对于待判断的点，找到离它最近的几个数据点，根据它们的类型决定待判断点的类型。</p>
+
+<p>它的特点是完全跟着数据走，没有数学模型可言。</p>
+
+<p>适用情景：</p>
+
+<p>需要一个特别容易解释的模型的时候。</p>
+
+<p>比如需要向用户解释原因的推荐算法。</p>
+
+<h2 id="贝叶斯-bayesian">贝叶斯 (Bayesian)</h2>
+<p>典型的例子是Naive Bayes，核心思路是根据条件概率计算待判断点的类型。</p>
+
+<p>是相对容易理解的一个模型，至今依然被垃圾邮件过滤器使用。</p>
+
+<p>适用情景：</p>
+
+<p>需要一个比较容易解释，而且不同维度之间相关性较小的模型的时候。</p>
+
+<p>可以高效处理高维数据，虽然结果可能不尽如人意。</p>
+
+<h2 id="决策树-decision-tree">决策树 (Decision tree)</h2>
+<p>决策树的特点是它总是在沿着特征做切分。随着层层递进，这个划分会越来越细。</p>
+
+<p>虽然生成的树不容易给用户看，但是数据分析的时候，通过观察树的上层结构，能够对分类器的核心思路有一个直观的感受。</p>
+
+<p>举个简单的例子，当我们预测一个孩子的身高的时候，决策树的第一层可能是这个孩子的性别。男生走左边的树进行进一步预测，女生则走右边的树。这就说明性别对身高有很强的影响。</p>
+
+<p>适用情景：</p>
+
+<p>因为它能够生成清晰的基于特征(feature)选择不同预测结果的树状结构，数据分析师希望更好的理解手上的数据的时候往往可以使用决策树。</p>
+
+<p>同时它也是相对容易被攻击的分类器<a href="Man vs. Machine: Practical Adversarial Detection of Malicious Crowdsourcing Workers">3</a>。这里的攻击是指人为的改变一些特征，使得分类器判断错误。常见于垃圾邮件躲避检测中。因为决策树最终在底层判断是基于单个条件的，攻击者往往只需要改变很少的特征就可以逃过监测。</p>
+
+<p>受限于它的简单性，决策树更大的用处是作为一些更有用的算法的基石。</p>
+
+<h2 id="随机森林-random-forest">随机森林 (Random forest)</h2>
+<p>提到决策树就不得不提随机森林。顾名思义，森林就是很多树。</p>
+
+<p>严格来说，随机森林其实算是一种集成算法。它首先随机选取不同的特征(feature)和训练样本(training sample)，生成大量的决策树，然后综合这些决策树的结果来进行最终的分类。</p>
+
+<p>随机森林在现实分析中被大量使用，它相对于决策树，在准确性上有了很大的提升，同时一定程度上改善了决策树容易被攻击的特点。</p>
+
+<p>适用情景：</p>
+
+<p>数据维度相对低（几十维），同时对准确性有较高要求时。</p>
+
+<p>因为不需要很多参数调整就可以达到不错的效果，基本上不知道用什么方法的时候都可以先试一下随机森林。</p>
+
+<h2 id="svm-support-vector-machine">SVM (Support vector machine)</h2>
+<p>SVM的核心思想就是找到不同类别之间的分界面，使得两类样本尽量落在面的两边，而且离分界面尽量远。</p>
+
+<p>最早的SVM是平面的，局限很大。但是利用核函数(kernel function)，我们可以把平面投射(mapping)成曲面，进而大大提高SVM的适用范围。</p>
+
+<p>提高之后的SVM同样被大量使用，在实际分类中展现了很优秀的正确率。</p>
+
+<p>适用情景：</p>
+
+<p>SVM在很多数据集上都有优秀的表现。</p>
+
+<p>相对来说，SVM尽量保持与样本间距离的性质导致它抗攻击的能力更强。</p>
+
+<p>和随机森林一样，这也是一个拿到数据就可以先尝试一下的算法。</p>
+
+<h2 id="逻辑斯蒂回归-logistic-regression">逻辑斯蒂回归 (Logistic regression)</h2>
+<p>逻辑斯蒂回归这个名字太诡异了，我就叫它LR吧，反正讨论的是分类器，也没有别的方法叫LR。顾名思义，它其实是回归类方法的一个变体。</p>
+
+<p>回归方法的核心就是为函数找到最合适的参数，使得函数的值和样本的值最接近。例如线性回归(Linear regression)就是对于函数f(x)=ax+b，找到最合适的a,b。</p>
+
+<p>LR拟合的就不是线性函数了，它拟合的是一个概率学中的函数，f(x)的值这时候就反映了样本属于这个类的概率。</p>
+
+<p>适用情景：</p>
+
+<p>LR同样是很多分类算法的基础组件，它的好处是输出值自然地落在0到1之间，并且有概率意义。</p>
+
+<p>因为它本质上是一个线性的分类器，所以处理不好特征之间相关的情况。</p>
+
+<p>虽然效果一般，却胜在模型清晰，背后的概率学经得住推敲。它拟合出来的参数就代表了每一个特征(feature)对结果的影响。也是一个理解数据的好工具。</p>
+
+<h2 id="判别分析-discriminant-analysis">判别分析 (Discriminant analysis)</h2>
+<p>判别分析主要是统计那边在用，所以我也不是很熟悉，临时找统计系的闺蜜补了补课。这里就现学现卖了。</p>
+
+<p>判别分析的典型例子是线性判别分析(Linear discriminant analysis)，简称LDA。</p>
+
+<p>（这里注意不要和隐含狄利克雷分布(Latent Dirichlet allocation)弄混，虽然都叫LDA但说的不是一件事。）</p>
+
+<p>LDA的核心思想是把高维的样本投射(project)到低维上，如果要分成两类，就投射到一维。要分三类就投射到二维平面上。这样的投射当然有很多种不同的方式，LDA投射的标准就是让同类的样本尽量靠近，而不同类的尽量分开。对于未来要预测的样本，用同样的方式投射之后就可以轻易地分辨类别了。</p>
+
+<p>使用情景：</p>
+
+<p>判别分析适用于高维数据需要降维的情况，自带降维功能使得我们能方便地观察样本分布。它的正确性有数学公式可以证明，所以同样是很经得住推敲的方式。</p>
+
+<p>但是它的分类准确率往往不是很高，所以不是统计系的人就把它作为降维工具用吧。</p>
+
+<p>同时注意它是假定样本成正态分布的，所以那种同心圆形的数据就不要尝试了。</p>
+
+<h2 id="神经网络-neural-network">神经网络 (Neural network)</h2>
+<p>神经网络现在是火得不行啊。它的核心思路是利用训练样本(training sample)来逐渐地完善参数。还是举个例子预测身高的例子，如果输入的特征中有一个是性别（1:男；0:女），而输出的特征是身高（1:高；0:矮）。那么当训练样本是一个个子高的男生的时候，在神经网络中，从“男”到“高”的路线就会被强化。同理，如果来了一个个子高的女生，那从“女”到“高”的路线就会被强化。</p>
+
+<p>最终神经网络的哪些路线比较强，就由我们的样本所决定。</p>
+
+<p>神经网络的优势在于，它可以有很多很多层。如果输入输出是直接连接的，那它和LR就没有什么区别。但是通过大量中间层的引入，它就能够捕捉很多输入特征之间的关系。卷积神经网络有很经典的不同层的可视化展示(visulization)，我这里就不赘述了。</p>
+
+<p>神经网络的提出其实很早了，但是它的准确率依赖于庞大的训练集，原本受限于计算机的速度，分类效果一直不如随机森林和SVM这种经典算法。</p>
+
+<p>使用情景：</p>
+
+<p>数据量庞大，参数之间存在内在联系的时候。</p>
+
+<p>当然现在神经网络不只是一个分类器，它还可以用来生成数据，用来做降维，这些就不在这里讨论了。</p>
+
+<h2 id="rule-based-methods">Rule-based methods</h2>
+<p>这个我是真不熟，都不知道中文翻译是什么。</p>
+
+<p>它里面典型的算法是C5.0 Rules，一个基于决策树的变体。因为决策树毕竟是树状结构，理解上还是有一定难度。所以它把决策树的结果提取出来，形成一个一个两三个条件组成的小规则。</p>
+
+<p>使用情景：</p>
+
+<p>它的准确度比决策树稍低，很少见人用。大概需要提供明确小规则来解释决定的时候才会用吧。</p>
+
+<h2 id="提升算法boosting">提升算法（Boosting）</h2>
+<p>接下来讲的一系列模型，都属于集成学习算法(Ensemble Learning)，基于一个核心理念：三个臭皮匠，顶个诸葛亮。</p>
+
+<p>翻译过来就是：当我们把多个较弱的分类器结合起来的时候，它的结果会比一个强的分类器更</p>
+
+<p>典型的例子是AdaBoost。</p>
+
+<p>AdaBoost的实现是一个渐进的过程，从一个最基础的分类器开始，每次寻找一个最能解决当前错误样本的分类器。用加权取和(weighted sum)的方式把这个新分类器结合进已有的分类器中。</p>
+
+<p>它的好处是自带了特征选择（feature selection），只使用在训练集中发现有效的特征(feature)。这样就降低了分类时需要计算的特征数量，也在一定程度上解决了高维数据难以理解的问题。</p>
+
+<p>最经典的AdaBoost实现中，它的每一个弱分类器其实就是一个决策树。这就是之前为什么说决策树是各种算法的基石。</p>
+
+<p>使用情景：</p>
+
+<p>好的Boosting算法，它的准确性不逊于随机森林。虽然在<a href="Do we need hundreds of classifiers to solve real world classification problems.">1</a>的实验中只有一个挤进前十，但是实际使用中它还是很强的。因为自带特征选择（feature selection）所以对新手很友好，是一个“不知道用什么就试一下它吧”的算法。</p>
+
+<h2 id="装袋算法bagging">装袋算法（Bagging）</h2>
+<p>同样是弱分类器组合的思路，相对于Boosting，其实Bagging更好理解。它首先随机地抽取训练集（training set），以之为基础训练多个弱分类器。然后通过取平均，或者投票(voting)的方式决定最终的分类结果。</p>
+
+<p>因为它随机选取训练集的特点，Bagging可以一定程度上避免过渡拟合(overfit)。</p>
+
+<p>在<a href="Do we need hundreds of classifiers to solve real world classification problems.">1</a>中，最强的Bagging算法是基于SVM的。如果用定义不那么严格的话，随机森林也算是Bagging的一种。</p>
+
+<p>使用情景：</p>
+
+<p>相较于经典的必使算法，Bagging使用的人更少一些。一部分的原因是Bagging的效果和参数的选择关系比较大，用默认参数往往没有很好的效果。</p>
+
+<p>虽然调对参数结果会比决策树和LR好，但是模型也变得复杂了，没事有特别的原因就别用它了。</p>
+
+<h2 id="stacking">Stacking</h2>
+<p>这个我是真不知道中文怎么说了。它所做的是在多个分类器的结果上，再套一个新的分类器。</p>
+
+<p>这个新的分类器就基于弱分类器的分析结果，加上训练标签(training label)进行训练。一般这最后一层用的是LR。</p>
+
+<p>Stacking在<a href="Do we need hundreds of classifiers to solve real world classification problems.">1</a>里面的表现不好，可能是因为增加的一层分类器引入了更多的参数，也可能是因为有过渡拟合(overfit)的现象。</p>
+
+<p>使用情景：</p>
+
+<p>没事就别用了。</p>
+
+<p>（修订：</p>
+
+<p>@庄岩</p>
+
+<p>提醒说stacking在数据挖掘竞赛的网站kaggle上很火，相信参数调得好的话还是对结果能有帮助的。</p>
+
+<p>http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/</p>
+
+<p>这篇文章很好地介绍了stacking的好处。在kaggle这种一点点提升就意味着名次不同的场合下，stacking还是很有效的，但是对于一般商用，它所带来的提升就很难值回额外的复杂度了。）</p>
+
+<h2 id="多专家模型mixture-of-experts">多专家模型（Mixture of Experts）</h2>
+<p>最近这个模型还挺流行的，主要是用来合并神经网络的分类结果。我也不是很熟，对神经网络感兴趣，而且训练集异质性（heterogeneity）比较强的话可以研究一下这个。</p>
+
+<p>讲到这里分类器其实基本说完了。讲一下问题里面其他一些名词吧。</p>
+
+<h2 id="最大熵模型-maximum-entropy-model">最大熵模型 (Maximum entropy model)</h2>
+<p>最大熵模型本身不是分类器，它一般是用来判断模型预测结果的好坏的。</p>
+
+<p>对于它来说，分类器预测是相当于是：针对样本，给每个类一个出现概率。比如说样本的特征是：性别男。我的分类器可能就给出了下面这样一个概率：高（60%），矮（40%）。</p>
+
+<p>而如果这个样本真的是高的，那我们就得了一个分数60%。最大熵模型的目标就是让这些分数的乘积尽量大。</p>
+
+<h2 id="lr其实就是使用最大熵模型作为优化目标的一个算法4">LR其实就是使用最大熵模型作为优化目标的一个算法<a href="http://www.win-vector.com/dfiles/LogisticRegressionMaxEnt.pdf">4</a>。</h2>
+<h2 id="em">EM</h2>
+<p>就像最大熵模型一样，EM不是分类器，而是一个思路。很多算法都是基于这个思路实现的。</p>
+
+<p>@刘奕驰 已经讲得很清楚了，我就不多说了。</p>
+
+<h2 id="隐马尔科夫-hidden-markov-model">隐马尔科夫 (Hidden Markov model)</h2>
+<p>这是一个基于序列的预测方法，核心思想就是通过上一个（或几个）状态预测下一个状态。</p>
+
+<p>之所以叫“隐”马尔科夫是因为它的设定是状态本身我们是看不到的，我们只能根据状态生成的结果序列来学习可能的状态。</p>
+
+<p>适用场景：</p>
+
+<p>可以用于序列的预测，可以用来生成序列。</p>
+
+<p>条件随机场 (Conditional random field)
+典型的例子是linear-chain CRF。</p>
+
+<p>具体的使用 @Aron 有讲，我就不献丑了，因为我从来没用过这个。</p>
+
+<p>就是这些啦。</p>
+
+<p>相关的文章：</p>
+
+<p>Fernández-Delgado, Manuel, et al. J. Mach. Learn. Res 15.1 (2014)</p>
+
+<p>Rich Caruana, Nikos Karampatziakis, and Ainur Yessenalina. ICML ‘08</p>
+
+<p>Wang, G., Wang, T., Zheng, H., &amp; Zhao, B. Y. Usenix Security’14</p>
+
+<h2 id="1决策树decision-trees的优缺点">1决策树（Decision Trees）的优缺点</h2>
+
+<p>决策树的优点：</p>
+
+<p>一、           决策树易于理解和解释.人们在通过解释后都有能力去理解决策树所表达的意义。</p>
+
+<p>二、           对于决策树，数据的准备往往是简单或者是不必要的.其他的技术往往要求先把数据一般化，比如去掉多余的或者空白的属性。</p>
+
+<p>三、           能够同时处理数据型和常规型属性。其他的技术往往要求数据属性的单一。</p>
+
+<p>四、           决策树是一个白盒模型。如果给定一个观察的模型，那么根据所产生的决策树很容易推出相应的逻辑表达式。</p>
+
+<p>五、           易于通过静态测试来对模型进行评测。表示有可能测量该模型的可信度。</p>
+
+<p>六、          在相对短的时间内能够对大型数据源做出可行且效果良好的结果。</p>
+
+<p>七、           可以对有许多属性的数据集构造决策树。</p>
+
+<p>八、           决策树可很好地扩展到大型数据库中，同时它的大小独立于数据库的大小。</p>
+
+<p>决策树的缺点：</p>
+
+<p>一、           对于那些各类别样本数量不一致的数据，在决策树当中,信息增益的结果偏向于那些具有更多数值的特征。</p>
+
+<p>二、           决策树处理缺失数据时的困难。</p>
+
+<p>三、           过度拟合问题的出现。</p>
+
+<p>四、           忽略数据集中属性之间的相关性。</p>
 
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2017/03/12/jekyll-theme-version-2.0/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/02/19/ml/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
+                  <a class="post-link" href="/2018/02/13/python7/">Python3网络爬虫(五)：爬取人物头像</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2018-02-13
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Python网络爬虫" title="Category: Python网络爬虫" rel="category">Python网络爬虫</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a>&nbsp;
+    
+        <a href="/tag/#网络爬虫" title="Tag: 网络爬虫" rel="tag">网络爬虫</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <ul id="markdown-toc">
+  <li><a href="#一预备知识" id="markdown-toc-一预备知识">（一）预备知识</a></li>
+  <li><a href="#二实战" id="markdown-toc-二实战">(二)实战</a></li>
+  <li><a href="#三-总结" id="markdown-toc-三-总结">(三) 总结</a></li>
+</ul>
+
+<p>运行平台：Windows 
+Python版本：Python3.x 
+IDE：Sublime text3</p>
+<h2 id="一预备知识">（一）预备知识</h2>
+<p>为了也能够学习到新知识，本次爬虫教程使用requests第三方库，这个库可不是Python3内置的urllib.request库，而是一个强大的基于urllib3的第三方库</p>
+
+<p>requests库的基础方法如下：</p>
+
+<p><img src="https://img-blog.csdn.net/20170521121032110?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+官方中文教程地址：http://docs.python-requests.org/zh_CN/latest/user/quickstart.html</p>
+
+<p>因为官方给出的《快速上手》教程已经整理的很好了，并且本次教程使用的也是最简单的requests.get()，因此第三方库requests的使用方法，不再累述。详情请看官方中文教程，有urllib2基础的人，还是好上手的。</p>
+
+<h2 id="二实战">(二)实战</h2>
+<p>2.1 背景
+    爬取《帅啊》网的帅哥图片！</p>
+
+<p>URL : http://www.shuaia.net/index.html</p>
+
+<p>先看一眼网站的样子：
+<img src="https://img-blog.csdn.net/20170521121231569?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<p>2.2 requests安装
+    在cmd中，使用如下指令安装第三方库requests：
+pip3 install requests
+    或者：
+easy_install requests
+2.3 爬取单页目标连接
+    通过审查元素，我们不难发现，目标的地址存储在class属性为”item-img”的<a>标签的href属性中。这时候，有人可能会问为啥不用下面的<img />标签的src属性？因为这个图片是首页的浏览图片，根据这个地址保存下来的图片，太小了，并且不清清楚。秉承着热爱“高清无码”的精神，这种图片可不是我想要的。因此，先获取目标的地址，也就是我们点击图片之后，进入的网页地址，然后根据下一个网页，找到图片的地址。
+<img src="https://img-blog.csdn.net/20170521121440034?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+ 代码：</a></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> # -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+import requests
+
+if __name__ == '__main__':
+    url = 'http://www.shuaia.net/index.html'
+    headers = {
+            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    }
+    req = requests.get(url = url,headers = headers)
+    req.encoding = 'utf-8'
+    html = req.text
+    bf = BeautifulSoup(html, 'lxml')
+    targets_url = bf.find_all(class_='item-img')
+    list_url = []
+    for each in targets_url:
+        list_url.append(each.img.get('alt') + '=' + each.get('href'))
+    print(list_url)
+</code></pre></div></div>
+<p>我们将爬取的信息保存到list中，图片名字和图片地址使用”=”连接，运行结果：
+ <img src="https://img-blog.csdn.net/20170521121615323?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<p>2.4 爬取多页目标连接
+    翻到第二页的时候，很容易就发现地址变为了:www.shuaia.net/index_2.html。第三页、第四页、第五页依此类推。
+<img src="https://img-blog.csdn.net/20170521121727325?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+代码：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+import requests
+
+if __name__ == '__main__':
+    list_url = []
+    for num in range(1,20):
+        if num == 1:
+            url = 'http://www.shuaia.net/index.html'
+        else:
+            url = 'http://www.shuaia.net/index_%d.html' % num
+        headers = {
+                "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+        }
+        req = requests.get(url = url,headers = headers)
+        req.encoding = 'utf-8'
+        html = req.text
+        bf = BeautifulSoup(html, 'lxml')
+        targets_url = bf.find_all(class_='item-img')
+
+        for each in targets_url:
+            list_url.append(each.img.get('alt') + '=' + each.get('href'))
+    print(list_url)
+</code></pre></div></div>
+<p>我们少爬取一些，爬取前19页的目标连接：
+<img src="https://img-blog.csdn.net/20170521121837177?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+2.5 单张图片下载
+    进入目标地址，审查元素。可以看到，图片地址保存在了class属性为”wr-single-content-list “的div-&gt;div-&gt;img的src属性中。
+<img src="https://img-blog.csdn.net/20170521121936116?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+ 代码：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> target_url = 'http://www.shuaia.net/rihanshuaige/2017-05-18/1294.html'
+filename = '张根硕拍摄机车型男写真帅气十足' + '.jpg'
+headers = {
+    "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    }
+img_req = requests.get(url = target_url,headers = headers)
+img_req.encoding = 'utf-8'
+img_html = img_req.text
+img_bf_1 = BeautifulSoup(img_html, 'lxml')
+img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
+img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
+img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
+if 'images' not in os.listdir():
+    os.makedirs('images')
+urlretrieve(url = img_url,filename = 'images/' + filename)
+print('下载完成！')
+</code></pre></div></div>
+<p>我们将图片保存在程序文件所在目录的imgase目录下：
+ <img src="https://img-blog.csdn.net/20170521122107585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+ <img src="https://img-blog.csdn.net/20170521122141523?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+ 2.6 整体代码
+已经获取到了每张图片的连接，我们就可以下载了。整合下代码，先少下载一点，下载前2页的图片。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+from urllib.request import urlretrieve
+import requests
+import os
+import time
+
+if __name__ == '__main__':
+    list_url = []
+    for num in range(1,3):
+        if num == 1:
+            url = 'http://www.shuaia.net/index.html'
+        else:
+            url = 'http://www.shuaia.net/index_%d.html' % num
+        headers = {
+                "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+        }
+        req = requests.get(url = url,headers = headers)
+        req.encoding = 'utf-8'
+        html = req.text
+        bf = BeautifulSoup(html, 'lxml')
+        targets_url = bf.find_all(class_='item-img')
+
+        for each in targets_url:
+            list_url.append(each.img.get('alt') + '=' + each.get('href'))
+
+    print('连接采集完成')
+
+    for each_img in list_url:
+        img_info = each_img.split('=')
+        target_url = img_info[1]
+        filename = img_info[0] + '.jpg'
+        print('下载：' + filename)
+        headers = {
+            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+        }
+        img_req = requests.get(url = target_url,headers = headers)
+        img_req.encoding = 'utf-8'
+        img_html = img_req.text
+        img_bf_1 = BeautifulSoup(img_html, 'lxml')
+        img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
+        img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
+        img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
+        if 'images' not in os.listdir():
+            os.makedirs('images')
+        urlretrieve(url = img_url,filename = 'images/' + filename)
+        time.sleep(1)
+
+    print('下载完成！')
+</code></pre></div></div>
+<p>运行结果如下：
+<img src="https://img-blog.csdn.net/20170521122323428?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+最终下载的图片：
+<img src="https://img-blog.csdn.net/20170521122401947?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<h2 id="三-总结">(三) 总结</h2>
+<p>    图片是不是很帅？还算满意吧？
+    这种爬取方法是比较简单的，速度慢。服务器有防爬虫程序，所以不能爬太快，每下载一个图片需要加个1秒延时，否则会被服务器断开连接。当然，解决办法还是有的，因为不是本文重点，以后有机会再细说。
+    爬取图片的原理就是这样了，如果想爬取妹子图的可以去《煎蛋网》看看，包你满意。</p>
+
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2018/02/13/python7/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
+                  <a class="post-link" href="/2018/02/13/python6/">Python3网络爬虫(五)：爬取人物头像</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2018-02-13
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Python网络爬虫" title="Category: Python网络爬虫" rel="category">Python网络爬虫</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a>&nbsp;
+    
+        <a href="/tag/#网络爬虫" title="Tag: 网络爬虫" rel="tag">网络爬虫</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <ul id="markdown-toc">
+  <li><a href="#一预备知识" id="markdown-toc-一预备知识">（一）预备知识</a></li>
+  <li><a href="#二实战" id="markdown-toc-二实战">(二)实战</a></li>
+  <li><a href="#三-总结" id="markdown-toc-三-总结">(三) 总结</a></li>
+</ul>
+
+<p>运行平台：Windows 
+Python版本：Python3.x 
+IDE：Sublime text3</p>
+<h2 id="一预备知识">（一）预备知识</h2>
+<p>为了也能够学习到新知识，本次爬虫教程使用requests第三方库，这个库可不是Python3内置的urllib.request库，而是一个强大的基于urllib3的第三方库</p>
+
+<p>requests库的基础方法如下：</p>
+
+<p><img src="https://img-blog.csdn.net/20170521121032110?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+官方中文教程地址：http://docs.python-requests.org/zh_CN/latest/user/quickstart.html</p>
+
+<p>因为官方给出的《快速上手》教程已经整理的很好了，并且本次教程使用的也是最简单的requests.get()，因此第三方库requests的使用方法，不再累述。详情请看官方中文教程，有urllib2基础的人，还是好上手的。</p>
+
+<h2 id="二实战">(二)实战</h2>
+<p>2.1 背景
+    爬取《帅啊》网的帅哥图片！</p>
+
+<p>URL : http://www.shuaia.net/index.html</p>
+
+<p>先看一眼网站的样子：
+<img src="https://img-blog.csdn.net/20170521121231569?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<p>2.2 requests安装
+    在cmd中，使用如下指令安装第三方库requests：
+pip3 install requests
+    或者：
+easy_install requests
+2.3 爬取单页目标连接
+    通过审查元素，我们不难发现，目标的地址存储在class属性为”item-img”的<a>标签的href属性中。这时候，有人可能会问为啥不用下面的<img />标签的src属性？因为这个图片是首页的浏览图片，根据这个地址保存下来的图片，太小了，并且不清清楚。秉承着热爱“高清无码”的精神，这种图片可不是我想要的。因此，先获取目标的地址，也就是我们点击图片之后，进入的网页地址，然后根据下一个网页，找到图片的地址。
+<img src="https://img-blog.csdn.net/20170521121440034?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+ 代码：</a></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> # -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+import requests
+
+if __name__ == '__main__':
+    url = 'http://www.shuaia.net/index.html'
+    headers = {
+            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    }
+    req = requests.get(url = url,headers = headers)
+    req.encoding = 'utf-8'
+    html = req.text
+    bf = BeautifulSoup(html, 'lxml')
+    targets_url = bf.find_all(class_='item-img')
+    list_url = []
+    for each in targets_url:
+        list_url.append(each.img.get('alt') + '=' + each.get('href'))
+    print(list_url)
+</code></pre></div></div>
+<p>我们将爬取的信息保存到list中，图片名字和图片地址使用”=”连接，运行结果：
+ <img src="https://img-blog.csdn.net/20170521121615323?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<p>2.4 爬取多页目标连接
+    翻到第二页的时候，很容易就发现地址变为了:www.shuaia.net/index_2.html。第三页、第四页、第五页依此类推。
+<img src="https://img-blog.csdn.net/20170521121727325?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+代码：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+import requests
+
+if __name__ == '__main__':
+    list_url = []
+    for num in range(1,20):
+        if num == 1:
+            url = 'http://www.shuaia.net/index.html'
+        else:
+            url = 'http://www.shuaia.net/index_%d.html' % num
+        headers = {
+                "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+        }
+        req = requests.get(url = url,headers = headers)
+        req.encoding = 'utf-8'
+        html = req.text
+        bf = BeautifulSoup(html, 'lxml')
+        targets_url = bf.find_all(class_='item-img')
+
+        for each in targets_url:
+            list_url.append(each.img.get('alt') + '=' + each.get('href'))
+    print(list_url)
+</code></pre></div></div>
+<p>我们少爬取一些，爬取前19页的目标连接：
+<img src="https://img-blog.csdn.net/20170521121837177?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+2.5 单张图片下载
+    进入目标地址，审查元素。可以看到，图片地址保存在了class属性为”wr-single-content-list “的div-&gt;div-&gt;img的src属性中。
+<img src="https://img-blog.csdn.net/20170521121936116?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+ 代码：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> target_url = 'http://www.shuaia.net/rihanshuaige/2017-05-18/1294.html'
+filename = '张根硕拍摄机车型男写真帅气十足' + '.jpg'
+headers = {
+    "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    }
+img_req = requests.get(url = target_url,headers = headers)
+img_req.encoding = 'utf-8'
+img_html = img_req.text
+img_bf_1 = BeautifulSoup(img_html, 'lxml')
+img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
+img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
+img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
+if 'images' not in os.listdir():
+    os.makedirs('images')
+urlretrieve(url = img_url,filename = 'images/' + filename)
+print('下载完成！')
+</code></pre></div></div>
+<p>我们将图片保存在程序文件所在目录的imgase目录下：
+ <img src="https://img-blog.csdn.net/20170521122107585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+ <img src="https://img-blog.csdn.net/20170521122141523?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+ 2.6 整体代码
+已经获取到了每张图片的连接，我们就可以下载了。整合下代码，先少下载一点，下载前2页的图片。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+from urllib.request import urlretrieve
+import requests
+import os
+import time
+
+if __name__ == '__main__':
+    list_url = []
+    for num in range(1,3):
+        if num == 1:
+            url = 'http://www.shuaia.net/index.html'
+        else:
+            url = 'http://www.shuaia.net/index_%d.html' % num
+        headers = {
+                "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+        }
+        req = requests.get(url = url,headers = headers)
+        req.encoding = 'utf-8'
+        html = req.text
+        bf = BeautifulSoup(html, 'lxml')
+        targets_url = bf.find_all(class_='item-img')
+
+        for each in targets_url:
+            list_url.append(each.img.get('alt') + '=' + each.get('href'))
+
+    print('连接采集完成')
+
+    for each_img in list_url:
+        img_info = each_img.split('=')
+        target_url = img_info[1]
+        filename = img_info[0] + '.jpg'
+        print('下载：' + filename)
+        headers = {
+            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+        }
+        img_req = requests.get(url = target_url,headers = headers)
+        img_req.encoding = 'utf-8'
+        img_html = img_req.text
+        img_bf_1 = BeautifulSoup(img_html, 'lxml')
+        img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
+        img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
+        img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
+        if 'images' not in os.listdir():
+            os.makedirs('images')
+        urlretrieve(url = img_url,filename = 'images/' + filename)
+        time.sleep(1)
+
+    print('下载完成！')
+</code></pre></div></div>
+<p>运行结果如下：
+<img src="https://img-blog.csdn.net/20170521122323428?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+最终下载的图片：
+<img src="https://img-blog.csdn.net/20170521122401947?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<h2 id="三-总结">(三) 总结</h2>
+<p>    图片是不是很帅？还算满意吧？
+    这种爬取方法是比较简单的，速度慢。服务器有防爬虫程序，所以不能爬太快，每下载一个图片需要加个1秒延时，否则会被服务器断开连接。当然，解决办法还是有的，因为不是本文重点，以后有机会再细说。
+    爬取图片的原理就是这样了，如果想爬取妹子图的可以去《煎蛋网》看看，包你满意。</p>
+
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2018/02/13/python6/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
@@ -797,10 +1947,10 @@ Java代码如下：</p>
             <a href="/index.html" class="previous"><i class="fa fa-angle-double-left"></i></a>
             <a href="/page2" class="previous"><i class="fa fa-angle-left"></i></a>
           
-          <span class="page_number ">3/6</span>
+          <span class="page_number ">3/10</span>
           
             <a href="/page4" class="next"><i class="fa fa-angle-right"></i></a>
-            <a href="/page6" class="next"><i class="fa fa-angle-double-right"></i></a>
+            <a href="/page10" class="next"><i class="fa fa-angle-double-right"></i></a>
           
         </div>
     </div>
@@ -816,23 +1966,23 @@ Java代码如下：</p>
                     
                         <li><a href="/2019/01/25/test/">Hello World!</a></li>
                     
-                        <li><a href="/2018/02/13/python7/">Python3网络爬虫(五)：爬取人物头像</a></li>
+                        <li><a href="/2019/01/19/dl/">深度学习与语音识别—常用声学模型简介</a></li>
                     
-                        <li><a href="/2018/02/13/python6/">Python3网络爬虫(五)：爬取人物头像</a></li>
+                        <li><a href="/2019/01/16/datamining/">Kmeans文本聚类实施过程</a></li>
                     
-                        <li><a href="/2018/02/01/Hive2/">Hive的几种常见的数据导入方式</a></li>
+                        <li><a href="/2018/11/23/datamining/">文本数据挖掘-----词向量</a></li>
                     
-                        <li><a href="/2018/02/01/Hive1/">Hive的几种常见的数据导入方式</a></li>
+                        <li><a href="/2018/10/28/datamining/">TF-IDF提取文章关键词算法</a></li>
                     
-                        <li><a href="/2018/01/11/python5/">Python3网络爬虫(四)：Python3安装Scrapy</a></li>
+                        <li><a href="/2018/10/12/datamining/">基于用户的协同过滤推荐算法java实现（UserCF）</a></li>
                     
-                        <li><a href="/2017/09/16/1-Algorams3/">剑指offer:链表中倒数第k个节点</a></li>
+                        <li><a href="/2018/10/05/datamining/">Louvain 社团发现算法学习</a></li>
                     
-                        <li><a href="/2017/09/16/1-Algorams2/">剑指offer:链表中倒数第k个节点</a></li>
+                        <li><a href="/2018/09/26/datamining/">使用python提取文章关键词</a></li>
                     
-                        <li><a href="/2017/06/11/JavaScript-function/">JavaScript 函数</a></li>
+                        <li><a href="/2018/07/11/datamining/">基于内容的推荐 java实现</a></li>
                     
-                        <li><a href="/2017/05/22/python4/">Python3网络爬虫(三)：使用User Agent和代理IP隐藏身份</a></li>
+                        <li><a href="/2018/07/11/datamining/">机器学习算法——PCA算法介绍以及Java实现</a></li>
                     
                 </ul>
             </div>
@@ -844,6 +1994,15 @@ Java代码如下：</p>
                     目录
                 </div>
                 <ul class="content-ul" cate>
+                    
+                    <li>
+                        <a href="/category/#数据挖掘" class="categories-list-item" cate="数据挖掘">
+                            <span class="name">
+                                数据挖掘
+                            </span>
+                            <span class="badge">10</span>
+                        </a>
+                    </li>
                     
                     <li>
                         <a href="/category/#大数据技术" class="categories-list-item" cate="大数据技术">
@@ -873,9 +2032,27 @@ Java代码如下：</p>
                     </li>
                     
                     <li>
+                        <a href="/category/#Python" class="categories-list-item" cate="Python">
+                            <span class="name">
+                                Python
+                            </span>
+                            <span class="badge">3</span>
+                        </a>
+                    </li>
+                    
+                    <li>
                         <a href="/category/#Java" class="categories-list-item" cate="Java">
                             <span class="name">
                                 Java
+                            </span>
+                            <span class="badge">2</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#开发工具" class="categories-list-item" cate="开发工具">
+                            <span class="name">
+                                开发工具
                             </span>
                             <span class="badge">2</span>
                         </a>
@@ -891,15 +2068,6 @@ Java代码如下：</p>
                     </li>
                     
                     <li>
-                        <a href="/category/#Python" class="categories-list-item" cate="Python">
-                            <span class="name">
-                                Python
-                            </span>
-                            <span class="badge">1</span>
-                        </a>
-                    </li>
-                    
-                    <li>
                         <a href="/category/#jekyll" class="categories-list-item" cate="jekyll">
                             <span class="name">
                                 jekyll
@@ -909,9 +2077,18 @@ Java代码如下：</p>
                     </li>
                     
                     <li>
-                        <a href="/category/#开发工具" class="categories-list-item" cate="开发工具">
+                        <a href="/category/#机器学习" class="categories-list-item" cate="机器学习">
                             <span class="name">
-                                开发工具
+                                机器学习
+                            </span>
+                            <span class="badge">7</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#R" class="categories-list-item" cate="R">
+                            <span class="name">
+                                R
                             </span>
                             <span class="badge">1</span>
                         </a>
@@ -923,6 +2100,24 @@ Java代码如下：</p>
                                 Python网络爬虫
                             </span>
                             <span class="badge">6</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#深度学习" class="categories-list-item" cate="深度学习">
+                            <span class="name">
+                                深度学习
+                            </span>
+                            <span class="badge">4</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#数据分析" class="categories-list-item" cate="数据分析">
+                            <span class="name">
+                                数据分析
+                            </span>
+                            <span class="badge">1</span>
                         </a>
                     </li>
                     
@@ -948,6 +2143,34 @@ Java代码如下：</p>
                       
                       
                       
+                      <a href="/tag/#数据挖掘" style="font-size: 18pt; color: #000;">数据挖掘</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#机器学习" style="font-size: 15.5pt; color: #333;">机器学习</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#深度学习" style="font-size: 11pt; color: #777;">深度学习</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#推荐算法" style="font-size: 12.5pt; color: #555;">推荐算法</a>
+                    
+                      
+                      
+                      
+                      
+                      
                       <a href="/tag/#Hadoop" style="font-size: 9pt; color: #999;">Hadoop</a>
                     
                       
@@ -955,14 +2178,14 @@ Java代码如下：</p>
                       
                       
                       
-                      <a href="/tag/#大数据技术" style="font-size: 11.5pt; color: #666;">大数据技术</a>
+                      <a href="/tag/#大数据技术" style="font-size: 10pt; color: #888;">大数据技术</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#GitHub" style="font-size: 10.5pt; color: #888;">GitHub</a>
+                      <a href="/tag/#GitHub" style="font-size: 10pt; color: #888;">GitHub</a>
                     
                       
                       
@@ -983,7 +2206,14 @@ Java代码如下：</p>
                       
                       
                       
-                      <a href="/tag/#JavaScript" style="font-size: 14pt; color: #444;">JavaScript</a>
+                      <a href="/tag/#JavaScript" style="font-size: 12.5pt; color: #555;">JavaScript</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#python" style="font-size: 14.5pt; color: #444;">python</a>
                     
                       
                       
@@ -1004,42 +2234,49 @@ Java代码如下：</p>
                       
                       
                       
-                      <a href="/tag/#Java" style="font-size: 18pt; color: #000;">Java</a>
+                      <a href="/tag/#Java" style="font-size: 17pt; color: #111;">Java</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#数据结构" style="font-size: 15.5pt; color: #333;">数据结构</a>
+                      <a href="/tag/#Myeclipse" style="font-size: 9pt; color: #999;">Myeclipse</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#剑指offer" style="font-size: 15.5pt; color: #333;">剑指offer</a>
+                      <a href="/tag/#软件开发工具" style="font-size: 9pt; color: #999;">软件开发工具</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#面试" style="font-size: 15.5pt; color: #333;">面试</a>
+                      <a href="/tag/#数据结构" style="font-size: 13.5pt; color: #444;">数据结构</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#python" style="font-size: 9pt; color: #999;">python</a>
+                      <a href="/tag/#剑指offer" style="font-size: 13.5pt; color: #444;">剑指offer</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#jekyll" style="font-size: 11.5pt; color: #666;">jekyll</a>
+                      <a href="/tag/#面试" style="font-size: 13.5pt; color: #444;">面试</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#jekyll" style="font-size: 11pt; color: #777;">jekyll</a>
                     
                       
                       
@@ -1074,6 +2311,13 @@ Java代码如下：</p>
                       
                       
                       
+                      <a href="/tag/#R" style="font-size: 9pt; color: #999;">R</a>
+                    
+                      
+                      
+                      
+                      
+                      
                       <a href="/tag/#正则" style="font-size: 9pt; color: #999;">正则</a>
                     
                       
@@ -1088,21 +2332,112 @@ Java代码如下：</p>
                       
                       
                       
-                      <a href="/tag/#Python" style="font-size: 15.5pt; color: #333;">Python</a>
+                      <a href="/tag/#Python" style="font-size: 13.5pt; color: #444;">Python</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#网络爬虫" style="font-size: 15.5pt; color: #333;">网络爬虫</a>
+                      <a href="/tag/#网络爬虫" style="font-size: 13.5pt; color: #444;">网络爬虫</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#Hive" style="font-size: 10.5pt; color: #888;">Hive</a>
+                      <a href="/tag/#文本挖掘" style="font-size: 11.5pt; color: #666;">文本挖掘</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#中文分词" style="font-size: 11pt; color: #777;">中文分词</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#数据分析" style="font-size: 10pt; color: #888;">数据分析</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#可视化" style="font-size: 9pt; color: #999;">可视化</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#Hive" style="font-size: 9pt; color: #999;">Hive</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#特征选择" style="font-size: 10pt; color: #888;">特征选择</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#DNN" style="font-size: 9pt; color: #999;">DNN</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#情感分析" style="font-size: 9pt; color: #999;">情感分析</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#神经网络" style="font-size: 10pt; color: #888;">神经网络</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#数据仓库" style="font-size: 9pt; color: #999;">数据仓库</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#ETL" style="font-size: 9pt; color: #999;">ETL</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#java" style="font-size: 11pt; color: #777;">java</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#PCA" style="font-size: 9pt; color: #999;">PCA</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#kmeans" style="font-size: 9pt; color: #999;">kmeans</a>
                     
                 </div>
             </div>

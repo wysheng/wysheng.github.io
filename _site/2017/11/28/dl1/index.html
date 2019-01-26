@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>情感分析知识点汇总</title>
+    <meta name="description" content="  1.情感分析教程：  1.1 为程序员准备的情感分析教程：  使用python对Top100 Subreddits进行情感分析  使用NLTK来对Tweets进行情感分析  使用Scikit-learn和Jupyter Notebook来对Tweets进行情感分析  1.2 下一步：研究文献  与情感分析相关...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2017/11/28/dl1/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>情感分析知识点汇总</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-11-28
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#深度学习" title="Category: 深度学习" rel="category">深度学习</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%96%87%E6%9C%AC%E6%8C%96%E6%8E%98" title="Tag: 文本挖掘" rel="tag">文本挖掘</a-->
+        <a href="/tag/#文本挖掘" title="Tag: 文本挖掘" rel="tag">文本挖掘</a>&nbsp;
+    
+        <!--a href="/tag/#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0" title="Tag: 深度学习" rel="tag">深度学习</a-->
+        <a href="/tag/#深度学习" title="Tag: 深度学习" rel="tag">深度学习</a>&nbsp;
+    
+        <!--a href="/tag/#%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D" title="Tag: 中文分词" rel="tag">中文分词</a-->
+        <a href="/tag/#中文分词" title="Tag: 中文分词" rel="tag">中文分词</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#1情感分析教程" id="markdown-toc-1情感分析教程">1.情感分析教程：</a></li>
+  <li><a href="#11-为程序员准备的情感分析教程" id="markdown-toc-11-为程序员准备的情感分析教程">1.1 为程序员准备的情感分析教程：</a></li>
+  <li><a href="#使用python对top100-subreddits进行情感分析" id="markdown-toc-使用python对top100-subreddits进行情感分析">使用python对Top100 Subreddits进行情感分析</a></li>
+  <li><a href="#使用nltk来对tweets进行情感分析" id="markdown-toc-使用nltk来对tweets进行情感分析">使用NLTK来对Tweets进行情感分析</a></li>
+  <li><a href="#使用scikit-learn和jupyter-notebook来对tweets进行情感分析" id="markdown-toc-使用scikit-learn和jupyter-notebook来对tweets进行情感分析">使用Scikit-learn和Jupyter Notebook来对Tweets进行情感分析</a></li>
+  <li><a href="#12-下一步研究文献" id="markdown-toc-12-下一步研究文献">1.2 下一步：研究文献</a></li>
+  <li><a href="#与情感分析相关的论文" id="markdown-toc-与情感分析相关的论文">与情感分析相关的论文：</a></li>
+  <li><a href="#与情感分析相关的书" id="markdown-toc-与情感分析相关的书">与情感分析相关的书：</a></li>
+  <li><a href="#课程和视频" id="markdown-toc-课程和视频">课程和视频：</a></li>
+  <li><a href="#2-情感分析数据集" id="markdown-toc-2-情感分析数据集">2. 情感分析数据集：</a></li>
+  <li><a href="#3情感分析apis" id="markdown-toc-3情感分析apis">3.情感分析APIs：</a></li>
+  <li><a href="#4-结束语" id="markdown-toc-4-结束语">4. 结束语</a></li>
+</ul>
+<h2 id="1情感分析教程">1.情感分析教程：</h2>
+<p>有一份几乎为所有人准备的情感分析教程，包括程序员，非程序员，营销人员，数据分析师，代理人，销售人员等等。 在本节中，我们将分享各种各样的教程，以便您可以找到适合自己的情绪分析。</p>
+
+<h2 id="11-为程序员准备的情感分析教程">1.1 为程序员准备的情感分析教程：</h2>
+<p>对于那些对代码和API很熟悉的人，您可以快速找到各种分步指南和资源。 Python是关于数据分析，机器学习和NLP（包括情感分析）教程的最常用编程语言，但R正在迅速赶上，特别是针对数据科学家和统计学家的教程。</p>
+
+<h2 id="使用python对top100-subreddits进行情感分析">使用python对Top100 Subreddits进行情感分析</h2>
+<p>这个视频教程提供了一份分步指南，有关如何使用Python根据他们的评论感情，分析前100个子评价。
+它首先解释如何使用Beautiful Soup，这是用于网页抓取的最流行的Python库之一，以便从网页中爬取数据。 作者使用这个库来抓取这个网页来获取前100个subreddits。
+一旦获得subreddits的名称，他就使用Praw库与Reddit API进行交互并从这些subreddit中提取评论。
+Github</p>
+
+<h2 id="使用nltk来对tweets进行情感分析">使用NLTK来对Tweets进行情感分析</h2>
+<p>如果您是Python程序员，并且想要学习如何训练您的第一个文本分类器以进行情感分析，那么这是一个很好的分步指南。 作者使用自然语言处理工具NLTK训练能够预测新推文情感的分类器。
+首先，作者解释了如何从预定义的正面和负面推文集中提取特征。 这些特征是一系列不同的单词，可用于表示每条推文，是训练分类器的关键部分。
+然后，您将学习如何准备包含标签的训练数据。 最后，他继续训练Naive Bayes分类器，这是一种简单但功能强大的算法，特别适合自然语言处理问题。
+训练分类器结束后，作者继续解释如何使用这个模型对新的推文进行分类。</p>
+
+<h2 id="使用scikit-learn和jupyter-notebook来对tweets进行情感分析">使用Scikit-learn和Jupyter Notebook来对Tweets进行情感分析</h2>
+<p>Scikit-learn是一种简单而有效的数据分析工具，最常用于数据分类，回归和聚类问题。 因为它功能强大但每个人都可以掌握，所以它是机器学习中最常用的库之一。 如果您想认真学习数据分析和机器学习，本教程将帮助您开始学习scikit-learn。
+它解释了如何训练逻辑回归模型用于情绪分析。 首先介绍如何正确设置我们的环境，包括jupyter notebook，这是一个允许快速原型设计，以及共享与数据相关的项目，的一个应用。
+之后，作者继续解释如何使用scikit-learn准备和向量化我们的数据。 最后，它训练了一个线性分类器，并展示如何评估模型，以及计算模型的准确度。</p>
+
+<h2 id="12-下一步研究文献">1.2 下一步：研究文献</h2>
+<p>到目前为止，我们已经了解了情绪分析的基础知识，我们已经使用在线演示体验了情绪分析模型，并且我们通过学习教程来弄清楚。
+到目前为止，您渴望提升自己的技能，希望详细了解情绪分析，并尝试更高级的内容。 在这种情况下，下一步将是深入研究和科学文献。</p>
+
+<h2 id="与情感分析相关的论文">与情感分析相关的论文：</h2>
+<p>关于情绪分析的文献很多; 有超过55,700篇学术文章，论文，论文，书籍和摘要。
+以下是情绪分析中最常被引用和阅读的论文：</p>
+
+<p>Opinion mining and sentiment analysis (Pang and Lee, 2008)
+Recognizing contextual polarity in phrase-level sentiment analysis (Wilson, Wiebe and Hoffmann, 2005)
+Sentiment analysis and subjectivity (Liu, 2010)
+A survey of opinion mining and sentiment analysis (Liu and Zhang, 2012)
+Sentiment analysis and opinion mining (Liu, 2012)</p>
+<h2 id="与情感分析相关的书">与情感分析相关的书：</h2>
+<p>刘冰是该领域的杰出人物，并撰写了一本对于那些开始研究情绪分析的人来说，非常好的书。 他以一种高度技术性，可理解的方式解释情绪分析，做得非常出色。 这本书涵盖了情感分析的不同方面，包括应用，研究，使用监督和无监督学习的情感分类，句子主观性，基于方面的情感分析等。</p>
+
+<h2 id="课程和视频">课程和视频：</h2>
+<p>另一个深入研究情感分析的好方法是掌握自然语言处理（NLP）的知识和技能，这是一个专注于理解“人类”语言的计算机科学领域。
+通过结合机器学习，计算语言学和计算机科学，NLP能够让机器理解自然语言，包括人们的情感，评估，态度和书面语言中的情感。
+网上有大量的课程，讲座和资源，但必修的NLP课程是Dan Jurafsky和Christopher Manning的Stanford Coursera课程。 通过本课程，您将获得NLP社区内两个最有声望的两位名人对该领域逐步的介绍。
+如果你想要一个更实用的课程，你应该在Udemy上注册Data Science: Natural Language Processing (NLP) in Python。 本课程对NLP做了详细的介绍，你需要用Python构建不同的项目，包括垃圾邮件检测器，情感分析器和文章微调器。 大多数课程视频都很短（约5分钟），课程在实践和理论内容之间尽量保持平衡。</p>
+
+<h2 id="2-情感分析数据集">2. 情感分析数据集：</h2>
+<p>掌握情绪分析的关键就处理不同的数据集，并尝试不同的方法。 要做到这一点，您首先需要上手数据并获取一个数据集，根据你的领域和兴趣，在数据集上进行实验。
+以下是一些我们最常用的的用于试验情绪分析和机器学习方法的情绪分析数据集。 它们开源且可以免费下载：</p>
+
+<p>产品评论：此数据集包含数百万亚马逊客户评论，星级评级，对培训情绪分析模型非常有用；
+餐饮评论：此数据集包含5,2百万条评论星级的Yelp评论；
+电影评论：此数据集包含1,000个正面和1,000个负面处理评论。 它还提供5,331个正面和5,331个负面处理句子/片段；
+精美食品评论：此数据集包含来自亚马逊的约500,000份食品评论。 它包括产品和用户信息，评级以及每个评论的纯文本版本；
+Kaggle上Twitter对航空公司的评论：该数据集包含约15,000条有关航空公司的标签推文（正面，中性和负面）；
+第一次共和党辩论Twitter情绪：这个数据集由关于2016年第一次共和党辩论的大约14,000条标记的推文（正面，中立和负面）组成。
+如果您对基于规则的方法感兴趣，以下是各种情绪分析词典，它们将派上用场。 这些词典提供了一系列单词词典，其中的标签包括各种领域中的情感。 以下词汇对于识别文本情感非常有用：</p>
+
+<p>81种语言的情感词典：该数据集包含81种语言的正面和负面情绪词典。
+SentiWordNet：此数据集包含约29,000个单词，情绪分数介于0和1之间；
+Opinion Lexicon for Sentiment Analysis：该数据集提供了4,782个负面单词和2,005个英语正面单词的列表；
+Wordstat Sentiment Dictionary:：该数据集包括4800个正面和9000个负面单词；
+Emoticon Sentiment Lexicon：此数据集包含477个表情符号列表，标记为正面，中性或负面。</p>
+<h2 id="3情感分析apis">3.情感分析APIs：</h2>
+<p>开源库：
+在开源库中，Python或Java之类的编程语言，因为它们具有强大的数据科学社区，数据科学的开源库，包括自然语言处理。 为了成功使用下面的库，你应该具有足够的机器学习和编程先验知识。</p>
+
+<p>Python情感分析APIs
+Python是数据科学领域的顶级编程语言之一，它具有强大的社区和大量的NLP模型。
+以下是几个例子：</p>
+
+<p>Scikit-learn是机器学习的首选库，具有用于文本向量化的工具。 利用频率或tf-idf文本向量化器之类的工具，训练一个分类器非常简单。 Scikit-learn实现了支持向量机，朴素贝叶斯和Logistic回归等模型；
+NLTK一直是Python的传统NLP库。 它有一个活跃的社区，除了为NLP提供低级功能外，还提供了训练机器学习分类器的可能性；
+SpaCy是另一个NLP库，社区正在不断壮大。与NLTK一样，它为NLP提供了一组强大的底层函数，并支持训练文本分类器。
+随着深度学习越来越火，过去几年中，人们开发了各种新的数据科学库，支持NLP应用。 一些出名的：
+TensorFlow ：它由Google开发，提供了一套用于构建和训练神经网络的底层工具。 还支持文本矢量化，包括传统的词频和更高级的词嵌入。
+Keras提供有用的抽象来处理多种神经网络类型，如递归神经网络（RNNs）和卷积神经网络（CNN），并轻松堆叠神经元层。 Keras可以在Tensorflow或Theano之上运行。 并且它为文本分类提供了有用的工具。
+PyTorch是最近的深度学习框架，由Facebook，Twitter，Nvidia，Salesforce，斯坦福大学，牛津大学和优步等知名组织提供支持。 它迅速发展了一个强大的社区。</p>
+<h2 id="4-结束语">4. 结束语</h2>
+<p>情感分析可应用于商业上无数的方面，从品牌监控到产品分析，从客户服务到市场研究。 通过将其整合到现有系统和分析中，领导品牌（更不用说整个城市）能够更快，更准确地工作，朝着更有用的目的前进。</p>
+
+<p>情感分析已经不单单是一个有趣的，高科技的奇思妙想，并将很快成为所有现代的公司不可或缺的工具。 最终，情绪分析使我们能够收集新的见解，更好地了解我们的客户，并更有效地授权我们自己的团队，以便他们做的更好，工作更高效。</p>
+
+<p>情感分析系列文章：
+1.情感分析：几乎包括你需要知道的所有（一）
+2.情感分析：几乎包括你需要知道的所有（二）
+3.AI Challenger 细粒度用户评论情感分析 (baseline 0.62)</p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/11/23/datamining/">文本数据挖掘-----词向量
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/28/datamining/">TF-IDF提取文章关键词算法
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/09/26/datamining/">使用python提取文章关键词
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2017/09/16/1-Algorams3/">剑指offer:链表中倒数第k个节点</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2017/12/08/caravel/">centos 7 下 安装配置 caravel</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2017/11/28/dl1/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2017/11/28/dl1/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

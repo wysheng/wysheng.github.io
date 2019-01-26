@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>基于内容的推荐 java实现</title>
+    <meta name="description" content="这是本人在cousera上学习机器学习的笔记，不能保证其正确性，谨慎参考看完这一课后Content Based Recommendations 后自己用java实现了一下1、下图是待处理的数据，代码使用数据和下图一样： 2、思路：对每个用户假定其为一个3维向量（在代码中初始化为[1,1,1]的转置，然后采用梯度下...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2018/07/11/datamining/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>基于内容的推荐 java实现</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2018-07-11
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#数据挖掘" title="Category: 数据挖掘" rel="category">数据挖掘</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98" title="Tag: 数据挖掘" rel="tag">数据挖掘</a-->
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>&nbsp;
+    
+        <!--a href="/tag/#%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95" title="Tag: 推荐算法" rel="tag">推荐算法</a-->
+        <a href="/tag/#推荐算法" title="Tag: 推荐算法" rel="tag">推荐算法</a>&nbsp;
+    
+        <!--a href="/tag/#java" title="Tag: java" rel="tag">java</a-->
+        <a href="/tag/#java" title="Tag: java" rel="tag">java</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <p>这是本人在cousera上学习机器学习的笔记，不能保证其正确性，谨慎参考
+看完这一课后Content Based Recommendations 后自己用java实现了一下
+1、下图是待处理的数据，代码使用数据和下图一样： 
+<img src="https://img-blog.csdn.net/20170309164640433?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+2、思路：对每个用户假定其为一个3维向量（在代码中初始化为[1,1,1]的转置，然后采用梯度下降法不断的对这个3维向量的值进行更新），假设更新到最后的向量值为[0，5，0]的转置，然后使用该向量和电影“Cute puppoes of love”的特征向量进行计算，即可得到该电影的预测分为4.95。 
+<img src="https://img-blog.csdn.net/20170309165741276?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+3、使用梯度下降法对某个用户的向量进行更新（我在代码中没有考虑正则化这一问题，现在还不懂正则化，后面学会了就附上加了正则化的）： 
+<img src="https://img-blog.csdn.net/20170309170547804?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+下图为没有使用正则化的函数：
+<img src="https://img-blog.csdn.net/20170309170756480?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<p>4、下面仅针对用户carol进行了代码实现</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class ContentBase {
+    private static int[][] rate_set = { { 5, 5, 0, 0 }, { 5, -1, -1, 0 },
+            { -1, 4, 0, -1 }, { 0, 0, 5, 4 }, { 0, 0, 5, -1 } };
+    private static double[][] m_feature = { { 0.9, 0 }, { 1.0, 0.01 },
+            { 0.99, 0 }, { 0.1, 1.0 }, { 0, 0.9 } };
+    //仅针对用户carol进行了代码实现
+    public static void main(String[] args) {
+        double t = 0.1;
+        double[] para = { 1.0, 1.0, 1.0 };
+        double[] partial = new double[3];
+        double min = 0.0;
+
+        int i = 0, j, u,times=0;
+        double temp,temp2;
+        //100为用户2的向量学习次数
+        while(times++&lt;100){
+            min=0.0;
+            i=0;
+            //该while循环计算代价函数
+            while (i &lt; 5) {
+                temp = 0.0;
+                if (rate_set[i][2] != -1) {
+                    for (u = 0; u &lt; 3; u++) {
+                        if (u == 0)
+                            temp += para[u];
+                        else
+                            temp += para[u] * m_feature[i][u - 1];
+                    }
+                    min += (temp - rate_set[i][2]) * (temp - rate_set[i][2]);
+                }
+                i++;
+            }
+            System.out.print("当用户 carol的向量值为[");
+            for(j=0;j&lt;3;j++)
+                if(j!=2)
+                    System.out.print(para[j]+",");
+                else
+                    System.out.println(para[j]+"]时，min="+min);
+            System.out.println();
+
+            for (j = 0; j &lt; 3; j++) {
+                i = 0;
+                partial[j] = 0;
+                while (i &lt; 5) {
+                    temp = 0.0;temp2=0.0;
+                    if (rate_set[i][2] != -1) {
+                        for (u = 0; u &lt; 3; u++) {
+                            if (u == 0)
+                                temp += para[u];
+                            else
+                                temp += para[u] * m_feature[i][u - 1];
+                        }
+                        temp2 += temp - rate_set[i][2];
+                        if (j != 0)
+                            temp2 *= m_feature[i][j - 1];
+                        partial[j]+=temp2;
+                    }
+                    i++;
+                }
+            }
+            //根据求得的偏导数 partial来更新某用户的参数值
+            for (j = 0; j &lt; 3; j++) {
+                para[j] = para[j] - t * partial[j];
+
+            }
+        }
+    }
+}
+</code></pre></div></div>
+<p>4、运行结果： 
+<img src="https://img-blog.csdn.net/20170309172356566?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2019/01/16/datamining/">Kmeans文本聚类实施过程
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/11/23/datamining/">文本数据挖掘-----词向量
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/28/datamining/">TF-IDF提取文章关键词算法
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/12/datamining/">基于用户的协同过滤推荐算法java实现（UserCF）
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/05/datamining/">Louvain 社团发现算法学习
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/09/26/datamining/">使用python提取文章关键词
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2018/07/11/datamining/">机器学习算法——PCA算法介绍以及Java实现</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/09/26/datamining/">使用python提取文章关键词</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2018/07/11/datamining/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2018/07/11/datamining/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

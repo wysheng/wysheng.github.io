@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>数据仓库知识汇总</title>
+    <meta name="description" content="  一、数据仓库是什么  1. 操作型数据库  2. 分析型数据库  二、数据仓库有什么特点  三、为什么搭建数据仓库  四、数据仓库结构  五、ETL  六、数据集市  七、ODS  八、元数据一、数据仓库是什么可以理解为：面向分析的存储系统。也就是说数仓是存数据的，企业的各种数据往里面塞，主要目的是为了有效分...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2018/07/11/bigdata1/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>数据仓库知识汇总</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2018-07-11
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#大数据技术" title="Category: 大数据技术" rel="category">大数据技术</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93" title="Tag: 数据仓库" rel="tag">数据仓库</a-->
+        <a href="/tag/#数据仓库" title="Tag: 数据仓库" rel="tag">数据仓库</a>&nbsp;
+    
+        <!--a href="/tag/#ETL" title="Tag: ETL" rel="tag">ETL</a-->
+        <a href="/tag/#ETL" title="Tag: ETL" rel="tag">ETL</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#一数据仓库是什么" id="markdown-toc-一数据仓库是什么">一、数据仓库是什么</a></li>
+  <li><a href="#1-操作型数据库" id="markdown-toc-1-操作型数据库">1. 操作型数据库</a></li>
+  <li><a href="#2-分析型数据库" id="markdown-toc-2-分析型数据库">2. 分析型数据库</a></li>
+  <li><a href="#二数据仓库有什么特点" id="markdown-toc-二数据仓库有什么特点">二、数据仓库有什么特点</a></li>
+  <li><a href="#三为什么搭建数据仓库" id="markdown-toc-三为什么搭建数据仓库">三、为什么搭建数据仓库</a></li>
+  <li><a href="#四数据仓库结构" id="markdown-toc-四数据仓库结构">四、数据仓库结构</a></li>
+  <li><a href="#五etl" id="markdown-toc-五etl">五、ETL</a></li>
+  <li><a href="#六数据集市" id="markdown-toc-六数据集市">六、数据集市</a></li>
+  <li><a href="#七ods" id="markdown-toc-七ods">七、ODS</a></li>
+  <li><a href="#八元数据" id="markdown-toc-八元数据">八、元数据</a></li>
+</ul>
+<h2 id="一数据仓库是什么">一、数据仓库是什么</h2>
+
+<p>可以理解为：面向分析的存储系统。</p>
+
+<p>也就是说数仓是存数据的，企业的各种数据往里面塞，主要目的是为了有效分析数据，后续会基于它产出供分析挖掘的数据，或者数据应用需要的数据，如企业的分析性报告和各类报表，为企业的决策提供支持。</p>
+
+<p>上面的意思先理解着，接下来从头讲起，先看关系型数据库，它可以被划分为两大基本类型：操作型数据库和分析型数据库。</p>
+
+<h2 id="1-操作型数据库">1. 操作型数据库</h2>
+
+<p>主要面向应用，用于业务支撑，支持对实际业务的处理，也可以叫业务型数据库。</p>
+
+<p>可以理解为通常意义上的数据库（后端开发同学口中的经常提到的就是这种）。</p>
+
+<h2 id="2-分析型数据库">2. 分析型数据库</h2>
+
+<p>主要面向数据分析，侧重决策支持，作为公司的单独数据存储，负责利用历史数据对公司各主题域进行统计分析。</p>
+
+<p>由于分析型数据库中的操作都是查询，因此也就不需要严格满足关系型数据库一些设计规范，这样的情况下再将它归为数据库不太合适，也容易不引起混淆，所以称之为数据仓库。</p>
+
+<p>这里可以说一下，数据处理大致可以分成两大类：OLTP（联机事务处理）和OLAP（联机分析处理）。</p>
+
+<p>OLTP（联机事务处理）就是操作型数据库的主要应用，更侧重于基本的、日常的事务处理，包括数据的增删改查。
+OLAP（联机分析处理）就是分析型数据库的主要应用，以多维度的方式分析数据， 这个后续会整理。</p>
+
+<h2 id="二数据仓库有什么特点">二、数据仓库有什么特点</h2>
+
+<p>相对于数据库，数据仓库有以下特点</p>
+
+<p>（1）面向主题</p>
+
+<p>数据仓库通过一个个主题域将多个业务系统的数据加载到一起，为了各个主题（如：用户、订单、商品等）进行分析而建，操作型数据库是为了支撑各种业务而建立。</p>
+
+<p>（2）集成性</p>
+
+<p>数据仓库会将不同源数据库中的数据汇总到一起。</p>
+
+<p>（3）历史性</p>
+
+<p>较之操作型数据库，数据仓库的数据是为企业数据分析而建立，所以数据被加载后一般情况下将被长期保留，前者通常保存几个月，后者可能几年甚至几十年。</p>
+
+<p>（4）时变性</p>
+
+<p>是指数据仓库包含来自其时间范围不同时间段的数据快照，有了这些数据快照以后，用户便可将其汇总，生成各历史阶段的数据分析报告。</p>
+
+<p>（5）稳定性</p>
+
+<p>数据仓库中的数据一般仅执行查询操作，很少会有删除和更新。但是需定期加载和刷新数据。</p>
+
+<h2 id="三为什么搭建数据仓库">三、为什么搭建数据仓库</h2>
+
+<p>简单来说，就是为了有效分析数据 。</p>
+
+<p>你说直接从业务数据库中取数据来做分析？</p>
+
+<p>也不是不可以，就是业务系统多，业务复杂时，会发现结构复杂，数据脏乱，难以理解，缺少历史，大规模查询缓慢这些问题。</p>
+
+<p>业务到一定规模，大家需要面临的问题越来越复杂和深入，数据需求不再只是昨日的营收，上月的uv这些，而是“28到45岁女性在社区的活跃度与公司策划的专题内容活动的关系”这类精细化的分析，而从数据库是很难取出这类数据的。</p>
+
+<p>毕竟业务型数据库是为了支撑业务设计的，不是为了查询和分析数据。</p>
+
+<h2 id="四数据仓库结构">四、数据仓库结构</h2>
+
+<p>用AXURE画了个结构图，如下：简单来说，就是把各数据源的数据ETL到数仓中，数仓再对数据进行集成和统计，然后再输出给各数据应用，图中涉及的模块，接下来会分别介绍。
+<img src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1167328232,1283775129&amp;fm=173&amp;app=25&amp;f=JPEG?w=640&amp;h=353&amp;s=7D2C3472033B44235C5510CA0000A0B1" alt="" /></p>
+<h2 id="五etl">五、ETL</h2>
+
+<p>ETL分别代表：抽取extraction、转换transformation、加载load。</p>
+
+<p>（1）抽取(Extract)</p>
+
+<p>从数据来源提取指定数据，数据是需要指定的，不是所有的数据都要抽取过来， 某些源数据对于分析而言没有价值，或者其可能产生的价值，远低于储存这些数据所需要的数据仓库的实现和性能上的成本，就不会抽取了。</p>
+
+<p>（2）转换(Transform)</p>
+
+<p>将数据转换为指定格式并进行数据清洗保证数据质量。</p>
+
+<p>数据转换，如包括编码转换(m/f-&gt;男/女)，字段转换(balance-&gt;bal)，度量单位的转换(cm-&gt;m)，数据粒度的转换。业务系统数据存储非常明细的数据，而数据仓库中数据是用分析的，不需要非常明细，会将业务系统数据按照数据仓库粒度进行聚合。</p>
+
+<p>数据清洗，如会对不完整数据，错误数据和重复数据等脏数据进行清洗。</p>
+
+<p>（3）加载(Load)</p>
+
+<p>将转换过后的数据加载到目标数据仓库，加载可分为两种：</p>
+
+<p>全量加载：一次对全部数据进行加载。
+增量加载：一般首次需要全量加载，但是在第二次周期或者第三次周期的时候仍然全量加载的话，耗费了极大的物理和时间资源。有可能部分数据源并未发生变化，而有的数据源可能只是增加了少量的数据。 对数据源中的数据只考虑新修改的记录和新插入的记录就是增量加载。</p>
+
+<p>ETL很可能是数据仓库开发中最耗时最耗资源的一个环节，因为该环节要整理各大业务系统中杂乱无章的数据，并协调元数据上的差别，工作量很大，但也是构建数据仓库的重要环节，对数据仓库的后续环节影响比较大。</p>
+
+<h2 id="六数据集市">六、数据集市</h2>
+
+<p>数据集市（DM）可以理解为是一种“小型数据仓库”，一般面向部门、单个主题或特定应用，且之间互不影响。</p>
+
+<p>可以分为以下两种：</p>
+
+<p>独立数据集市：有自己的源数据库和ETL架构；
+非独立数据集市：没有自己的源数据，它的数据来自数据仓库。当用户或者应用程序不需要/不必要/不允许访问整个数仓数据时，就可以直接访问数据集市，为用户提供一个数据仓库的“子集”。
+<img src="https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3821147515,1630319372&amp;fm=173&amp;app=25&amp;f=JPEG?w=640&amp;h=362&amp;s=7C2C347213136C6B18DC90CA0000E0B1" alt="" />
+简单理解就是一个结构完全和数仓一样，有ETL，然后自己存储和计算；另一种就是直接用数仓处理过的数据，再次进行组合集成。可能后面结合数据分层更好理解。</p>
+
+<h2 id="七ods">七、ODS</h2>
+
+<p>ODS：全称是Operational Data Store，操作数据存储。</p>
+
+<p>存储各大业务型数据库ETL后的数据，是最接近数据源中数据的一层，主要目的是为了数据集中。</p>
+
+<p>总体上大多是按照源业务系统的分类方式而分类的，因此会具有鲜明的业务数据库的特征，甚至还具有一定的关系数据库中的数据范式的组织形式。</p>
+
+<p>但是不等同于原始数据，数据格式按照数仓要求统一，并经过简单的清洗。</p>
+
+<h2 id="八元数据">八、元数据</h2>
+
+<p>元数据（Meta Date），即数据的数据，元数据可分为技术元数据和业务元数据。</p>
+
+<p>技术元数据为开发和管理数据仓库的IT 人员使用，描述了与数据仓库开发、管理和维护相关的数据，包括数据源信息、数据转换描述、数据仓库模型、数据清洗与更新规则、数据映射和访问权限等。</p>
+
+<p>而业务元数据为管理层和业务分析人员服务，从业务角度描述数据，包括商务术语、数据仓库中有什么数据、数据的位置和数据的可用性等，帮助业务人员更好地理解数据仓库中哪些数据是可用的以及如何使用。</p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2018/06/15/datamining/">用Python开发一个迷你打飞机的游戏</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/07/11/datamining/">机器学习算法——PCA算法介绍以及Java实现</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2018/07/11/bigdata1/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2018/07/11/bigdata1/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

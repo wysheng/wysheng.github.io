@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>基于用户的协同过滤推荐算法java实现（UserCF）</title>
+    <meta name="description" content="UserCF的核心思想即为根据用户数据模拟向量相似度，我们根据这个相似度，来找出指定用户的相似用户，然后将相似用户买过的而指定用户没有买的东西推荐给指定用户，推荐度的计算也是结合了相似用户与指定用户的相似度累加。注意这里我们默认是用户的隐反馈行为，所以每一个物品的影响因子默认为1。package cn.csu.C...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2018/10/12/datamining/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>基于用户的协同过滤推荐算法java实现（UserCF）</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2018-10-12
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#数据挖掘" title="Category: 数据挖掘" rel="category">数据挖掘</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98" title="Tag: 数据挖掘" rel="tag">数据挖掘</a-->
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>&nbsp;
+    
+        <!--a href="/tag/#%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95" title="Tag: 推荐算法" rel="tag">推荐算法</a-->
+        <a href="/tag/#推荐算法" title="Tag: 推荐算法" rel="tag">推荐算法</a>&nbsp;
+    
+        <!--a href="/tag/#java" title="Tag: java" rel="tag">java</a-->
+        <a href="/tag/#java" title="Tag: java" rel="tag">java</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <p>UserCF的核心思想即为根据用户数据模拟向量相似度，我们根据这个相似度，来找出指定用户的相似用户，然后将相似用户买过的而指定用户没有买的东西推荐给指定用户，推荐度的计算也是结合了相似用户与指定用户的相似度累加。注意这里我们默认是用户的隐反馈行为，所以每一个物品的影响因子默认为1。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">cn</span><span class="p">.</span><span class="n">csu</span><span class="p">.</span><span class="n">CFUtils</span><span class="p">;</span>
+ 
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">HashMap</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">HashSet</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Iterator</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Map</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Entry</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Scanner</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="k">Set</span><span class="p">;</span>
+ 
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">基于用户的协同过滤推荐算法实现</span>
+<span class="n">A</span> <span class="n">a</span> <span class="n">b</span> <span class="n">d</span>
+<span class="n">B</span> <span class="n">a</span> <span class="n">c</span>
+<span class="n">C</span> <span class="n">b</span> <span class="n">e</span>
+<span class="n">D</span> <span class="n">c</span> <span class="n">d</span> <span class="n">e</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">author</span> <span class="n">Administrator</span>
+ <span class="p">*</span>
+ <span class="p">*/</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">UserCF</span> <span class="p">{</span>
+ 
+	<span class="k">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span><span class="k">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+		<span class="p">/**</span>
+		 <span class="p">*</span> <span class="err">输入用户</span><span class="p">--&gt;</span><span class="err">物品条目</span>  <span class="err">一个用户对应多个物品</span>
+		 <span class="p">*</span> <span class="err">用户</span><span class="n">ID</span>	<span class="err">物品</span><span class="n">ID</span><span class="err">集合</span>
+		 <span class="p">*</span>   <span class="n">A</span>		<span class="n">a</span> <span class="n">b</span> <span class="n">d</span>
+		 <span class="p">*</span>   <span class="n">B</span>		<span class="n">a</span> <span class="n">c</span>
+		 <span class="p">*</span>   <span class="n">C</span>		<span class="n">b</span> <span class="n">e</span>
+		 <span class="p">*</span>   <span class="n">D</span>		<span class="n">c</span> <span class="n">d</span> <span class="n">e</span>
+		 <span class="p">*/</span>
+		<span class="n">Scanner</span> <span class="n">scanner</span> <span class="p">=</span> <span class="n">new</span> <span class="n">Scanner</span><span class="p">(</span><span class="nf">System</span><span class="p">.</span><span class="k">in</span><span class="p">);</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s2">"Input the total users number:"</span><span class="p">);</span>
+		<span class="p">//</span><span class="err">输入用户总量</span>
+		<span class="n">int</span> <span class="n">N</span> <span class="p">=</span> <span class="n">scanner</span><span class="p">.</span><span class="n">nextInt</span><span class="p">();</span>
+		<span class="n">int</span><span class="p">[][]</span> <span class="n">sparseMatrix</span> <span class="p">=</span> <span class="n">new</span> <span class="n">int</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">];//</span><span class="err">建立用户稀疏矩阵，用于用户相似度计算【相似度矩阵】</span>
+		<span class="n">Map</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Integer</span><span class="p">&gt;</span> <span class="n">userItemLength</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();//</span><span class="err">存储每一个用户对应的不同物品总数</span>  <span class="n">eg</span><span class="p">:</span> <span class="n">A</span> <span class="m">3</span>
+		<span class="n">Map</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;&gt;</span> <span class="n">itemUserCollection</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();//</span><span class="err">建立物品到用户的倒排表</span> <span class="n">eg</span><span class="p">:</span> <span class="n">a</span> <span class="n">A</span> <span class="n">B</span>
+		<span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;</span> <span class="n">items</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashSet</span><span class="p">&lt;&gt;();//</span><span class="err">辅助存储物品集合</span>
+		<span class="n">Map</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Integer</span><span class="p">&gt;</span> <span class="n">userID</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();//</span><span class="err">辅助存储每一个用户的用户</span><span class="n">ID</span><span class="err">映射</span>
+		<span class="n">Map</span><span class="p">&lt;</span><span class="k">Integer</span><span class="p">,</span> <span class="k">String</span><span class="p">&gt;</span> <span class="n">idUser</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();//</span><span class="err">辅助存储每一个</span><span class="n">ID</span><span class="err">对应的用户映射</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s2">"Input user--items maping infermation:&lt;eg:A a b d&gt;"</span><span class="p">);</span>
+		<span class="n">scanner</span><span class="p">.</span><span class="n">nextLine</span><span class="p">();</span>
+		<span class="n">for</span><span class="p">(</span><span class="n">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">N</span> <span class="p">;</span> <span class="n">i</span><span class="p">++){//</span><span class="err">依次处理</span><span class="n">N</span><span class="err">个用户</span> <span class="err">输入数据</span>  <span class="err">以空格间隔</span>
+			<span class="k">String</span><span class="p">[]</span> <span class="n">user_item</span> <span class="p">=</span> <span class="n">scanner</span><span class="p">.</span><span class="n">nextLine</span><span class="p">().</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">);</span>
+			<span class="n">int</span> <span class="n">length</span> <span class="p">=</span> <span class="n">user_item</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+			<span class="n">userItemLength</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">],</span> <span class="n">length</span><span class="p">-</span><span class="m">1</span><span class="p">);//</span><span class="n">eg</span><span class="p">:</span> <span class="n">A</span> <span class="m">3</span>
+			<span class="n">userID</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">],</span> <span class="n">i</span><span class="p">);//</span><span class="err">用户</span><span class="n">ID</span><span class="err">与稀疏矩阵建立对应关系</span>
+			<span class="n">idUser</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">]);</span>
+			<span class="p">//</span><span class="err">建立物品</span><span class="p">--</span><span class="err">用户倒排表</span>
+			<span class="n">for</span><span class="p">(</span><span class="n">int</span> <span class="n">j</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span> <span class="n">j</span> <span class="p">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">j</span> <span class="p">++){</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">items</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">])){//</span><span class="err">如果已经包含对应的物品</span><span class="p">--</span><span class="err">用户映射，直接添加对应的用户</span>
+					<span class="n">itemUserCollection</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">]).</span><span class="n">add</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">]);</span>
+				<span class="p">}</span><span class="k">else</span><span class="p">{//</span><span class="err">否则创建对应物品</span><span class="p">--</span><span class="err">用户集合映射</span>
+					<span class="n">items</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+					<span class="n">itemUserCollection</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">new</span> <span class="n">HashSet</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;());//</span><span class="err">创建物品</span><span class="p">--</span><span class="err">用户倒排关系</span>
+					<span class="n">itemUserCollection</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">]).</span><span class="n">add</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">]);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">itemUserCollection</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
+		<span class="p">//</span><span class="err">计算相似度矩阵【稀疏】</span>
+		<span class="k">Set</span><span class="p">&lt;</span><span class="n">Entry</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;&gt;&gt;</span> <span class="n">entrySet</span> <span class="p">=</span> <span class="n">itemUserCollection</span><span class="p">.</span><span class="n">entrySet</span><span class="p">();</span>
+		<span class="n">Iterator</span><span class="p">&lt;</span><span class="n">Entry</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;&gt;&gt;</span> <span class="n">iterator</span> <span class="p">=</span> <span class="n">entrySet</span><span class="p">.</span><span class="n">iterator</span><span class="p">();</span>
+		<span class="k">while</span><span class="p">(</span><span class="n">iterator</span><span class="p">.</span><span class="n">hasNext</span><span class="p">()){</span>
+			<span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;</span> <span class="n">commonUsers</span> <span class="p">=</span> <span class="n">iterator</span><span class="p">.</span><span class="k">next</span><span class="p">().</span><span class="nf">getValue</span><span class="p">();</span>
+			<span class="n">for</span> <span class="p">(</span><span class="k">String</span> <span class="n">user_u</span> <span class="p">:</span> <span class="n">commonUsers</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">for</span> <span class="p">(</span><span class="k">String</span> <span class="n">user_v</span> <span class="p">:</span> <span class="n">commonUsers</span><span class="p">)</span> <span class="p">{</span>
+					<span class="k">if</span><span class="p">(</span><span class="n">user_u</span><span class="p">.</span><span class="n">equals</span><span class="p">(</span><span class="n">user_v</span><span class="p">)){</span>
+						<span class="n">continue</span><span class="p">;</span>
+					<span class="p">}</span>
+					<span class="n">sparseMatrix</span><span class="p">[</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_u</span><span class="p">)][</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_v</span><span class="p">)]</span> <span class="p">+=</span> <span class="m">1</span><span class="p">;//</span><span class="err">计算用户</span><span class="n">u</span><span class="err">与用户</span><span class="n">v</span><span class="err">都有正反馈的物品总数</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s2">"Input the user for recommendation:&lt;eg:A&gt;"</span><span class="p">);</span>
+		<span class="k">String</span> <span class="n">recommendUser</span> <span class="p">=</span> <span class="n">scanner</span><span class="p">.</span><span class="n">nextLine</span><span class="p">();</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUser</span><span class="p">));</span>
+		<span class="p">//</span><span class="err">计算用户之间的相似度【余弦相似性】</span>
+		<span class="n">int</span> <span class="n">recommendUserId</span> <span class="p">=</span> <span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUser</span><span class="p">);</span>
+		<span class="n">for</span> <span class="p">(</span><span class="n">int</span> <span class="n">j</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span><span class="n">j</span> <span class="p">&lt;</span> <span class="n">sparseMatrix</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">j</span><span class="p">++)</span> <span class="p">{</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">j</span> <span class="c1">!= recommendUserId){
+</span>					<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">idUser</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUserId</span><span class="p">)+</span><span class="s2">"--"</span><span class="p">+</span><span class="n">idUser</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">j</span><span class="p">)+</span><span class="s2">"相似度:"</span><span class="p">+</span><span class="n">sparseMatrix</span><span class="p">[</span><span class="n">recommendUserId</span><span class="p">][</span><span class="n">j</span><span class="p">]/</span><span class="n">Math</span><span class="p">.</span><span class="nb">sqrt</span><span class="p">(</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">idUser</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUserId</span><span class="p">))*</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">idUser</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">j</span><span class="p">))));</span>
+				<span class="p">}</span>
+		<span class="p">}</span>
+		
+		<span class="p">//</span><span class="err">计算指定用户</span><span class="n">recommendUser</span><span class="err">的物品推荐度</span>
+		<span class="n">for</span><span class="p">(</span><span class="k">String</span> <span class="n">item</span><span class="p">:</span> <span class="n">items</span><span class="p">){//</span><span class="err">遍历每一件物品</span>
+			<span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;</span> <span class="n">users</span> <span class="p">=</span> <span class="n">itemUserCollection</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">item</span><span class="p">);//</span><span class="err">得到购买当前物品的所有用户集合</span>
+			<span class="k">if</span><span class="p">(</span><span class="c1">!users.contains(recommendUser)){//如果被推荐用户没有购买当前物品，则进行推荐度计算
+</span>				<span class="n">double</span> <span class="n">itemRecommendDegree</span> <span class="p">=</span> <span class="m">0.0</span><span class="p">;</span>
+				<span class="n">for</span><span class="p">(</span><span class="k">String</span> <span class="n">user</span><span class="p">:</span> <span class="n">users</span><span class="p">){</span>
+					<span class="n">itemRecommendDegree</span> <span class="p">+=</span> <span class="n">sparseMatrix</span><span class="p">[</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUser</span><span class="p">)][</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="p">)]/</span><span class="n">Math</span><span class="p">.</span><span class="nb">sqrt</span><span class="p">(</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUser</span><span class="p">)*</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="p">));//</span><span class="err">推荐度计算</span>
+				<span class="p">}</span>
+				<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s2">"The item "</span><span class="p">+</span><span class="n">item</span><span class="p">+</span><span class="s2">" for "</span><span class="p">+</span><span class="n">recommendUser</span> <span class="p">+</span><span class="s2">"'s recommended degree:"</span><span class="p">+</span><span class="n">itemRecommendDegree</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="n">scanner</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+	<span class="p">}</span>
+ 
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2019/01/16/datamining/">Kmeans文本聚类实施过程
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/11/23/datamining/">文本数据挖掘-----词向量
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/28/datamining/">TF-IDF提取文章关键词算法
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/05/datamining/">Louvain 社团发现算法学习
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/09/26/datamining/">使用python提取文章关键词
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/07/11/datamining/">基于内容的推荐 java实现
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2018/10/05/datamining/">Louvain 社团发现算法学习</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/10/28/datamining/">TF-IDF提取文章关键词算法</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2018/10/12/datamining/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2018/10/12/datamining/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

@@ -141,6 +141,14 @@
                 
                     
                 
+                    
+                
+                    
+                
+                    
+                
+                    
+                
             </ul>
         </nav>
     </div>
@@ -155,11 +163,11 @@
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2017/09/16/1-Algorams3/">剑指offer:链表中倒数第k个节点</a>
+                  <a class="post-link" href="/2018/10/05/datamining/">Louvain 社团发现算法学习</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-09-16
+                        <i class="fa fa-calendar"></i>2018-10-05
                     </div>
                     <div class="label-card">
                         
@@ -177,7 +185,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#算法和数据结构" title="Category: 算法和数据结构" rel="category">算法和数据结构</a>
+        <a href="/category/#机器学习" title="Category: 机器学习" rel="category">机器学习</a>
     
   
 
@@ -194,13 +202,11 @@
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#数据结构" title="Tag: 数据结构" rel="tag">数据结构</a>&nbsp;
+        <a href="/tag/#机器学习" title="Tag: 机器学习" rel="tag">机器学习</a>&nbsp;
     
-        <a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a>&nbsp;
+        <a href="/tag/#推荐算法" title="Tag: 推荐算法" rel="tag">推荐算法</a>&nbsp;
     
-        <a href="/tag/#剑指offer" title="Tag: 剑指offer" rel="tag">剑指offer</a>&nbsp;
-    
-        <a href="/tag/#面试" title="Tag: 面试" rel="tag">面试</a>
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>
     
   
 
@@ -210,124 +216,86 @@
                 </div>
                 <div class="excerpt">
                     <ul id="markdown-toc">
-  <li><a href="#题目描述" id="markdown-toc-题目描述">题目描述</a></li>
-  <li><a href="#思路" id="markdown-toc-思路">思路</a></li>
+  <li><a href="#算法介绍" id="markdown-toc-算法介绍">算法介绍：</a></li>
+  <li><a href="#模块度增益的计算请继续看下文" id="markdown-toc-模块度增益的计算请继续看下文">模块度增益的计算，请继续看下文</a></li>
+</ul>
+<h2 id="算法介绍">算法介绍：</h2>
+
+<p>Louvain 算法是基于模块度的社区发现算法，该算法在效率和效果上都表现较好，并且能够发现层次性的社区结构，其优化目标是最大化整个社区网络的模块度。</p>
+
+<p>社区网络的模块度（Modularity）是评估一个社区网络划分好坏的度量方法，它的含义是社区内节点的连边数与随机情况下的边数之差，它的取值范围是 (0,1)，其定义如下：
+<img src="https://img-blog.csdn.net/20170414185610724?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+上式中，Aij代表结点i和j之间的边权值（当图不带权时，边权值可以看成1）。 ki代表结点i的領街边的边权和（当图不带权时，即为结点的度数）。
+m为图中所有边的边权和。 ci为结点i所在的社团编号。
+模块度的公式定义可以做如下的简化：
+<img src="https://img-blog.csdn.net/20170414193226025?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+其中Sigma in表示社区c内的边的权重之和，Sigma tot表示与社区c内的节点相连的边的权重之和。
+我们的目标，是要找出各个结点处于哪一个社团，并且让这个划分结构的模块度最大。
+Louvain算法的思想很简单：</p>
+
+<p>1）将图中的每个节点看成一个独立的社区，次数社区的数目与节点个数相同；
+2）对每个节点i，依次尝试把节点i分配到其每个邻居节点所在的社区，计算分配前与分配后的模块度变化Delta Q，并记录Delta Q最大的那个邻居节点，如果maxDelta Q&gt;0，则把节点i分配Delta Q最大的那个邻居节点所在的社区，否则保持不变；
+3）重复2），直到所有节点的所属社区不再变化；
+4）对图进行压缩，将所有在同一个社区的节点压缩成一个新节点，社区内节点之间的边的权重转化为新节点的环的权重，社区间的边权重转化为新节点间的边权重；
+5）重复1）直到整个图的模块度不再发生变化。
+在写代码时，要注意几个要点：</p>
+
+<ul>
+  <li>
+    <p>第二步，尝试分配结点时，并不是只尝试独立的结点，也可以尝试所在社区的结点数大于1的点，我在看paper时一开始把这个部分看错了，导致算法出问题。</p>
+  </li>
+  <li>
+    <p>第三步，重复2）的时候，并不是将每个点遍历一次后就对图进行一次重构，而是要不断循环的遍历每个结点，直到一次循环中所有结点所在社区都不更新了，表示当前网络已经稳定，然后才进行图的重构。</p>
+  </li>
+  <li>
+    <h2 id="模块度增益的计算请继续看下文">模块度增益的计算，请继续看下文</h2>
+    <p>过程如下图所示：
+<img src="https://img-blog.csdn.net/20170414195729001?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+可以看出，louvain是一个启发式的贪心算法。我们需要对模块度进行一个启发式的更新。这样的话这个算法会有如下几个问题：</p>
+  </li>
 </ul>
 
-<h2 id="题目描述">题目描述</h2>
+<p>1：尝试将节点i分配到相邻社团时，如果真的移动结点i，重新计算模块度，那么算法的效率很难得到保证</p>
 
-<p>题目来自 [剑指offer] <br />
-输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，我们从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6.这个链表的倒数第3个节点是值为4的节点。</p>
-<h2 id="思路">思路</h2>
-<p>可以定义两个指针。第一个指针从链表的头指针开始遍历向后走k-1步，第二个指针保持不动；从第k步开始，第二个指针也开始从链表的头指针开始遍历。由于两个指针的距离保持在k-1，当第一个指针到达链表的尾节点时，第二个指针正好指向倒数第k个节点。
-注意：
-（1）输入的链表头指针为空；
-（2）输入的链表节点总数小于k；
-（3）输入的参数k为0.
-———————</p>
+<p>2：在本问题中，贪心算法只能保证局部最优，而不能够保证全局最优</p>
 
-<p>Java代码如下：</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
- 
-<span class="cm">/**
- * 剑指Offer:链表中倒数第k个节点
- */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FinkKthToTail</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ListNode</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
-        <span class="n">ListNode</span> <span class="n">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
- 
-        <span class="n">ListNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
- 
-    <span class="c1">//创建链表</span>
-    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">CreateList</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ListNode</span> <span class="n">head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
-        <span class="n">head</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="n">ListNode</span> <span class="n">pAhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
-        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-            <span class="n">ListNode</span> <span class="n">q</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
-            <span class="n">q</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-            <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">q</span><span class="o">;</span>
-            <span class="n">pAhead</span> <span class="o">=</span> <span class="n">q</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="n">head</span><span class="o">;</span>
-    <span class="o">}</span>
- 
-    <span class="c1">//打印链表中的元素</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">Print</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ListNode</span> <span class="n">pAhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">pAhead</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">pAhead</span><span class="o">.</span><span class="na">val</span> <span class="o">+</span> <span class="s">" "</span><span class="o">);</span>
-            <span class="n">pAhead</span> <span class="o">=</span> <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
-    <span class="o">}</span>
- 
-    <span class="c1">//寻找链表中的倒数第K个数</span>
-    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">findKthToTail</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">head</span><span class="o">==</span><span class="kc">null</span><span class="o">||</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
-            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="n">ListNode</span> <span class="n">pAhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
-        <span class="n">ListNode</span> <span class="n">pBehind</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
-                <span class="n">pAhead</span> <span class="o">=</span> <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-        <span class="n">pBehind</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
-            <span class="n">pAhead</span> <span class="o">=</span> <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-            <span class="n">pBehind</span> <span class="o">=</span> <span class="n">pBehind</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="n">pBehind</span><span class="o">;</span>
-    <span class="o">}</span>
- 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
-            <span class="n">String</span><span class="o">[]</span> <span class="n">str</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">().</span><span class="na">split</span><span class="o">(</span><span class="s">","</span><span class="o">);</span>
-            <span class="kt">int</span><span class="o">[]</span> <span class="n">num</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
-            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-                <span class="n">num</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">str</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
-            <span class="o">}</span>
-            <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">());</span>
-            <span class="n">FinkKthToTail</span> <span class="n">sk</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FinkKthToTail</span><span class="o">();</span>
-            <span class="n">ListNode</span> <span class="n">head</span> <span class="o">=</span> <span class="n">sk</span><span class="o">.</span><span class="na">CreateList</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
-            <span class="n">sk</span><span class="o">.</span><span class="na">Print</span><span class="o">(</span><span class="n">head</span><span class="o">);</span>
-            <span class="n">ListNode</span> <span class="n">result</span> <span class="o">=</span> <span class="n">sk</span><span class="o">.</span><span class="na">findKthToTail</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">k</span><span class="o">);</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">==</span><span class="kc">null</span><span class="o">){</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Null"</span><span class="o">);</span>
-            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
-            <span class="o">}</span>
- 
-        <span class="o">}</span>
-        <span class="n">scanner</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
+<p>3：将节点i尝试分配至相邻社团时，要依据一个什么样的顺序</p>
 
-</code></pre></div></div>
-<hr />
+<p>……
+第一个问题，在该算法的paper中给了我们解答。我们实际上不用真的把节点i加入相邻社团后重新计算模块度，paper中给了我们一个计算把结点i移动至社团c时，模块度的增益公式：
+——————— 
+<img src="https://img-blog.csdn.net/20170414194703112?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+其中Sigma in表示起点终点都在社区c内的边的权重之和，Sigma tot表示入射社区c内的边的权重之和，ki代表结点i的带权度数和，m为所有边权和。</p>
+
+<p>但是该增益公式还是过于复杂，仍然会影响算法的时间效率。</p>
+
+<p>但是请注意，我们只是想通过模块增益度来判断一个结点i是否能移动到社团c中，而我们实际上是没有必要真正的去求精确的模块度，只需要知道，当前的这步操作，模块度是否发生了增长。</p>
+
+<p>因此，就有了相对增益公式的出现：</p>
+
+<p><img src="https://img-blog.csdn.net/20170414200159913?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+相对增益的值可能大于1，不是真正的模块度增长值，但是它的正负表示了当前的操作是否增加了模块度。用该公式能大大降低算法的时间复杂度。
+第二个问题，该算法的确不能够保证全局最优。但是我们该算法的启发式规则很合理，因此我们能够得到一个十分精确的近似结果。
+同时，为了校准结果，我们可以以不同的序列多次调用该算法，保留一个模块度最大的最优结果。
+第三个问题，在第二个问题中也出现了，就是给某个结点i找寻領接点时，应当以一个什么顺序？递增or随机or其它规则？我想这个问题需要用实验数据去分析。</p>
+
+<p>在paper中也有提到一些能够使结果更精确的序列。我的思路是，如果要尝试多次取其最优，取随机序列应该是比较稳定比较精确的方式。</p>
+
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2017/09/16/1-Algorams3/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/10/05/datamining/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2017/09/16/1-Algorams2/">剑指offer:链表中倒数第k个节点</a>
+                  <a class="post-link" href="/2018/09/26/datamining/">使用python提取文章关键词</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-09-16
+                        <i class="fa fa-calendar"></i>2018-09-26
                     </div>
                     <div class="label-card">
                         
@@ -345,7 +313,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#算法和数据结构" title="Category: 算法和数据结构" rel="category">算法和数据结构</a>
+        <a href="/category/#数据挖掘" title="Category: 数据挖掘" rel="category">数据挖掘</a>
     
   
 
@@ -362,13 +330,272 @@
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#数据结构" title="Tag: 数据结构" rel="tag">数据结构</a>&nbsp;
+        <a href="/tag/#文本挖掘" title="Tag: 文本挖掘" rel="tag">文本挖掘</a>&nbsp;
     
-        <a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a>&nbsp;
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>&nbsp;
     
-        <a href="/tag/#剑指offer" title="Tag: 剑指offer" rel="tag">剑指offer</a>&nbsp;
+        <a href="/tag/#python" title="Tag: python" rel="tag">python</a>
     
-        <a href="/tag/#面试" title="Tag: 面试" rel="tag">面试</a>
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <p>提取文章关键词，使用TF-IDF 算法，使用的例子是结合jieba分词，使用FreDist，因为TF-IDF算法需要的是一个语料库，当前语料库只有一篇文章，所以TF-IDF算法就退化成计算文章词频的算法了：
+需要记录的是FreqDist的成员函数
+	plot(n)，绘制出现次数最多的前n项
+	tabulate(n)，该方法接受一个数字n作为参数，会以表格的方式打印出现次数最多的前n项
+	most_common(n)，该方法接受一个数字n作为参数，返回出现次数最多的前n项列表
+	hapaxes()，返回一个低频项列表
+	max()，该方法会返回出现次数最多的项。</p>
+
+<p>代码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding: utf-8 -*-
+import requests
+from bs4 import BeautifulSoup
+import jieba
+import re
+from nltk.book import *
+from pylab import *
+from jieba.analyse import *
+def stop_words():
+	stop_word_list = []
+	f = open('stopwords.txt', 'rU',encoding='UTF-8')
+	for word in f:
+		stop_word_list.append(word.strip())
+	return stop_word_list	
+r = requests.get('https://blog.csdn.net/chszs/article/details/806585xx802')
+soup = BeautifulSoup(r.text, 'lxml')
+# 获得主要内容
+context = soup.find('article').get_text()
+# 进行结巴中文分词，获得字符串数组
+jieba.load_userdict('user_dict.txt')
+word_list = jieba.cut(context)
+word_list_str = (",".join(word_list))
+word_list = re.split(",", word_list_str)
+#去掉长度为1的单词，同时去掉停止词
+stop_word_list = stop_words()
+word_list = [w for w in word_list if (len(w)&gt;1 and (w not in stop_word_list))]
+word_freq_list = FreqDist(word_list)
+# 根据次品得到前20 项
+word_commons = word_freq_list.most_common(20)
+for word in word_commons:
+	print(word[0], word_freq_list.freq(word[0]))
+
+</code></pre></div></div>
+<p>所以下一篇文章中主要解决两个问题，第一个是语料库的问题，我们可以将这个用户的所有文章爬下来，获得该用户的所有文章，然后进行计算，使用TF-IDF算法也就是在当前文章中出现次数最多，在其他文章出现次数越少的越可以代表当前文章，</p>
+
+<p>PS:  </p>
+
+<ol>
+  <li>
+    <p>如果发现jieba分词的结果不是很准确的时候，可以通过加载用户自定义词典进行修正 jieba.load_userdict(‘xxx.txt’)，需要注意的是该词典文件应该是utf-8编码的</p>
+  </li>
+  <li>
+    <p>因为这里文本清理使用的是bs4的Beautiful4soup，因为我爬取的是csdn的博客，该博客的主要内容在article标签当中，所以只取article的get_text()即可</p>
+  </li>
+</ol>
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2018/09/26/datamining/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
+                  <a class="post-link" href="/2018/07/11/datamining/">基于内容的推荐 java实现</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2018-07-11
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#数据挖掘" title="Category: 数据挖掘" rel="category">数据挖掘</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>&nbsp;
+    
+        <a href="/tag/#推荐算法" title="Tag: 推荐算法" rel="tag">推荐算法</a>&nbsp;
+    
+        <a href="/tag/#java" title="Tag: java" rel="tag">java</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <p>这是本人在cousera上学习机器学习的笔记，不能保证其正确性，谨慎参考
+看完这一课后Content Based Recommendations 后自己用java实现了一下
+1、下图是待处理的数据，代码使用数据和下图一样： 
+<img src="https://img-blog.csdn.net/20170309164640433?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+2、思路：对每个用户假定其为一个3维向量（在代码中初始化为[1,1,1]的转置，然后采用梯度下降法不断的对这个3维向量的值进行更新），假设更新到最后的向量值为[0，5，0]的转置，然后使用该向量和电影“Cute puppoes of love”的特征向量进行计算，即可得到该电影的预测分为4.95。 
+<img src="https://img-blog.csdn.net/20170309165741276?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+3、使用梯度下降法对某个用户的向量进行更新（我在代码中没有考虑正则化这一问题，现在还不懂正则化，后面学会了就附上加了正则化的）： 
+<img src="https://img-blog.csdn.net/20170309170547804?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+下图为没有使用正则化的函数：
+<img src="https://img-blog.csdn.net/20170309170756480?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<p>4、下面仅针对用户carol进行了代码实现</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class ContentBase {
+    private static int[][] rate_set = { { 5, 5, 0, 0 }, { 5, -1, -1, 0 },
+            { -1, 4, 0, -1 }, { 0, 0, 5, 4 }, { 0, 0, 5, -1 } };
+    private static double[][] m_feature = { { 0.9, 0 }, { 1.0, 0.01 },
+            { 0.99, 0 }, { 0.1, 1.0 }, { 0, 0.9 } };
+    //仅针对用户carol进行了代码实现
+    public static void main(String[] args) {
+        double t = 0.1;
+        double[] para = { 1.0, 1.0, 1.0 };
+        double[] partial = new double[3];
+        double min = 0.0;
+
+        int i = 0, j, u,times=0;
+        double temp,temp2;
+        //100为用户2的向量学习次数
+        while(times++&lt;100){
+            min=0.0;
+            i=0;
+            //该while循环计算代价函数
+            while (i &lt; 5) {
+                temp = 0.0;
+                if (rate_set[i][2] != -1) {
+                    for (u = 0; u &lt; 3; u++) {
+                        if (u == 0)
+                            temp += para[u];
+                        else
+                            temp += para[u] * m_feature[i][u - 1];
+                    }
+                    min += (temp - rate_set[i][2]) * (temp - rate_set[i][2]);
+                }
+                i++;
+            }
+            System.out.print("当用户 carol的向量值为[");
+            for(j=0;j&lt;3;j++)
+                if(j!=2)
+                    System.out.print(para[j]+",");
+                else
+                    System.out.println(para[j]+"]时，min="+min);
+            System.out.println();
+
+            for (j = 0; j &lt; 3; j++) {
+                i = 0;
+                partial[j] = 0;
+                while (i &lt; 5) {
+                    temp = 0.0;temp2=0.0;
+                    if (rate_set[i][2] != -1) {
+                        for (u = 0; u &lt; 3; u++) {
+                            if (u == 0)
+                                temp += para[u];
+                            else
+                                temp += para[u] * m_feature[i][u - 1];
+                        }
+                        temp2 += temp - rate_set[i][2];
+                        if (j != 0)
+                            temp2 *= m_feature[i][j - 1];
+                        partial[j]+=temp2;
+                    }
+                    i++;
+                }
+            }
+            //根据求得的偏导数 partial来更新某用户的参数值
+            for (j = 0; j &lt; 3; j++) {
+                para[j] = para[j] - t * partial[j];
+
+            }
+        }
+    }
+}
+</code></pre></div></div>
+<p>4、运行结果： 
+<img src="https://img-blog.csdn.net/20170309172356566?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHpoNDc2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2018/07/11/datamining/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
+                  <a class="post-link" href="/2018/07/11/datamining/">机器学习算法——PCA算法介绍以及Java实现</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2018-07-11
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#机器学习" title="Category: 机器学习" rel="category">机器学习</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#特征选择" title="Tag: 特征选择" rel="tag">特征选择</a>&nbsp;
+    
+        <a href="/tag/#java" title="Tag: java" rel="tag">java</a>&nbsp;
+    
+        <a href="/tag/#PCA" title="Tag: PCA" rel="tag">PCA</a>
     
   
 
@@ -378,124 +605,314 @@
                 </div>
                 <div class="excerpt">
                     <ul id="markdown-toc">
-  <li><a href="#题目描述" id="markdown-toc-题目描述">题目描述</a></li>
-  <li><a href="#思路" id="markdown-toc-思路">思路</a></li>
+  <li><a href="#pca算法" id="markdown-toc-pca算法">PCA算法</a></li>
+  <li><a href="#一算法概述" id="markdown-toc-一算法概述">一、算法概述</a></li>
+  <li><a href="#二算法原理" id="markdown-toc-二算法原理">二、算法原理</a></li>
+  <li><a href="#三代码实现" id="markdown-toc-三代码实现">三、代码实现</a></li>
 </ul>
+<h2 id="pca算法">PCA算法</h2>
+<h2 id="一算法概述">一、算法概述</h2>
+<p>主成分分析（PCA）是多元统计分析中用来分析数据的一种方法，PCA通过线性变换将原始数据变换为一组各维度线性无关的表示，可用于提取数据的主要特征分量，常用于高维数据的降维。</p>
 
-<h2 id="题目描述">题目描述</h2>
+<p>PCA方法最著名的应用应该是在人脸识别中特征提取及数据维，我们知道输入200*200大小的人脸图像，单单提取它的灰度值作为原始特征，则这个原始特征将达到40000维，这给后面分类器的处理将带来极大的难度。在这种情况下，我们必须对数据进行降维。</p>
 
-<p>题目来自 [剑指offer] <br />
-输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，我们从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6.这个链表的倒数第3个节点是值为4的节点。</p>
-<h2 id="思路">思路</h2>
-<p>可以定义两个指针。第一个指针从链表的头指针开始遍历向后走k-1步，第二个指针保持不动；从第k步开始，第二个指针也开始从链表的头指针开始遍历。由于两个指针的距离保持在k-1，当第一个指针到达链表的尾节点时，第二个指针正好指向倒数第k个节点。
-注意：
-（1）输入的链表头指针为空；
-（2）输入的链表节点总数小于k；
-（3）输入的参数k为0.
-———————</p>
+<p>降维当然意味着信息的丢失，不过鉴于实际数据本身常常存在的相关性，我们可以想办法在降维的同时将信息的损失尽量降低。</p>
 
-<p>Java代码如下：</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
- 
-<span class="cm">/**
- * 剑指Offer:链表中倒数第k个节点
- */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FinkKthToTail</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ListNode</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
-        <span class="n">ListNode</span> <span class="n">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
- 
-        <span class="n">ListNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
- 
-    <span class="c1">//创建链表</span>
-    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">CreateList</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ListNode</span> <span class="n">head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
-        <span class="n">head</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="n">ListNode</span> <span class="n">pAhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
-        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-            <span class="n">ListNode</span> <span class="n">q</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
-            <span class="n">q</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-            <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">q</span><span class="o">;</span>
-            <span class="n">pAhead</span> <span class="o">=</span> <span class="n">q</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="n">head</span><span class="o">;</span>
-    <span class="o">}</span>
- 
-    <span class="c1">//打印链表中的元素</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">Print</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ListNode</span> <span class="n">pAhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">pAhead</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">pAhead</span><span class="o">.</span><span class="na">val</span> <span class="o">+</span> <span class="s">" "</span><span class="o">);</span>
-            <span class="n">pAhead</span> <span class="o">=</span> <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
-    <span class="o">}</span>
- 
-    <span class="c1">//寻找链表中的倒数第K个数</span>
-    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">findKthToTail</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">head</span><span class="o">==</span><span class="kc">null</span><span class="o">||</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
-            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="n">ListNode</span> <span class="n">pAhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
-        <span class="n">ListNode</span> <span class="n">pBehind</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
-                <span class="n">pAhead</span> <span class="o">=</span> <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-        <span class="n">pBehind</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
-            <span class="n">pAhead</span> <span class="o">=</span> <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-            <span class="n">pBehind</span> <span class="o">=</span> <span class="n">pBehind</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="n">pBehind</span><span class="o">;</span>
-    <span class="o">}</span>
- 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
-            <span class="n">String</span><span class="o">[]</span> <span class="n">str</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">().</span><span class="na">split</span><span class="o">(</span><span class="s">","</span><span class="o">);</span>
-            <span class="kt">int</span><span class="o">[]</span> <span class="n">num</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
-            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-                <span class="n">num</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">str</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
-            <span class="o">}</span>
-            <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">());</span>
-            <span class="n">FinkKthToTail</span> <span class="n">sk</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FinkKthToTail</span><span class="o">();</span>
-            <span class="n">ListNode</span> <span class="n">head</span> <span class="o">=</span> <span class="n">sk</span><span class="o">.</span><span class="na">CreateList</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
-            <span class="n">sk</span><span class="o">.</span><span class="na">Print</span><span class="o">(</span><span class="n">head</span><span class="o">);</span>
-            <span class="n">ListNode</span> <span class="n">result</span> <span class="o">=</span> <span class="n">sk</span><span class="o">.</span><span class="na">findKthToTail</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">k</span><span class="o">);</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">==</span><span class="kc">null</span><span class="o">){</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Null"</span><span class="o">);</span>
-            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
-            <span class="o">}</span>
- 
-        <span class="o">}</span>
-        <span class="n">scanner</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
+<p>例如某淘宝店铺的数据记录为(日期, 浏览量, 访客数, 下单数, 成交数, 成交金额)，从经验我们可以知道，“浏览量”和“访客数”往往具有较强的相关关系，而“下单数”和“成交数”也具有较强的相关关系。这里我们非正式的使用“相关关系”这个词，可以直观理解为“当某一天这个店铺的浏览量较高（或较低）时，我们应该很大程度上认为这天的访客数也较高（或较低）”。后面的章节中我们会给出相关性的严格数学定义。 
+这种情况表明，如果我们删除浏览量或访客数其中一个指标，我们应该期待并不会丢失太多信息。因此我们可以删除一个，以降低机器学习算法的复杂度。所以，我们可以采用PCA进行降纬。</p>
+<h2 id="二算法原理">二、算法原理</h2>
+<p>1、数据准备 
+假设有M个样本，每个样本有N个特征，例如第i个（i=1,2,…,M）样本为： 
+<img src="https://img-blog.csdn.net/20180207110748376?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvWGlhb1hpYW9fWWFuZzc3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<p>则M个样本构成了M行N列的数值矩阵A。</p>
+
+<p>2、数据归一化处理 
+通常做法是将每一维的数据都减去该维的均值，使每一维的均值都为0。</p>
+
+<p>3、计算协方差矩阵 
+协方差是一种用来度量两个随机变量关系的统计量，其定义为： 
+<img src="https://img-blog.csdn.net/20160403102743766" alt="" /></p>
+
+<p>M*N样本的协方差矩阵为： 
+<img src="https://img-blog.csdn.net/20180207112736891?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvWGlhb1hpYW9fWWFuZzc3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+
+<p>4、求出协方差矩阵的特征值及对应的特征向量 
+若AX=λX，则称λ是A的特征值，X是对应的特征向量。实际上可以这样理解：矩阵A作用在它的特征向量X上，仅仅使得X的长度发生了变化，缩放比例就是相应的特征值λ。</p>
+
+<p>特别地，当A是对称矩阵时，A的奇异值等于A的特征值，存在正交矩阵Q（Q-1=QT），使得：</p>
+
+<p>对A进行奇异值分解就能求出所有特征值和Q矩阵。</p>
+
+<p>A∗Q=Q∗DA∗Q=Q∗D,D是由特征值组成的对角矩阵</p>
+
+<p>由特征值和特征向量的定义知，Q的列向量就是A的特征向量。</p>
+
+<p>5、将特征向量按对应的特征值大小从上往下按行排列成矩阵，取前k行组成矩阵P，P为k行n列矩阵</p>
+
+<p>6、Y=AP’ 即为降维到k维后的数据，Y为M行k列矩阵</p>
+<h2 id="三代码实现">三、代码实现</h2>
+<p>PCA.class</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mport java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+import Jama.Matrix;
+
+/*
+ * 算法步骤:
+ * 1)将原始数据按列组成n行m列矩阵X
+ * 2)特征中心化。即每一维的数据都减去该维的均值，使每一维的均值都为0
+ * 3)求出协方差矩阵
+ * 4)求出协方差矩阵的特征值及对应的特征向量
+ * 5)将特征向量按对应的特征值大小从上往下按行排列成矩阵，取前k行组成矩阵p
+ * 6)Y=PX 即为降维到k维后的数据
+ */
+public class PCA {
+
+    private static final double threshold = 0.95;// 特征值阈值
+
+    /**
+     * 
+     * 使每个样本的均值为0
+     * 
+     * @param primary
+     *            原始二维数组矩阵
+     * @return averageArray 中心化后的矩阵
+     */
+    public double[][] changeAverageToZero(double[][] primary) {
+        int n = primary.length;
+        int m = primary[0].length;
+        double[] sum = new double[m];
+        double[] average = new double[m];
+        double[][] averageArray = new double[n][m];
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                sum[i] += primary[j][i];
+            }
+            average[i] = sum[i] / n;
+        }
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                averageArray[j][i] = primary[j][i] - average[i];
+            }
+        }
+        return averageArray;
+    }
+
+    /**
+     * 
+     * 计算协方差矩阵
+     * 
+     * @param matrix
+     *            中心化后的矩阵
+     * @return result 协方差矩阵
+     */
+    public double[][] getVarianceMatrix(double[][] matrix) {
+        int n = matrix.length;// 行数
+        int m = matrix[0].length;// 列数
+        double[][] result = new double[m][m];// 协方差矩阵
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; m; j++) {
+                double temp = 0;
+                for (int k = 0; k &lt; n; k++) {
+                    temp += matrix[k][i] * matrix[k][j];
+                }
+                result[i][j] = temp / (n - 1);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 求特征值矩阵
+     * 
+     * @param matrix
+     *            协方差矩阵
+     * @return result 向量的特征值二维数组矩阵
+     */
+    public double[][] getEigenvalueMatrix(double[][] matrix) {
+        Matrix A = new Matrix(matrix);
+        // 由特征值组成的对角矩阵,eig()获取特征值
+//      A.eig().getD().print(10, 6);
+        double[][] result = A.eig().getD().getArray();
+        return result;
+    }
+
+    /**
+     * 标准化矩阵（特征向量矩阵）
+     * 
+     * @param matrix
+     *            特征值矩阵
+     * @return result 标准化后的二维数组矩阵
+     */
+    public double[][] getEigenVectorMatrix(double[][] matrix) {
+        Matrix A = new Matrix(matrix);
+//      A.eig().getV().print(6, 2);
+        double[][] result = A.eig().getV().getArray();
+        return result;
+    }
+
+    /**
+     * 寻找主成分
+     * 
+     * @param prinmaryArray
+     *            原始二维数组数组
+     * @param eigenvalue
+     *            特征值二维数组
+     * @param eigenVectors
+     *            特征向量二维数组
+     * @return principalMatrix 主成分矩阵
+     */
+    public Matrix getPrincipalComponent(double[][] primaryArray,
+            double[][] eigenvalue, double[][] eigenVectors) {
+        Matrix A = new Matrix(eigenVectors);// 定义一个特征向量矩阵
+        double[][] tEigenVectors = A.transpose().getArray();// 特征向量转置
+        Map&lt;Integer, double[]&gt; principalMap = new HashMap&lt;Integer, double[]&gt;();// key=主成分特征值，value=该特征值对应的特征向量
+        TreeMap&lt;Double, double[]&gt; eigenMap = new TreeMap&lt;Double, double[]&gt;(
+                Collections.reverseOrder());// key=特征值，value=对应的特征向量；初始化为翻转排序，使map按key值降序排列
+        double total = 0;// 存储特征值总和
+        int index = 0, n = eigenvalue.length;
+        double[] eigenvalueArray = new double[n];// 把特征值矩阵对角线上的元素放到数组eigenvalueArray里
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (i == j)
+                    eigenvalueArray[index] = eigenvalue[i][j];
+            }
+            index++;
+        }
+
+        for (int i = 0; i &lt; tEigenVectors.length; i++) {
+            double[] value = new double[tEigenVectors[0].length];
+            value = tEigenVectors[i];
+            eigenMap.put(eigenvalueArray[i], value);
+        }
+
+        // 求特征总和
+        for (int i = 0; i &lt; n; i++) {
+            total += eigenvalueArray[i];
+        }
+        // 选出前几个主成分
+        double temp = 0;
+        int principalComponentNum = 0;// 主成分数
+        List&lt;Double&gt; plist = new ArrayList&lt;Double&gt;();// 主成分特征值
+        for (double key : eigenMap.keySet()) {
+            if (temp / total &lt;= threshold) {
+                temp += key;
+                plist.add(key);
+                principalComponentNum++;
+            }
+        }
+        System.out.println("\n" + "当前阈值: " + threshold);
+        System.out.println("取得的主成分数: " + principalComponentNum + "\n");
+
+        // 往主成分map里输入数据
+        for (int i = 0; i &lt; plist.size(); i++) {
+            if (eigenMap.containsKey(plist.get(i))) {
+                principalMap.put(i, eigenMap.get(plist.get(i)));
+            }
+        }
+
+        // 把map里的值存到二维数组里
+        double[][] principalArray = new double[principalMap.size()][];
+        Iterator&lt;Entry&lt;Integer, double[]&gt;&gt; it = principalMap.entrySet()
+                .iterator();
+        for (int i = 0; it.hasNext(); i++) {
+            principalArray[i] = it.next().getValue();
+        }
+
+        Matrix principalMatrix = new Matrix(principalArray);
+
+        return principalMatrix;
+    }
+
+    /**
+     * 矩阵相乘
+     * 
+     * @param primary
+     *            原始二维数组
+     * 
+     * @param matrix
+     *            主成分矩阵
+     * 
+     * @return result 结果矩阵
+     */
+    public Matrix getResult(double[][] primary, Matrix matrix) {
+        Matrix primaryMatrix = new Matrix(primary);
+        Matrix result = primaryMatrix.times(matrix.transpose());
+        return result;
+    }
+}
+</code></pre></div></div>
+<p>主函数调用PCA：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Jama.Matrix;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class PCAMain {
+
+    public static void main(String[] args) throws IOException {
+        // TODO Auto-generated catch block
+
+        SelectData selectData = new SelectData();
+        PCA pca = new PCA();
+        //获得样本集
+        double[][] primaryArray = selectData.getdatas();
+        System.out.println("--------------------------------------------");
+        double[][] averageArray = pca.changeAverageToZero(primaryArray);
+        System.out.println("--------------------------------------------");
+        System.out.println("均值0化后的数据: ");
+        System.out.println(averageArray.length + "行，"
+                + averageArray[0].length + "列");
+
+        System.out.println("---------------------------------------------");
+        System.out.println("协方差矩阵: ");
+        double[][] varMatrix = pca.getVarianceMatrix(averageArray);
+
+        System.out.println("--------------------------------------------");
+        System.out.println("特征值矩阵: ");
+        double[][] eigenvalueMatrix = pca.getEigenvalueMatrix(varMatrix);
+
+        System.out.println("--------------------------------------------");
+        System.out.println("特征向量矩阵: ");
+        double[][] eigenVectorMatrix = pca.getEigenVectorMatrix(varMatrix);
+
+        System.out.println("--------------------------------------------");
+        Matrix principalMatrix = pca.getPrincipalComponent(primaryArray, eigenvalueMatrix, eigenVectorMatrix);
+        System.out.println("主成分矩阵: ");
+//        principalMatrix.print(6, 3);
+
+        System.out.println("--------------------------------------------");
+        System.out.println("降维后的矩阵: ");
+        Matrix resultMatrix = pca.getResult(primaryArray, principalMatrix);
+//        resultMatrix.print(6, 3);
+        int c = resultMatrix.getColumnDimension(); //列数
+        int r = resultMatrix.getRowDimension();//行数
+        System.out.println(resultMatrix.getRowDimension() + "," + resultMatrix.getColumnDimension());
+    }
+}
 
 </code></pre></div></div>
-<hr />
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2017/09/16/1-Algorams2/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/07/11/datamining/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2017/06/11/JavaScript-function/">JavaScript 函数</a>
+                  <a class="post-link" href="/2018/07/11/bigdata1/">数据仓库知识汇总</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-06-11
+                        <i class="fa fa-calendar"></i>2018-07-11
                     </div>
                     <div class="label-card">
                         
@@ -513,7 +930,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#JavaScript" title="Category: JavaScript" rel="category">JavaScript</a>
+        <a href="/category/#大数据技术" title="Category: 大数据技术" rel="category">大数据技术</a>
     
   
 
@@ -530,283 +947,9 @@
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#JavaScript" title="Tag: JavaScript" rel="tag">JavaScript</a>
+        <a href="/tag/#数据仓库" title="Tag: 数据仓库" rel="tag">数据仓库</a>&nbsp;
     
-  
-
-</span>
-
-                    </div>
-                </div>
-                <div class="excerpt">
-                    
-<p>本文为慕课网 <a href="http://www.imooc.com/learn/277">JavaScript深入浅出</a> JavaScript 函数笔记。</p>
-
-
-                </div>
-                <div class="read-all">
-                    <a  href="/2017/06/11/JavaScript-function/"><i class="fa fa-newspaper-o"></i>Read All</a>
-                </div>
-                <hr>
-              </li>
-            
-              <li>
-                <h2>
-                  <a class="post-link" href="/2017/05/22/python4/">Python3网络爬虫(三)：使用User Agent和代理IP隐藏身份</a>
-                </h2>
-                <div class="label">
-                    <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-05-22
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-
-                    <div class="label-card">
-                    
-
-
-<!-- <span class="point">•</span> -->
-<span class="categories">
-  <i class="fa fa-th-list"></i>
-  
-    
-        <a href="/category/#Python网络爬虫" title="Category: Python网络爬虫" rel="category">Python网络爬虫</a>
-    
-  
-
-  <!-- <span class="point">•</span> -->
-</span>
-
-
-                    </div>
-
-                    <div class="label-card">
-                    
-<!-- <span class="point">•</span> -->
-<span class="pageTag">
-  <i class="fa fa-tags"></i>
-  
-    
-        <a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a>&nbsp;
-    
-        <a href="/tag/#网络爬虫" title="Tag: 网络爬虫" rel="tag">网络爬虫</a>
-    
-  
-
-</span>
-
-                    </div>
-                </div>
-                <div class="excerpt">
-                    <ul id="markdown-toc">
-  <li><a href="#一为何要设置user-agent" id="markdown-toc-一为何要设置user-agent">一、为何要设置User Agent</a></li>
-  <li><a href="#二常见的user-agent" id="markdown-toc-二常见的user-agent">二、常见的User Agent</a></li>
-  <li><a href="#三设置user-agent的方法" id="markdown-toc-三设置user-agent的方法">三、设置User Agent的方法</a></li>
-  <li><a href="#方法一" id="markdown-toc-方法一">方法一：</a></li>
-  <li><a href="#方法二" id="markdown-toc-方法二">方法二：</a></li>
-  <li><a href="#四ip代理的使用" id="markdown-toc-四ip代理的使用">四、IP代理的使用</a></li>
-</ul>
-
-<p>运行平台：Windows 
-Python版本：Python3.x 
-IDE：Sublime text3</p>
-<h2 id="一为何要设置user-agent">一、为何要设置User Agent</h2>
-
-<p>    有一些网站不喜欢被爬虫程序访问，所以会检测连接对象，如果是爬虫程序，也就是非人点击访问，它就会不让你继续访问，所以为了要让程序可以正常运行，需要隐藏自己的爬虫程序的身份。此时，我们就可以通过设置User Agent的来达到隐藏身份的目的，User Agent的中文名为用户代理，简称UA。</p>
-
-<p>    User Agent存放于Headers中，服务器就是通过查看Headers中的User Agent来判断是谁在访问。在Python中，如果不设置User Agent，程序将使用默认的参数，那么这个User Agent就会有Python的字样，如果服务器检查User Agent，那么没有设置User Agent的Python程序将无法正常访问网站。</p>
-
-<p>    Python允许我们修改这个User Agent来模拟浏览器访问，它的强大毋庸置疑。</p>
-
-<h2 id="二常见的user-agent">二、常见的User Agent</h2>
-
-<p>1.Android</p>
-
-<p>Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19
-Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30
-Mozilla/5.0 (Linux; U; Android 2.2; en-gb; GT-P1000 Build/FROYO) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1
-2.Firefox</p>
-
-<p>Mozilla/5.0 (Windows NT 6.2; WOW64; rv:21.0) Gecko/20100101 Firefox/21.0
-Mozilla/5.0 (Android; Mobile; rv:14.0) Gecko/14.0 Firefox/14.0
-3.Google Chrome</p>
-
-<p>Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36
-Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19
-4.iOS</p>
-
-<p>Mozilla/5.0 (iPad; CPU OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3
-Mozilla/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/3A101a Safari/419.3
-    上面列举了Andriod、Firefox、Google Chrome、iOS的一些User Agent，直接copy就能用。</p>
-
-<h2 id="三设置user-agent的方法">三、设置User Agent的方法</h2>
-<p>先看下urllib.request.Request()
-<img src="https://img-blog.csdn.net/20170303123244632?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-从上图可以看出，在创建Request对象的时候，可以传入headers参数。 
-    因此，想要设置User Agent，有两种方法：</p>
-
-<p>    1.在创建Request对象的时候，填入headers参数(包含User Agent信息)，这个Headers参数要求为字典；</p>
-
-<p>    2.在创建Request对象的时候不添加headers参数，在创建完成之后，使用add_header()的方法，添加headers。</p>
-
-<h2 id="方法一">方法一：</h2>
-<p>创建文件urllib_test09.py，使用上面提到的Android的第一个User Agent，在创建Request对象的时候传入headers参数，编写代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding: UTF-8 -*-
-from urllib import request
-
-if __name__ == "__main__":
-    #以CSDN为例，CSDN不更改User Agent是无法访问的
-    url = 'http://www.csdn.net/'
-    head = {}
-    #写入User Agent信息
-    head['User-Agent'] = 'Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19'
- #创建Request对象
-    req = request.Request(url, headers=head)
-    #传入创建好的Request对象
-    response = request.urlopen(req)
-    #读取响应信息并解码
-    html = response.read().decode('utf-8')
-    #打印信息
-    print(html)
-</code></pre></div></div>
-<p>运行结果如下：
-<img src="https://img-blog.csdn.net/20170303123738649?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
-<h2 id="方法二">方法二：</h2>
-<p>创建文件urllib_test10.py，使用上面提到的Android的第一个User Agent，在创建Request对象时不传入headers参数，创建之后使用add_header()方法，添加headers，编写代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   # -*- coding: UTF-8 -*-
-from urllib import request
-
-if __name__ == "__main__":
-    #以CSDN为例，CSDN不更改User Agent是无法访问的
-    url = 'http://www.csdn.net/'
-    #创建Request对象
-    req = request.Request(url)
-    #传入headers
-    req.add_header('User-Agent', 'Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19')
-    #传入创建好的Request对象
-    response = request.urlopen(req)
-    #读取响应信息并解码
-    html = response.read().decode('utf-8')
-    #打印信息
-    print(html)
-</code></pre></div></div>
-<p>运行结果和上一个方法是一样的。</p>
-
-<h2 id="四ip代理的使用">四、IP代理的使用</h2>
-
-<p>1.为何使用IP代理</p>
-
-<p>    User Agent已经设置好了，但是还应该考虑一个问题，程序的运行速度是很快的，如果我们利用一个爬虫程序在网站爬取东西，一个固定IP的访问频率就会很高，这不符合人为操作的标准，因为人操作不可能在几ms内，进行如此频繁的访问。所以一些网站会设置一个IP访问频率的阈值，如果一个IP访问频率超过这个阈值，说明这个不是人在访问，而是一个爬虫程序。</p>
-
-<p>2.一般步骤说明</p>
-
-<p>    一个很简单的解决办法就是设置延时，但是这显然不符合爬虫快速爬取信息的目的，所以另一种更好的方法就是使用IP代理。使用代理的步骤：</p>
-
-<p>    (1)调用urlib.request.ProxyHandler()，proxies参数为一个字典。</p>
-
-<p>    (2)创建Opener(类似于urlopen，这个代开方式是我们自己定制的)</p>
-
-<p>    (3)安装Opener</p>
-
-<p>    使用install_opener方法之后，会将程序默认的urlopen方法替换掉。也就是说，如果使用install_opener之后，在该文件中，再次调用urlopen会使用自己创建好的opener。如果不想替换掉，只是想临时使用一下，可以使用opener.open(url)，这样就不会对程序默认的urlopen有影响。</p>
-
-<p>3.代理IP选取</p>
-
-<p>    在写代码之前，先在代理IP网站选好一个IP地址，推荐西刺代理IP。</p>
-
-<p>    URL：http://www.xicidaili.com/</p>
-
-<p>    注意：当然也可以写个正则表达式从网站直接爬取IP，但是要记住不要太频繁爬取，加个延时什么的，太频繁给服务器带来压力了，服务器会直接把你block，不让你访问的，我就被封了两天。</p>
-
-<p>    从西刺网站选出信号好的IP，我的选择如下：(106.46.136.112:808)
-<img src="https://img-blog.csdn.net/20170303124651091?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-编写代码访问http://www.whatismyip.com.tw/，该网站是测试自己IP为多少的网址，服务器会返回访问者的IP。</p>
-
-<p>4.代码实例
-创建文件urllib_test11.py，编写代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding: UTF-8 -*-
-from urllib import request
-
-if __name__ == "__main__":
-    #访问网址
-    url = 'http://www.whatismyip.com.tw/'
-    #这是代理IP
-    proxy = {'http':'106.46.136.112:808'}
-    #创建ProxyHandler
-    proxy_support = request.ProxyHandler(proxy)
-    #创建Opener
-    opener = request.build_opener(proxy_support)
-    #添加User Angent
-    opener.addheaders = [('User-Agent','Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36')]
-    #安装OPener
-    request.install_opener(opener)
-    #使用自己安装好的Opener
-    response = request.urlopen(url)
-    #读取相应信息并解码
-    html = response.read().decode("utf-8")
-    #打印信息
-    print(html)
-</code></pre></div></div>
-<p>运行结果如下：
- <img src="https://img-blog.csdn.net/20170303124823038?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-  从上图可以看出，访问的IP已经伪装成了106.46.136.112。</p>
-
-
-                </div>
-                <div class="read-all">
-                    <a  href="/2017/05/22/python4/"><i class="fa fa-newspaper-o"></i>Read All</a>
-                </div>
-                <hr>
-              </li>
-            
-              <li>
-                <h2>
-                  <a class="post-link" href="/2017/05/22/python3/">Python3网络爬虫(二)：利用urllib.urlopen向有道翻译发送数据获得翻译结果</a>
-                </h2>
-                <div class="label">
-                    <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-05-22
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-
-                    <div class="label-card">
-                    
-
-
-<!-- <span class="point">•</span> -->
-<span class="categories">
-  <i class="fa fa-th-list"></i>
-  
-    
-        <a href="/category/#Python网络爬虫" title="Category: Python网络爬虫" rel="category">Python网络爬虫</a>
-    
-  
-
-  <!-- <span class="point">•</span> -->
-</span>
-
-
-                    </div>
-
-                    <div class="label-card">
-                    
-<!-- <span class="point">•</span> -->
-<span class="pageTag">
-  <i class="fa fa-tags"></i>
-  
-    
-        <a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a>&nbsp;
-    
-        <a href="/tag/#网络爬虫" title="Tag: 网络爬虫" rel="tag">网络爬虫</a>
+        <a href="/tag/#ETL" title="Tag: ETL" rel="tag">ETL</a>
     
   
 
@@ -816,136 +959,150 @@ if __name__ == "__main__":
                 </div>
                 <div class="excerpt">
                     <ul id="markdown-toc">
-  <li><a href="#一urlopen的url参数-agent" id="markdown-toc-一urlopen的url参数-agent">一、urlopen的url参数 Agent</a></li>
-  <li><a href="#二urlopen的data参数" id="markdown-toc-二urlopen的data参数">二、urlopen的data参数</a></li>
-  <li><a href="#三发送data实例" id="markdown-toc-三发送data实例">三、发送data实例</a></li>
+  <li><a href="#一数据仓库是什么" id="markdown-toc-一数据仓库是什么">一、数据仓库是什么</a></li>
+  <li><a href="#1-操作型数据库" id="markdown-toc-1-操作型数据库">1. 操作型数据库</a></li>
+  <li><a href="#2-分析型数据库" id="markdown-toc-2-分析型数据库">2. 分析型数据库</a></li>
+  <li><a href="#二数据仓库有什么特点" id="markdown-toc-二数据仓库有什么特点">二、数据仓库有什么特点</a></li>
+  <li><a href="#三为什么搭建数据仓库" id="markdown-toc-三为什么搭建数据仓库">三、为什么搭建数据仓库</a></li>
+  <li><a href="#四数据仓库结构" id="markdown-toc-四数据仓库结构">四、数据仓库结构</a></li>
+  <li><a href="#五etl" id="markdown-toc-五etl">五、ETL</a></li>
+  <li><a href="#六数据集市" id="markdown-toc-六数据集市">六、数据集市</a></li>
+  <li><a href="#七ods" id="markdown-toc-七ods">七、ODS</a></li>
+  <li><a href="#八元数据" id="markdown-toc-八元数据">八、元数据</a></li>
 </ul>
+<h2 id="一数据仓库是什么">一、数据仓库是什么</h2>
 
-<p>运行平台：Windows 
-Python版本：Python3.x 
-IDE：Sublime text3
-      上一篇内容，已经学会了使用简单的语句对网页进行抓取。接下来，详细看下urlopen的两个重要参数url和data，学习如何发送数据data</p>
-<h2 id="一urlopen的url参数-agent">一、urlopen的url参数 Agent</h2>
-<p><img src="https://img-blog.csdn.net/20170301124632320?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<p>可以理解为：面向分析的存储系统。</p>
 
-<p>url不仅可以是一个字符串，例如:http://www.baidu.com。url也可以是一个Request对象，这就需要我们先定义一个Request对象，然后将这个Request对象作为urlopen的参数使用，方法如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding: UTF-8 -*-
-from urllib import request
+<p>也就是说数仓是存数据的，企业的各种数据往里面塞，主要目的是为了有效分析数据，后续会基于它产出供分析挖掘的数据，或者数据应用需要的数据，如企业的分析性报告和各类报表，为企业的决策提供支持。</p>
 
-if __name__ == "__main__":
-    req = request.Request("http://fanyi.baidu.com/")
-    response = request.urlopen(req)
-    html = response.read()
-    html = html.decode("utf-8")
-    print(html)
---------------------- 
-</code></pre></div></div>
-<p>同样，运行这段代码同样可以得到网页信息。可以看一下这段代码和上个笔记中代码的不同，对比一下就明白了。</p>
+<p>上面的意思先理解着，接下来从头讲起，先看关系型数据库，它可以被划分为两大基本类型：操作型数据库和分析型数据库。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>urlopen()返回的对象，可以使用read()进行读取，同样也可以使用geturl()方法、info()方法、getcode()方法。 ![](https://img-blog.csdn.net/20170301124759856?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast) geturl()返回的是一个url的字符串；
-</code></pre></div></div>
+<h2 id="1-操作型数据库">1. 操作型数据库</h2>
 
-<p>info()返回的是一些meta标记的元信息，包括一些服务器的信息；</p>
+<p>主要面向应用，用于业务支撑，支持对实际业务的处理，也可以叫业务型数据库。</p>
 
-<p>getcode()返回的是HTTP的状态码，如果返回200表示请求成功。</p>
+<p>可以理解为通常意义上的数据库（后端开发同学口中的经常提到的就是这种）。</p>
 
-<p>关于META标签和HTTP状态码的内容可以自行百度百科，里面有很详细的介绍。
-<img src="https://img-blog.csdn.net/20170301124848730?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-<img src="https://img-blog.csdn.net/20170301124908215?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-    了解到这些，我们就可以进行新一轮的测试，新建文件名urllib_test04.py，编写如下代码：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    # -*- coding: UTF-8 -*-
-from urllib import request
+<h2 id="2-分析型数据库">2. 分析型数据库</h2>
 
-if __name__ == "__main__":
-    req = request.Request("http://fanyi.baidu.com/")
-    response = request.urlopen(req)
-    print("geturl打印信息：%s"%(response.geturl()))
-    print('**********************************************')
-    print("info打印信息：%s"%(response.info()))
-    print('**********************************************')
-    print("getcode打印信息：%s"%(response.getcode()))
-</code></pre></div></div>
-<h2 id="二urlopen的data参数">二、urlopen的data参数</h2>
+<p>主要面向数据分析，侧重决策支持，作为公司的单独数据存储，负责利用历史数据对公司各主题域进行统计分析。</p>
 
-<p>    我们可以使用data参数，向服务器发送数据。根据HTTP规范，GET用于信息获取，POST是向服务器提交数据的一种请求，再换句话说：</p>
+<p>由于分析型数据库中的操作都是查询，因此也就不需要严格满足关系型数据库一些设计规范，这样的情况下再将它归为数据库不太合适，也容易不引起混淆，所以称之为数据仓库。</p>
 
-<p>    从客户端向服务器提交数据使用POST；</p>
+<p>这里可以说一下，数据处理大致可以分成两大类：OLTP（联机事务处理）和OLAP（联机分析处理）。</p>
 
-<p>    从服务器获得数据到客户端使用GET(GET也可以提交，暂不考虑)。</p>
+<p>OLTP（联机事务处理）就是操作型数据库的主要应用，更侧重于基本的、日常的事务处理，包括数据的增删改查。
+OLAP（联机分析处理）就是分析型数据库的主要应用，以多维度的方式分析数据， 这个后续会整理。</p>
 
-<p>    如果没有设置urlopen()函数的data参数，HTTP请求采用GET方式，也就是我们从服务器获取信息，如果我们设置data参数，HTTP请求采用POST方式，也就是我们向服务器传递数据。
-data参数有自己的格式，它是一个基于application/x-www.form-urlencoded的格式，具体格式我们不用了解， 因为我们可以使用urllib.parse.urlencode()函数将字符串自动转换成上面所说的格式。</p>
-<h2 id="三发送data实例">三、发送data实例</h2>
-<p>向有道翻译发送data，得到翻译结果。
-1.打开有道翻译界面，如下图所示：
-<img src="https://img-blog.csdn.net/20170301125256905?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-2.鼠标右键检查，也就是审查元素，如下图所示：
-<img src="https://img-blog.csdn.net/20170301125418999?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- 3.选择右侧出现的Network，如下图所示：
- <img src="https://img-blog.csdn.net/20170301125456156?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- 4.在左侧输入翻译内容，输入Jack，如下图所示：</p>
+<h2 id="二数据仓库有什么特点">二、数据仓库有什么特点</h2>
 
-<p><img src="https://img-blog.csdn.net/20170301125516531?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<p>相对于数据库，数据仓库有以下特点</p>
 
-<p>5.点击自动翻译按钮，我们就可以看到右侧出现的内容，如下图所示：</p>
+<p>（1）面向主题</p>
 
-<p><img src="https://img-blog.csdn.net/20170301125528598?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<p>数据仓库通过一个个主题域将多个业务系统的数据加载到一起，为了各个主题（如：用户、订单、商品等）进行分析而建，操作型数据库是为了支撑各种业务而建立。</p>
 
-<p>6.点击上图红框中的内容，查看它的信息，如下图所示：
- <img src="https://img-blog.csdn.net/20170301125537583?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- <img src="https://img-blog.csdn.net/20170301125558083?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<p>（2）集成性</p>
 
-<p>7.记住这些信息，这是我们一会儿写程序需要用到的。
-新建文件translate_test.py，编写如下代码：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding: UTF-8 -*-
-from urllib import request
-from urllib import parse
-import json
+<p>数据仓库会将不同源数据库中的数据汇总到一起。</p>
 
-if __name__ == "__main__":
-    #对应上图的Request URL
-    Request_URL = 'http://fanyi.youdao.com/translate?smartresult=dict&amp;smartresult=rule&amp;smartresult=ugc&amp;sessionFrom=https://www.baidu.com/link'
-    #创建Form_Data字典，存储上图的Form Data
-    Form_Data = {}
-    Form_Data['type'] = 'AUTO'
-    Form_Data['i'] = 'Jack'
-    Form_Data['doctype'] = 'json'
-    Form_Data['xmlVersion'] = '1.8'
-    Form_Data['keyfrom'] = 'fanyi.web'
-    Form_Data['ue'] = 'ue:UTF-8'
-    Form_Data['action'] = 'FY_BY_CLICKBUTTON'
-    #使用urlencode方法转换标准格式
-    data = parse.urlencode(Form_Data).encode('utf-8')
-    #传递Request对象和转换完格式的数据
-    response = request.urlopen(Request_URL,data)
-    #读取信息并解码
-    html = response.read().decode('utf-8')
-    #使用JSON
-    translate_results = json.loads(html)
-    #找到翻译结果
-    translate_results = translate_results['translateResult'][0][0]['tgt']
-    #打印翻译信息
-    print("翻译的结果是：%s" % translate_results)
-</code></pre></div></div>
-<p>这样我们就可以查看翻译的结果了，如下图所示：
-<img src="https://img-blog.csdn.net/20170301125732407?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-JSON是一种轻量级的数据交换格式，我们需要从爬取到的内容中找到JSON格式的数据，这里面保存着我们想要的翻译结果，再将得到的JSON格式的翻译结果进行解析，得到我们最终想要的样子：杰克。</p>
+<p>（3）历史性</p>
 
+<p>较之操作型数据库，数据仓库的数据是为企业数据分析而建立，所以数据被加载后一般情况下将被长期保留，前者通常保存几个月，后者可能几年甚至几十年。</p>
+
+<p>（4）时变性</p>
+
+<p>是指数据仓库包含来自其时间范围不同时间段的数据快照，有了这些数据快照以后，用户便可将其汇总，生成各历史阶段的数据分析报告。</p>
+
+<p>（5）稳定性</p>
+
+<p>数据仓库中的数据一般仅执行查询操作，很少会有删除和更新。但是需定期加载和刷新数据。</p>
+
+<h2 id="三为什么搭建数据仓库">三、为什么搭建数据仓库</h2>
+
+<p>简单来说，就是为了有效分析数据 。</p>
+
+<p>你说直接从业务数据库中取数据来做分析？</p>
+
+<p>也不是不可以，就是业务系统多，业务复杂时，会发现结构复杂，数据脏乱，难以理解，缺少历史，大规模查询缓慢这些问题。</p>
+
+<p>业务到一定规模，大家需要面临的问题越来越复杂和深入，数据需求不再只是昨日的营收，上月的uv这些，而是“28到45岁女性在社区的活跃度与公司策划的专题内容活动的关系”这类精细化的分析，而从数据库是很难取出这类数据的。</p>
+
+<p>毕竟业务型数据库是为了支撑业务设计的，不是为了查询和分析数据。</p>
+
+<h2 id="四数据仓库结构">四、数据仓库结构</h2>
+
+<p>用AXURE画了个结构图，如下：简单来说，就是把各数据源的数据ETL到数仓中，数仓再对数据进行集成和统计，然后再输出给各数据应用，图中涉及的模块，接下来会分别介绍。
+<img src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1167328232,1283775129&amp;fm=173&amp;app=25&amp;f=JPEG?w=640&amp;h=353&amp;s=7D2C3472033B44235C5510CA0000A0B1" alt="" /></p>
+<h2 id="五etl">五、ETL</h2>
+
+<p>ETL分别代表：抽取extraction、转换transformation、加载load。</p>
+
+<p>（1）抽取(Extract)</p>
+
+<p>从数据来源提取指定数据，数据是需要指定的，不是所有的数据都要抽取过来， 某些源数据对于分析而言没有价值，或者其可能产生的价值，远低于储存这些数据所需要的数据仓库的实现和性能上的成本，就不会抽取了。</p>
+
+<p>（2）转换(Transform)</p>
+
+<p>将数据转换为指定格式并进行数据清洗保证数据质量。</p>
+
+<p>数据转换，如包括编码转换(m/f-&gt;男/女)，字段转换(balance-&gt;bal)，度量单位的转换(cm-&gt;m)，数据粒度的转换。业务系统数据存储非常明细的数据，而数据仓库中数据是用分析的，不需要非常明细，会将业务系统数据按照数据仓库粒度进行聚合。</p>
+
+<p>数据清洗，如会对不完整数据，错误数据和重复数据等脏数据进行清洗。</p>
+
+<p>（3）加载(Load)</p>
+
+<p>将转换过后的数据加载到目标数据仓库，加载可分为两种：</p>
+
+<p>全量加载：一次对全部数据进行加载。
+增量加载：一般首次需要全量加载，但是在第二次周期或者第三次周期的时候仍然全量加载的话，耗费了极大的物理和时间资源。有可能部分数据源并未发生变化，而有的数据源可能只是增加了少量的数据。 对数据源中的数据只考虑新修改的记录和新插入的记录就是增量加载。</p>
+
+<p>ETL很可能是数据仓库开发中最耗时最耗资源的一个环节，因为该环节要整理各大业务系统中杂乱无章的数据，并协调元数据上的差别，工作量很大，但也是构建数据仓库的重要环节，对数据仓库的后续环节影响比较大。</p>
+
+<h2 id="六数据集市">六、数据集市</h2>
+
+<p>数据集市（DM）可以理解为是一种“小型数据仓库”，一般面向部门、单个主题或特定应用，且之间互不影响。</p>
+
+<p>可以分为以下两种：</p>
+
+<p>独立数据集市：有自己的源数据库和ETL架构；
+非独立数据集市：没有自己的源数据，它的数据来自数据仓库。当用户或者应用程序不需要/不必要/不允许访问整个数仓数据时，就可以直接访问数据集市，为用户提供一个数据仓库的“子集”。
+<img src="https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3821147515,1630319372&amp;fm=173&amp;app=25&amp;f=JPEG?w=640&amp;h=362&amp;s=7C2C347213136C6B18DC90CA0000E0B1" alt="" />
+简单理解就是一个结构完全和数仓一样，有ETL，然后自己存储和计算；另一种就是直接用数仓处理过的数据，再次进行组合集成。可能后面结合数据分层更好理解。</p>
+
+<h2 id="七ods">七、ODS</h2>
+
+<p>ODS：全称是Operational Data Store，操作数据存储。</p>
+
+<p>存储各大业务型数据库ETL后的数据，是最接近数据源中数据的一层，主要目的是为了数据集中。</p>
+
+<p>总体上大多是按照源业务系统的分类方式而分类的，因此会具有鲜明的业务数据库的特征，甚至还具有一定的关系数据库中的数据范式的组织形式。</p>
+
+<p>但是不等同于原始数据，数据格式按照数仓要求统一，并经过简单的清洗。</p>
+
+<h2 id="八元数据">八、元数据</h2>
+
+<p>元数据（Meta Date），即数据的数据，元数据可分为技术元数据和业务元数据。</p>
+
+<p>技术元数据为开发和管理数据仓库的IT 人员使用，描述了与数据仓库开发、管理和维护相关的数据，包括数据源信息、数据转换描述、数据仓库模型、数据清洗与更新规则、数据映射和访问权限等。</p>
+
+<p>而业务元数据为管理层和业务分析人员服务，从业务角度描述数据，包括商务术语、数据仓库中有什么数据、数据的位置和数据的可用性等，帮助业务人员更好地理解数据仓库中哪些数据是可用的以及如何使用。</p>
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2017/05/22/python3/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/07/11/bigdata1/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2017/05/21/python2/">Python3网络爬虫(一):利用urllib进行简单的网页抓取</a>
+                  <a class="post-link" href="/2018/06/15/datamining/">用Python开发一个迷你打飞机的游戏</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-05-21
+                        <i class="fa fa-calendar"></i>2018-06-15
                     </div>
                     <div class="label-card">
                         
@@ -963,7 +1120,7 @@ JSON是一种轻量级的数据交换格式，我们需要从爬取到的内容�
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#Python网络爬虫" title="Category: Python网络爬虫" rel="category">Python网络爬虫</a>
+        <a href="/category/#Python" title="Category: Python" rel="category">Python</a>
     
   
 
@@ -980,9 +1137,7 @@ JSON是一种轻量级的数据交换格式，我们需要从爬取到的内容�
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a>&nbsp;
-    
-        <a href="/tag/#网络爬虫" title="Tag: 网络爬虫" rel="tag">网络爬虫</a>
+        <a href="/tag/#python" title="Tag: python" rel="tag">python</a>
     
   
 
@@ -992,153 +1147,542 @@ JSON是一种轻量级的数据交换格式，我们需要从爬取到的内容�
                 </div>
                 <div class="excerpt">
                     <ul id="markdown-toc">
-  <li><a href="#一预备知识" id="markdown-toc-一预备知识">一、预备知识</a></li>
-  <li><a href="#二网络爬虫的定义" id="markdown-toc-二网络爬虫的定义">二、网络爬虫的定义</a></li>
-  <li><a href="#三简单爬虫实例" id="markdown-toc-三简单爬虫实例">三、简单爬虫实例</a></li>
-  <li><a href="#瞧返回的是一个字典这样我们就知道网页的编码方式了通过获得的信息采用不同的解码方式即可" id="markdown-toc-瞧返回的是一个字典这样我们就知道网页的编码方式了通过获得的信息采用不同的解码方式即可">    瞧，返回的是一个字典，这样我们就知道网页的编码方式了，通过获得的信息，采用不同的解码方式即可。</a></li>
+  <li><a href="#01-前言" id="markdown-toc-01-前言">01 前言</a></li>
+  <li><a href="#02-整体框架" id="markdown-toc-02-整体框架">02 整体框架</a></li>
+  <li><a href="#03-开始之前-精灵类sprite" id="markdown-toc-03-开始之前-精灵类sprite">03 开始之前-精灵类Sprite</a></li>
+  <li><a href="#04-子弹类class-bullet" id="markdown-toc-04-子弹类class-bullet">04 子弹类class Bullet</a></li>
+  <li><a href="#05-玩家飞机类class-player" id="markdown-toc-05-玩家飞机类class-player">05 玩家飞机类class Player</a></li>
+  <li><a href="#06-敌机类class-enemy" id="markdown-toc-06-敌机类class-enemy">06 敌机类class Enemy</a></li>
+  <li><a href="#07-游戏主体循环以及帧率设置" id="markdown-toc-07-游戏主体循环以及帧率设置">07 游戏主体循环以及帧率设置</a></li>
+  <li><a href="#08-让子弹飞" id="markdown-toc-08-让子弹飞">08 让子弹飞</a></li>
+  <li><a href="#09-刷出敌机-打怪" id="markdown-toc-09-刷出敌机-打怪">09 刷出敌机 打怪</a></li>
+  <li><a href="#10-把飞机敌机子弹都画出来" id="markdown-toc-10-把飞机敌机子弹都画出来">10 把飞机敌机子弹都画出来</a></li>
+  <li><a href="#11-处理键盘事件" id="markdown-toc-11-处理键盘事件">11 处理键盘事件</a></li>
 </ul>
+<h2 id="01-前言">01 前言</h2>
+<p>在网上看到了相关资料和代码于是尝试用python实现了这个打飞机功能。这次还是用python的pygame库来做的游戏。关于这个库的内容，</p>
+<h2 id="02-整体框架">02 整体框架</h2>
+<p>这个游戏设计用到了面向对象的编程思想。
+游戏主体划分为三个主要的类：</p>
 
-<p>运行平台：Windows 
-Python版本：Python3.x 
-IDE：Sublime text3
-    一直想学习Python爬虫的知识，在网上搜索了一下，大部分都是基于Python2.x的。因此打算写一个Python3.x的爬虫笔记，以便后续回顾，欢迎一起交流、共同进步。</p>
-<h2 id="一预备知识">一、预备知识</h2>
+<p>子弹类class Bullet
+玩家类class Player
+敌机类class Enemy
+在屏幕上可见的也就是这三个东西了。自己的飞机、敌人的飞机、子弹。因此整个游戏的核心就是：</p>
 
-<p>1.Python3.x基础知识学习：</p>
+<p>把这三个东西的图像呈现在屏幕上。
+判断和处理子弹撞击敌机和敌机撞击玩家这两种情况。
+下面我们会展开为大家一一讲解。</p>
+<h2 id="03-开始之前-精灵类sprite">03 开始之前-精灵类Sprite</h2>
+<p>在下面的代码中，你们会大量见到这个pygame.sprite模块。这里就给大家介绍一下。“sprite”，中文翻译“精灵”，在游戏动画一般是指一个独立运动的画面元素，在pygame中，就可以是一个带有图像（Surface）和大小位置（Rect）的对象。 简单来说是一个会动图片。它的两个成员变量</p>
 
-<p>    可以在通过如下方式进行学习：</p>
+<p>self.image=要显示图片的Surface
+self.rect = 显示Surface的区域
+对于self.rect，常用的设置rect的方法：self.rect = self.image.get_rect()。然后设定self.rect.topleft=(0,0)来设定左上角的位置，从而设定这个精灵在屏幕上的显示位置。精灵特别适合用在OO语言中，比如Python。</p>
 
-<p>    (1)廖雪峰Python3教程(文档)：</p>
+<p>pygame.sprite.Sprite是pygame精灵的基类，一般来说，你总是需要写一个自己的精灵类继承一下它然后加入自己的代码。</p>
 
-<p>    URL：http://www.liaoxuefeng.com/</p>
+<p>关于此类的其他函数，咱们用到的时候会详细跟大家说的。</p>
 
-<p>    (2)菜鸟教程Python3教程(文档)：</p>
-
-<p>    URL：http://www.runoob.com/python3/python3-tutorial.html</p>
-
-<p>    (3)鱼C工作室Python教程(视频)：</p>
-
-<p>    小甲鱼老师很厉害，讲课风格幽默诙谐，如果时间充裕可以考虑看视频。</p>
-
-<p>    URL：http://www.fishc.com/</p>
-
-<p>2.开发环境搭建：</p>
-
-<p>    Sublime text3搭建Pyhthon IDE可以查看博客:</p>
-
-<p>    URL：http://www.cnblogs.com/nx520zj/p/5787393.html</p>
-
-<p>    URL：http://blog.csdn.net/c406495762/article/details/56489253</p>
-
-<h2 id="二网络爬虫的定义">二、网络爬虫的定义</h2>
-
-<p>    网络爬虫，也叫网络蜘蛛(Web Spider)，如果把互联网比喻成一个蜘蛛网，Spider就是一只在网上爬来爬去的蜘蛛。网络爬虫就是根据网页的地址来寻找网页的，也就是URL。举一个简单的例子，我们在浏览器的地址栏中输入的字符串就是URL，例如：https://www.baidu.com/</p>
-
-<p>    URL就是同意资源定位符(Uniform Resource Locator)，它的一般格式如下(带方括号[]的为可选项)：</p>
-
-<p>    protocol :// hostname[:port] / path / [;parameters][?query]#fragment</p>
-
-<p>    URL的格式由三部分组成：</p>
-
-<p>    (1)protocol：第一部分就是协议，例如百度使用的就是https协议；</p>
-
-<p>    (2)hostname[:port]：第二部分就是主机名(还有端口号为可选参数)，一般网站默认的端口号为80，例如百度的主机名就是www.baidu.com，这个就是服务器的地址;</p>
-
-<p>    (3)path：第三部分就是主机资源的具体地址，如目录和文件名等。</p>
-
-<p>    网络爬虫就是根据这个URL来获取网页信息的。</p>
-
-<h2 id="三简单爬虫实例">三、简单爬虫实例</h2>
-
-<p>    在Python3.x中，我们可以使用urlib这个组件抓取网页，urllib是一个URL处理包，这个包中集合了一些处理URL的模块，如下：</p>
-
-<p>1.urllib.request模块是用来打开和读取URLs的；</p>
-
-<p>2.urllib.error模块包含一些有urllib.request产生的错误，可以使用try进行捕捉处理；</p>
-
-<p>3.urllib.parse模块包含了一些解析URLs的方法；</p>
-
-<p>4.urllib.robotparser模块用来解析robots.txt文本文件.它提供了一个单独的RobotFileParser类，通过该类提供的can_fetch()方法测试爬虫是否可以下载一个页面。</p>
-
-<p>    我们使用urllib.request.urlopen()这个接口函数就可以很轻松的打开一个网站，读取并打印信息。</p>
-
-<p>    urlopen有一些可选参数，具体信息可以查阅Python自带的documentation。</p>
-
-<p>    了解到这些，我们就可以写一个最简单的程序，文件名为urllib_test01.py，感受一个urllib库的魅力：</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># -*- coding: UTF-8 -*-
-</span><span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s">"http://fanyi.baidu.com"</span><span class="p">)</span>
-    <span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+<h2 id="04-子弹类class-bullet">04 子弹类class Bullet</h2>
+<p>先来看代码吧。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1# 子弹类
+ 2class Bullet(pygame.sprite.Sprite):
+ 3    def __init__(self, bullet_img, init_pos):
+ 4        pygame.sprite.Sprite.__init__(self)
+ 5        self.image = bullet_img
+ 6        self.rect = self.image.get_rect()
+ 7        self.rect.midbottom = init_pos
+ 8        self.speed = 10
+ 9
+10    def move(self):
+11        self.rect.top -= self.speed
 </code></pre></div></div>
-<p>    urllib使用使用request.urlopen()打开和读取URLs信息，返回的对象response如同一个文本对象，我们可以调用read()，进行读取。再通过print()，将读到的信息打印出来。</p>
+<p>子弹类继承于pygame.sprite.Sprite， 成员主要是子弹的图片对象和子弹刷出来的位置，当然，还有移动速度。一个方法就是移动，从发出位置直线往屏幕上方移动。</p>
 
-<p>    运行程序ctrl+b，可以在Sublime中查看运行结果，如下：
-<img src="https://img-blog.csdn.net/20170228211015577?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
-
-<p>    也可以在cmd(控制台)中输入指令：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python urllib_test01.py
+<h2 id="05-玩家飞机类class-player">05 玩家飞机类class Player</h2>
+<p>老样子。先看代码</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1# 玩家飞机类
+ 2class Player(pygame.sprite.Sprite):
+ 3    def __init__(self, plane_img, player_rect, init_pos):
+ 4        pygame.sprite.Sprite.__init__(self)
+ 5        self.image = []                                 # 用来存储玩家飞机图片的列表
+ 6        for i in range(len(player_rect)):
+ 7            self.image.append(plane_img.subsurface(player_rect[i]).convert_alpha())
+ 8        self.rect = player_rect[0]                      # 初始化图片所在的矩形
+ 9        self.rect.topleft = init_pos                    # 初始化矩形的左上角坐标
+10        self.speed = 8                                  # 初始化玩家飞机速度，这里是一个确定的值
+11        self.bullets = pygame.sprite.Group()            # 玩家飞机所发射的子弹的集合
+12        self.is_hit = False                             # 玩家是否被击中
+13
+14    # 发射子弹
+15    def shoot(self, bullet_img):
+16        bullet = Bullet(bullet_img, self.rect.midtop)
+17        self.bullets.add(bullet)
+18
+19    # 向上移动，需要判断边界
+20    def moveUp(self):
+21        if self.rect.top &lt;= 0:
+22            self.rect.top = 0
+23        else:
+24            self.rect.top -= self.speed
+25
+26    # 向下移动，需要判断边界
+27    def moveDown(self):
+28        if self.rect.top &gt;= SCREEN_HEIGHT - self.rect.height:
+29            self.rect.top = SCREEN_HEIGHT - self.rect.height
+30        else:
+31            self.rect.top += self.speed
+32
+33    # 向左移动，需要判断边界
+34    def moveLeft(self):
+35        if self.rect.left &lt;= 0:
+36            self.rect.left = 0
+37        else:
+38            self.rect.left -= self.speed
+39
+40    # 向右移动，需要判断边界        
+41    def moveRight(self):
+42        if self.rect.left &gt;= SCREEN_WIDTH - self.rect.width:
+43            self.rect.left = SCREEN_WIDTH - self.rect.width
+44        else:
+45            self.rect.left += self.speed
 </code></pre></div></div>
-<p>运行py文件，输出信息是一样的，如下：</p>
+<p>老样子，成员变量主要还是那几个。图像对象以及矩形参数和刷出位置，当然还会有移动速度和子弹集合（用来保存飞机射出的子弹）。方法的话就是上下左右移动了，不过需要做好边界判断。这个直接看代码就能理解了。</p>
 
-<p><img src="https://img-blog.csdn.net/20170228211116438?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
-
-<p>    其实这就是浏览器接收到的信息，只不过我们在使用浏览器的时候，浏览器已经将这些信息转化成了界面信息供我们浏览。当然这些代码我们也可以从浏览器中查看到。例如，使用谷歌浏览器，在任意界面单击右键选择检查，也就是审查元素(不是所有页面都可以审查元素的，例如起点中文网付费章节就不行.)，以百度界面为例，
-    可以看到，右边就是我们的审查结果。我们可以在本地，也就是浏览器(客户端)更改元素，但是这个不会上传到服务器端。例如我可以修改自己的支付宝余额装一装，比如这样：
-    我实际有这些钱吗？显然苦逼的我，是不会有这些钱的，我只不过是修改了下审查元素的信息而已。</p>
-
-<p>    有些跑偏，不过说的道理就是，浏览器就是作为客户端从服务器端获取信息，然后将信息解析，再展示给我们的。</p>
-
-<p>    回归正题，虽然我们已经成功获取了信息，但是显然他们都是二进制的乱码，看起来很不方便。我们怎么办呢？</p>
-
-<p>    我们可以通过简单的decode()命令将网页的信息进行解码，并显示出来，我们新创建一个文件，命名为urllib_test02.py，编写如下代码(还是以百度翻译网站fanyi.baidu.com为例)：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding: UTF-8 -*-
-from urllib import request
-
-if __name__ == "__main__":
-    response = request.urlopen("http://www.fanyi.baidu.com/")
-    html = response.read()
-    html = html.decode("utf-8")
-    print(html)
+<h2 id="06-敌机类class-enemy">06 敌机类class Enemy</h2>
+<p>好吧，先上代码伺候。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1# 敌机类
+ 2class Enemy(pygame.sprite.Sprite):
+ 3    def __init__(self, enemy_img, enemy_down_imgs, init_pos):
+ 4       pygame.sprite.Sprite.__init__(self)
+ 5       self.image = enemy_img   #正常的图像
+ 6       self.rect = self.image.get_rect()
+ 7       self.rect.topleft = init_pos
+ 8       self.down_imgs = enemy_down_imgs # 爆炸的图像
+ 9       self.speed = 2
+10
+11    # 敌机移动，边界判断及删除在游戏主循环里处理
+12    def move(self):
+13        self.rect.top += self.speed
 </code></pre></div></div>
-<p>    这样我们就可以得到这样的结果，显然解码后的信息看起来工整和舒服多了：
-<img src="https://img-blog.csdn.net/20170228211300564?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<p>需要注意的时候，该类保存了两个图像对象，一个是正常情况下的敌机图像。一个是爆炸的敌机图像。以便在撞击时能把撞击效果显示出来。一个方法就是和子弹差不多的移动了，不过它是从屏幕上方往底下移动的而已。然后刷出位置的话，后面我们会用一个随机函数生成的。</p>
 
-<p>    当然这个前提是我们已经知道了这个网页是使用utf-8编码的，怎么查看网页的编码方式呢？需要人为操作，且非常简单的方法是使用使用浏览器审查元素，只需要找到head标签开始位置的chareset，就知道网页是采用何种编码的了。如下：
-<img src="https://img-blog.csdn.net/20170228211321613?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
-
-<p>    这样我们就知道了这个网站的编码方式，但是这需要我们每次都打开浏览器，并找下编码方式，显然有些费事，使用几行代码解决更加省事并且显得酷一些。</p>
-
-<p>四、自动获取网页编码方式的方法</p>
-
-<p>    获取网页编码的方式有很多，个人更喜欢用第三方库的方式。</p>
-
-<p>    首先我们需要安装第三方库chardet，它是用来判断编码的模块，安装方法如下图所示，只需要输入指令：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install chardet
+<h2 id="07-游戏主体循环以及帧率设置">07 游戏主体循环以及帧率设置</h2>
+<p>游戏主体的话，我们直接开一个死循环来不断刷新显示上面介绍的三个对象。代码设计如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1# 游戏循环帧率设置
+ 2clock = pygame.time.Clock()
+ 3
+ 4# 判断游戏循环退出的参数
+ 5running = True
+ 6
+ 7# 游戏主循环
+ 8while running:
+ 9    # 控制游戏最大帧率为 60
+10    clock.tick(60)
+11
+12    ……游戏运行部分
 </code></pre></div></div>
-<p><img src="https://img-blog.csdn.net/20170228211429052?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-    安装好后，我们就可以使用chardet.detect()方法，判断网页的编码方式了。至此，我们就可以编写一个小程序判断网页的编码方式了，新建文件名为chardet_test01.py：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding: UTF-8 -*-
-from urllib import request
-import chardet
+<p>关于pygame.time.Clock()，贪吃蛇那篇已经介绍过了。就是用来控制游戏帧率的。只要我们的玩家飞机没有被敌机撞到，即属于存活状态时。running将一直为真。</p>
 
-if __name__ == "__main__":
-    response = request.urlopen("http://fanyi.baidu.com/")
-    html = response.read()
-    charset = chardet.detect(html)
-    print(charset)
+<h2 id="08-让子弹飞">08 让子弹飞</h2>
+<p>在running循环里面，我们要做的是不断自动刷出子弹。当然，子弹是从玩家飞机上射出来的。</p>
+
+<p>首先是发射子弹</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1# 生成子弹，需要控制发射频率
+2# 首先判断玩家飞机没有被击中
+3# 循环15次发射一个子弹
+4if not player.is_hit:
+5    if shoot_frequency % 15 == 0:
+6        player.shoot(bullet_img)
+7    shoot_frequency += 1
+8    if shoot_frequency &gt;= 15:
+9        shoot_frequency = 0
 </code></pre></div></div>
-<p>    运行程序，查看输出结果如下：</p>
+<p>shoot_frequency变量的作用就是控制子弹发射的频率，它控制在running每循环15次发射一个子弹。</p>
 
-<p><img src="https://img-blog.csdn.net/20170228211514256?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<p>接着是子弹移动</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1for bullet in player.bullets:
+2# 以固定速度移动子弹
+3bullet.move()
+4# 移动出屏幕后删除子弹
+5if bullet.rect.bottom &lt; 0:
+6    player.bullets.remove(bullet)  
+</code></pre></div></div>
+<p>子弹移动的话，running每循环一次，就move一下。不过要注意当子弹移动出屏幕后删除。不然可能会爆电脑内存。</p>
 
-<h2 id="瞧返回的是一个字典这样我们就知道网页的编码方式了通过获得的信息采用不同的解码方式即可">    瞧，返回的是一个字典，这样我们就知道网页的编码方式了，通过获得的信息，采用不同的解码方式即可。</h2>
+<h2 id="09-刷出敌机-打怪">09 刷出敌机 打怪</h2>
+<p>和子弹类似的，在running循环里，随机刷出敌机。</p>
+
+<p>先是刷怪</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1# 生成敌机，需要控制生成频率
+2# 循环50次生成一架敌机
+3if enemy_frequency % 50 == 0:
+4    enemy1_pos = [random.randint(0, SCREEN_WIDTH - enemy1_rect.width), 0]
+5    enemy1 = Enemy(enemy1_img, enemy1_down_imgs, enemy1_pos)
+6    enemies1.add(enemy1)
+7enemy_frequency += 1
+8if enemy_frequency &gt;= 100:
+9    enemy_frequency = 0
+enemy_frequency变量的作用同样是控制刷怪的频率。running每循环50次就刷一个怪出来，位置是randint函数随机生成的。
+</code></pre></div></div>
+<p>接着让怪移动</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 for enemy in enemies1:
+2    #2. 移动敌机
+3    enemy.move()
+4    #4. 移动出屏幕后删除敌人
+5    if enemy.rect.top &lt; 0:
+6        enemies1.remove(enemy)
+移动的话也很简单，每running循环一次就move一次就行。但是还是注意。敌机移出屏幕后要删除，避免爆内存啊。
+</code></pre></div></div>
+<p>然后是碰撞检测</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1#3. 敌机与玩家飞机碰撞效果处理
+2if pygame.sprite.collide_circle(enemy, player):
+3    enemies_down.add(enemy)
+4    enemies1.remove(enemy)
+5    player.is_hit = True
+6    break
+</code></pre></div></div>
+<p>这里介绍一下pygame.sprite.collide_circle，这个函数的作用是判断两个精灵对象有没有碰撞。如果敌机和玩家飞机装上了，那很明显GameOver了。直接把running循环给break就行了。</p>
+
+<h2 id="10-把飞机敌机子弹都画出来">10 把飞机敌机子弹都画出来</h2>
+<p>前面说了这么多，最终我们还是要把这三个主要的对象画到屏幕上显示出来，然后通过每一次running循环更新它们的状态（正常？撞击？爆炸？）。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1#敌机被子弹击中效果处理
+ 2#将被击中的敌机对象添加到击毁敌机 Group 中
+ 3enemies1_down = pygame.sprite.groupcollide(enemies1, player.bullets, 1, 1)
+ 4for enemy_down in enemies1_down:
+ 5    enemies_down.add(enemy_down)
+ 6
+ 7# 绘制背景
+ 8screen.fill(0)
+ 9screen.blit(background, (0, 0))
+10
+11# 绘制玩家飞机
+12if not player.is_hit:
+13    screen.blit(player.image[0], player.rect) #将正常飞机画出来
+14else:
+15    # 玩家飞机被击中后的效果处理
+16    screen.blit(player.image[1], player.rect) #将爆炸的飞机画出来
+17    running = False
+18
+19# 敌机被子弹击中效果显示
+20for enemy_down in enemies_down:
+21    enemies_down.remove(enemy_down)
+22    score += 1
+23    screen.blit(enemy_down.down_imgs, enemy_down.rect) #将爆炸的敌机画出来
+24
+25
+26    # 显示子弹
+27    player.bullets.draw(screen)
+28    # 显示敌机
+29    enemies1.draw(screen)
+</code></pre></div></div>
+<p>注意的是，玩家飞机和敌机都有两种状态，一种是正常状态，另外一种是爆炸状态。在画之前要判断清楚再下手。然后再介绍一下pygame.sprite.groupcollide函数，这个函数是判断两个精灵组里面的精灵有没有相互碰撞的。它会把A组的精灵逐个和B组的精灵进行比较判断。</p>
+
+<h2 id="11-处理键盘事件">11 处理键盘事件</h2>
+<p>键盘事件的处理是十分重要的，我们通过键盘移动飞机，更新飞机的位置。最终再画出来。代码如下</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1# 处理游戏退出
+ 2for event in pygame.event.get():
+ 3    if event.type == pygame.QUIT:
+ 4        pygame.quit()
+ 5        exit()
+ 6
+ 7# 获取键盘事件（上下左右按键）
+ 8key_pressed = pygame.key.get_pressed()
+ 9
+10# 处理键盘事件（移动飞机的位置）
+11if key_pressed[K_w] or key_pressed[K_UP]:
+12    player.moveUp()
+13if key_pressed[K_s] or key_pressed[K_DOWN]:
+14    player.moveDown()
+15if key_pressed[K_a] or key_pressed[K_LEFT]:
+16    player.moveLeft()
+17if key_pressed[K_d] or key_pressed[K_RIGHT]:
+18    player.moveRight()
+12 分数显示 和 GameOver
+</code></pre></div></div>
+<p>对于分数显示，其实很简单，用一个font对象，在render渲染到屏幕上就可以了。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1# 绘制得分
+2score_font = pygame.font.Font(None, 36)
+3score_text = score_font.render('score: '+str(score), True, (128, 128, 128))
+4text_rect = score_text.get_rect()
+5text_rect.topleft = [10, 10]
+6screen.blit(score_text, text_rect)
+</code></pre></div></div>
+<p>不过，需要注意的是，最后我们还要将总得分在游戏结束的时候写出来。然后游戏结束的时候，我们还要把GameOver那张图片也blit出来。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1# 游戏 Game Over 后显示最终得分
+2font = pygame.font.Font(None, 64)
+3text = font.render('Final Score: '+ str(score), True, (255, 0, 0))
+4text_rect = text.get_rect()
+5text_rect.centerx = screen.get_rect().centerx
+6text_rect.centery = screen.get_rect().centery + 24
+7screen.blit(game_over, (0, 0))
+8screen.blit(text, text_rect)
+</code></pre></div></div>
+<p>13 最终代码</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  1#-*- coding: utf-8 -*-
+  2import pygame
+  3from sys import exit
+  4from pygame.locals import *
+  5import random
+  6
+  7# 设置游戏屏幕大小
+  8SCREEN_WIDTH = 480
+  9SCREEN_HEIGHT = 800
+ 10
+ 11# 子弹类
+ 12class Bullet(pygame.sprite.Sprite):
+ 13    def __init__(self, bullet_img, init_pos):
+ 14        pygame.sprite.Sprite.__init__(self)
+ 15        self.image = bullet_img
+ 16        self.rect = self.image.get_rect()
+ 17        self.rect.midbottom = init_pos
+ 18        self.speed = 10
+ 19
+ 20    def move(self):
+ 21        self.rect.top -= self.speed
+ 22
+ 23# 玩家飞机类
+ 24class Player(pygame.sprite.Sprite):
+ 25    def __init__(self, plane_img, player_rect, init_pos):
+ 26        pygame.sprite.Sprite.__init__(self)
+ 27        self.image = []                                 # 用来存储玩家飞机图片的列表
+ 28        for i in range(len(player_rect)):
+ 29            self.image.append(plane_img.subsurface(player_rect[i]).convert_alpha())
+ 30        self.rect = player_rect[0]                      # 初始化图片所在的矩形
+ 31        self.rect.topleft = init_pos                    # 初始化矩形的左上角坐标
+ 32        self.speed = 8                                  # 初始化玩家飞机速度，这里是一个确定的值
+ 33        self.bullets = pygame.sprite.Group()            # 玩家飞机所发射的子弹的集合
+ 34        self.is_hit = False                             # 玩家是否被击中
+ 35
+ 36    # 发射子弹
+ 37    def shoot(self, bullet_img):
+ 38        bullet = Bullet(bullet_img, self.rect.midtop)
+ 39        self.bullets.add(bullet)
+ 40
+ 41    # 向上移动，需要判断边界
+ 42    def moveUp(self):
+ 43        if self.rect.top &lt;= 0:
+ 44            self.rect.top = 0
+ 45        else:
+ 46            self.rect.top -= self.speed
+ 47
+ 48    # 向下移动，需要判断边界
+ 49    def moveDown(self):
+ 50        if self.rect.top &gt;= SCREEN_HEIGHT - self.rect.height:
+ 51            self.rect.top = SCREEN_HEIGHT - self.rect.height
+ 52        else:
+ 53            self.rect.top += self.speed
+ 54
+ 55    # 向左移动，需要判断边界
+ 56    def moveLeft(self):
+ 57        if self.rect.left &lt;= 0:
+ 58            self.rect.left = 0
+ 59        else:
+ 60            self.rect.left -= self.speed
+ 61
+ 62    # 向右移动，需要判断边界        
+ 63    def moveRight(self):
+ 64        if self.rect.left &gt;= SCREEN_WIDTH - self.rect.width:
+ 65            self.rect.left = SCREEN_WIDTH - self.rect.width
+ 66        else:
+ 67            self.rect.left += self.speed
+ 68
+ 69# 敌机类
+ 70class Enemy(pygame.sprite.Sprite):
+ 71    def __init__(self, enemy_img, enemy_down_imgs, init_pos):
+ 72       pygame.sprite.Sprite.__init__(self)
+ 73       self.image = enemy_img
+ 74       self.rect = self.image.get_rect()
+ 75       self.rect.topleft = init_pos
+ 76       self.down_imgs = enemy_down_imgs
+ 77       self.speed = 2
+ 78
+ 79    # 敌机移动，边界判断及删除在游戏主循环里处理
+ 80    def move(self):
+ 81        self.rect.top += self.speed
+ 82
+ 83# 初始化 pygame
+ 84pygame.init()
+ 85
+ 86# 设置游戏界面大小、背景图片及标题
+ 87# 游戏界面像素大小
+ 88screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+ 89
+ 90# 游戏界面标题
+ 91pygame.display.set_caption('Python打飞机大战')
+ 92
+ 93# 背景图
+ 94background = pygame.image.load('resources/image/background.png').convert()
+ 95
+ 96# Game Over 的背景图
+ 97game_over = pygame.image.load('resources/image/gameover.png')
+ 98
+ 99# 飞机及子弹图片集合
+100plane_img = pygame.image.load('resources/image/shoot.png')
+101
+102# 设置玩家飞机不同状态的图片列表，多张图片展示为动画效果
+103player_rect = []
+104player_rect.append(pygame.Rect(0, 99, 102, 126))        # 玩家飞机图片
+105player_rect.append(pygame.Rect(165, 234, 102, 126))     # 玩家爆炸图片
+106
+107player_pos = [200, 600]
+108player = Player(plane_img, player_rect, player_pos)
+109
+110# 子弹图片
+111bullet_rect = pygame.Rect(1004, 987, 9, 21)
+112bullet_img = plane_img.subsurface(bullet_rect)
+113
+114# 敌机不同状态的图片列表，包括正常敌机，爆炸的敌机图片
+115enemy1_rect = pygame.Rect(534, 612, 57, 43)
+116enemy1_img = plane_img.subsurface(enemy1_rect)
+117enemy1_down_imgs = plane_img.subsurface(pygame.Rect(267, 347, 57, 43))
+118
+119
+120#存储敌机，管理多个对象
+121enemies1 = pygame.sprite.Group()
+122
+123# 存储被击毁的飞机
+124enemies_down = pygame.sprite.Group()
+125
+126# 初始化射击及敌机移动频率
+127shoot_frequency = 0
+128enemy_frequency = 0
+129
+130# 初始化分数
+131score = 0
+132
+133# 游戏循环帧率设置
+134clock = pygame.time.Clock()
+135
+136# 判断游戏循环退出的参数
+137running = True
+138
+139# 游戏主循环
+140while running:
+141    # 控制游戏最大帧率为 60
+142    clock.tick(60)
+143
+144    # 生成子弹，需要控制发射频率
+145    # 首先判断玩家飞机没有被击中
+146    # 循环15次发射一个子弹
+147    if not player.is_hit:
+148        if shoot_frequency % 15 == 0:
+149            player.shoot(bullet_img)
+150        shoot_frequency += 1
+151        if shoot_frequency &gt;= 15:
+152            shoot_frequency = 0
+153
+154    # 生成敌机，需要控制生成频率
+155    # 循环50次生成一架敌机
+156    if enemy_frequency % 50 == 0:
+157        enemy1_pos = [random.randint(0, SCREEN_WIDTH - enemy1_rect.width), 0]
+158        enemy1 = Enemy(enemy1_img, enemy1_down_imgs, enemy1_pos)
+159        enemies1.add(enemy1)
+160    enemy_frequency += 1
+161    if enemy_frequency &gt;= 100:
+162        enemy_frequency = 0
+163
+164    for bullet in player.bullets:
+165        # 以固定速度移动子弹
+166        bullet.move()
+167        # 移动出屏幕后删除子弹
+168        if bullet.rect.bottom &lt; 0:
+169            player.bullets.remove(bullet)   
+170
+171    for enemy in enemies1:
+172        #2. 移动敌机
+173        enemy.move()
+174        #3. 敌机与玩家飞机碰撞效果处理
+175        if pygame.sprite.collide_circle(enemy, player):
+176            enemies_down.add(enemy)
+177            enemies1.remove(enemy)
+178            player.is_hit = True
+179            break
+180        #4. 移动出屏幕后删除敌人
+181        if enemy.rect.top &lt; 0:
+182            enemies1.remove(enemy)
+183
+184    #敌机被子弹击中效果处理
+185    #将被击中的敌机对象添加到击毁敌机 Group 中
+186    enemies1_down = pygame.sprite.groupcollide(enemies1, player.bullets, 1, 1)
+187    for enemy_down in enemies1_down:
+188        enemies_down.add(enemy_down)
+189
+190    # 绘制背景
+191    screen.fill(0)
+192    screen.blit(background, (0, 0))
+193
+194    # 绘制玩家飞机
+195    if not player.is_hit:
+196        screen.blit(player.image[0], player.rect) #将正常飞机画出来
+197    else:
+198        # 玩家飞机被击中后的效果处理
+199        screen.blit(player.image[1], player.rect) #将爆炸的飞机画出来
+200        running = False
+201
+202    # 敌机被子弹击中效果显示
+203    for enemy_down in enemies_down:
+204        enemies_down.remove(enemy_down)
+205        score += 1
+206        screen.blit(enemy_down.down_imgs, enemy_down.rect) #将爆炸的敌机画出来
+207
+208
+209    # 显示子弹
+210    player.bullets.draw(screen)
+211    # 显示敌机
+212    enemies1.draw(screen)
+213
+214    # 绘制得分
+215    score_font = pygame.font.Font(None, 36)
+216    score_text = score_font.render('score: '+str(score), True, (128, 128, 128))
+217    text_rect = score_text.get_rect()
+218    text_rect.topleft = [10, 10]
+219    screen.blit(score_text, text_rect)
+220
+221    # 更新屏幕
+222    pygame.display.update()
+223
+224    # 处理游戏退出
+225    for event in pygame.event.get():
+226        if event.type == pygame.QUIT:
+227            pygame.quit()
+228            exit()
+229
+230    # 获取键盘事件（上下左右按键）
+231    key_pressed = pygame.key.get_pressed()
+232
+233    # 处理键盘事件（移动飞机的位置）
+234    if key_pressed[K_w] or key_pressed[K_UP]:
+235        player.moveUp()
+236    if key_pressed[K_s] or key_pressed[K_DOWN]:
+237        player.moveDown()
+238    if key_pressed[K_a] or key_pressed[K_LEFT]:
+239        player.moveLeft()
+240    if key_pressed[K_d] or key_pressed[K_RIGHT]:
+241        player.moveRight()
+242
+243# 游戏 Game Over 后显示最终得分
+244font = pygame.font.Font(None, 64)
+245text = font.render('Final Score: '+ str(score), True, (255, 0, 0))
+246text_rect = text.get_rect()
+247text_rect.centerx = screen.get_rect().centerx
+248text_rect.centery = screen.get_rect().centery + 24
+249screen.blit(game_over, (0, 0))
+250screen.blit(text, text_rect)
+251
+252# 显示得分并处理游戏退出
+253while 1:
+254    for event in pygame.event.get():
+255        if event.type == pygame.QUIT:
+256            pygame.quit()
+257            exit()
+258    pygame.display.update()
+</code></pre></div></div>
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2017/05/21/python2/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/06/15/datamining/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
@@ -1153,10 +1697,10 @@ if __name__ == "__main__":
             <a href="/index.html" class="previous"><i class="fa fa-angle-double-left"></i></a>
             <a href="/" class="previous"><i class="fa fa-angle-left"></i></a>
           
-          <span class="page_number ">2/6</span>
+          <span class="page_number ">2/10</span>
           
             <a href="/page3" class="next"><i class="fa fa-angle-right"></i></a>
-            <a href="/page6" class="next"><i class="fa fa-angle-double-right"></i></a>
+            <a href="/page10" class="next"><i class="fa fa-angle-double-right"></i></a>
           
         </div>
     </div>
@@ -1172,23 +1716,23 @@ if __name__ == "__main__":
                     
                         <li><a href="/2019/01/25/test/">Hello World!</a></li>
                     
-                        <li><a href="/2018/02/13/python7/">Python3网络爬虫(五)：爬取人物头像</a></li>
+                        <li><a href="/2019/01/19/dl/">深度学习与语音识别—常用声学模型简介</a></li>
                     
-                        <li><a href="/2018/02/13/python6/">Python3网络爬虫(五)：爬取人物头像</a></li>
+                        <li><a href="/2019/01/16/datamining/">Kmeans文本聚类实施过程</a></li>
                     
-                        <li><a href="/2018/02/01/Hive2/">Hive的几种常见的数据导入方式</a></li>
+                        <li><a href="/2018/11/23/datamining/">文本数据挖掘-----词向量</a></li>
                     
-                        <li><a href="/2018/02/01/Hive1/">Hive的几种常见的数据导入方式</a></li>
+                        <li><a href="/2018/10/28/datamining/">TF-IDF提取文章关键词算法</a></li>
                     
-                        <li><a href="/2018/01/11/python5/">Python3网络爬虫(四)：Python3安装Scrapy</a></li>
+                        <li><a href="/2018/10/12/datamining/">基于用户的协同过滤推荐算法java实现（UserCF）</a></li>
                     
-                        <li><a href="/2017/09/16/1-Algorams3/">剑指offer:链表中倒数第k个节点</a></li>
+                        <li><a href="/2018/10/05/datamining/">Louvain 社团发现算法学习</a></li>
                     
-                        <li><a href="/2017/09/16/1-Algorams2/">剑指offer:链表中倒数第k个节点</a></li>
+                        <li><a href="/2018/09/26/datamining/">使用python提取文章关键词</a></li>
                     
-                        <li><a href="/2017/06/11/JavaScript-function/">JavaScript 函数</a></li>
+                        <li><a href="/2018/07/11/datamining/">基于内容的推荐 java实现</a></li>
                     
-                        <li><a href="/2017/05/22/python4/">Python3网络爬虫(三)：使用User Agent和代理IP隐藏身份</a></li>
+                        <li><a href="/2018/07/11/datamining/">机器学习算法——PCA算法介绍以及Java实现</a></li>
                     
                 </ul>
             </div>
@@ -1200,6 +1744,15 @@ if __name__ == "__main__":
                     目录
                 </div>
                 <ul class="content-ul" cate>
+                    
+                    <li>
+                        <a href="/category/#数据挖掘" class="categories-list-item" cate="数据挖掘">
+                            <span class="name">
+                                数据挖掘
+                            </span>
+                            <span class="badge">10</span>
+                        </a>
+                    </li>
                     
                     <li>
                         <a href="/category/#大数据技术" class="categories-list-item" cate="大数据技术">
@@ -1229,9 +1782,27 @@ if __name__ == "__main__":
                     </li>
                     
                     <li>
+                        <a href="/category/#Python" class="categories-list-item" cate="Python">
+                            <span class="name">
+                                Python
+                            </span>
+                            <span class="badge">3</span>
+                        </a>
+                    </li>
+                    
+                    <li>
                         <a href="/category/#Java" class="categories-list-item" cate="Java">
                             <span class="name">
                                 Java
+                            </span>
+                            <span class="badge">2</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#开发工具" class="categories-list-item" cate="开发工具">
+                            <span class="name">
+                                开发工具
                             </span>
                             <span class="badge">2</span>
                         </a>
@@ -1247,15 +1818,6 @@ if __name__ == "__main__":
                     </li>
                     
                     <li>
-                        <a href="/category/#Python" class="categories-list-item" cate="Python">
-                            <span class="name">
-                                Python
-                            </span>
-                            <span class="badge">1</span>
-                        </a>
-                    </li>
-                    
-                    <li>
                         <a href="/category/#jekyll" class="categories-list-item" cate="jekyll">
                             <span class="name">
                                 jekyll
@@ -1265,9 +1827,18 @@ if __name__ == "__main__":
                     </li>
                     
                     <li>
-                        <a href="/category/#开发工具" class="categories-list-item" cate="开发工具">
+                        <a href="/category/#机器学习" class="categories-list-item" cate="机器学习">
                             <span class="name">
-                                开发工具
+                                机器学习
+                            </span>
+                            <span class="badge">7</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#R" class="categories-list-item" cate="R">
+                            <span class="name">
+                                R
                             </span>
                             <span class="badge">1</span>
                         </a>
@@ -1279,6 +1850,24 @@ if __name__ == "__main__":
                                 Python网络爬虫
                             </span>
                             <span class="badge">6</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#深度学习" class="categories-list-item" cate="深度学习">
+                            <span class="name">
+                                深度学习
+                            </span>
+                            <span class="badge">4</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#数据分析" class="categories-list-item" cate="数据分析">
+                            <span class="name">
+                                数据分析
+                            </span>
+                            <span class="badge">1</span>
                         </a>
                     </li>
                     
@@ -1304,6 +1893,34 @@ if __name__ == "__main__":
                       
                       
                       
+                      <a href="/tag/#数据挖掘" style="font-size: 18pt; color: #000;">数据挖掘</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#机器学习" style="font-size: 15.5pt; color: #333;">机器学习</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#深度学习" style="font-size: 11pt; color: #777;">深度学习</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#推荐算法" style="font-size: 12.5pt; color: #555;">推荐算法</a>
+                    
+                      
+                      
+                      
+                      
+                      
                       <a href="/tag/#Hadoop" style="font-size: 9pt; color: #999;">Hadoop</a>
                     
                       
@@ -1311,14 +1928,14 @@ if __name__ == "__main__":
                       
                       
                       
-                      <a href="/tag/#大数据技术" style="font-size: 11.5pt; color: #666;">大数据技术</a>
+                      <a href="/tag/#大数据技术" style="font-size: 10pt; color: #888;">大数据技术</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#GitHub" style="font-size: 10.5pt; color: #888;">GitHub</a>
+                      <a href="/tag/#GitHub" style="font-size: 10pt; color: #888;">GitHub</a>
                     
                       
                       
@@ -1339,7 +1956,14 @@ if __name__ == "__main__":
                       
                       
                       
-                      <a href="/tag/#JavaScript" style="font-size: 14pt; color: #444;">JavaScript</a>
+                      <a href="/tag/#JavaScript" style="font-size: 12.5pt; color: #555;">JavaScript</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#python" style="font-size: 14.5pt; color: #444;">python</a>
                     
                       
                       
@@ -1360,42 +1984,49 @@ if __name__ == "__main__":
                       
                       
                       
-                      <a href="/tag/#Java" style="font-size: 18pt; color: #000;">Java</a>
+                      <a href="/tag/#Java" style="font-size: 17pt; color: #111;">Java</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#数据结构" style="font-size: 15.5pt; color: #333;">数据结构</a>
+                      <a href="/tag/#Myeclipse" style="font-size: 9pt; color: #999;">Myeclipse</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#剑指offer" style="font-size: 15.5pt; color: #333;">剑指offer</a>
+                      <a href="/tag/#软件开发工具" style="font-size: 9pt; color: #999;">软件开发工具</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#面试" style="font-size: 15.5pt; color: #333;">面试</a>
+                      <a href="/tag/#数据结构" style="font-size: 13.5pt; color: #444;">数据结构</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#python" style="font-size: 9pt; color: #999;">python</a>
+                      <a href="/tag/#剑指offer" style="font-size: 13.5pt; color: #444;">剑指offer</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#jekyll" style="font-size: 11.5pt; color: #666;">jekyll</a>
+                      <a href="/tag/#面试" style="font-size: 13.5pt; color: #444;">面试</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#jekyll" style="font-size: 11pt; color: #777;">jekyll</a>
                     
                       
                       
@@ -1430,6 +2061,13 @@ if __name__ == "__main__":
                       
                       
                       
+                      <a href="/tag/#R" style="font-size: 9pt; color: #999;">R</a>
+                    
+                      
+                      
+                      
+                      
+                      
                       <a href="/tag/#正则" style="font-size: 9pt; color: #999;">正则</a>
                     
                       
@@ -1444,21 +2082,112 @@ if __name__ == "__main__":
                       
                       
                       
-                      <a href="/tag/#Python" style="font-size: 15.5pt; color: #333;">Python</a>
+                      <a href="/tag/#Python" style="font-size: 13.5pt; color: #444;">Python</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#网络爬虫" style="font-size: 15.5pt; color: #333;">网络爬虫</a>
+                      <a href="/tag/#网络爬虫" style="font-size: 13.5pt; color: #444;">网络爬虫</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#Hive" style="font-size: 10.5pt; color: #888;">Hive</a>
+                      <a href="/tag/#文本挖掘" style="font-size: 11.5pt; color: #666;">文本挖掘</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#中文分词" style="font-size: 11pt; color: #777;">中文分词</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#数据分析" style="font-size: 10pt; color: #888;">数据分析</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#可视化" style="font-size: 9pt; color: #999;">可视化</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#Hive" style="font-size: 9pt; color: #999;">Hive</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#特征选择" style="font-size: 10pt; color: #888;">特征选择</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#DNN" style="font-size: 9pt; color: #999;">DNN</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#情感分析" style="font-size: 9pt; color: #999;">情感分析</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#神经网络" style="font-size: 10pt; color: #888;">神经网络</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#数据仓库" style="font-size: 9pt; color: #999;">数据仓库</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#ETL" style="font-size: 9pt; color: #999;">ETL</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#java" style="font-size: 11pt; color: #777;">java</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#PCA" style="font-size: 9pt; color: #999;">PCA</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#kmeans" style="font-size: 9pt; color: #999;">kmeans</a>
                     
                 </div>
             </div>

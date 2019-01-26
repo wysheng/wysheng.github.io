@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>机器学习各种算法对比总结</title>
+    <meta name="description" content="  近邻 (Nearest Neighbor)  贝叶斯 (Bayesian)  决策树 (Decision tree)  随机森林 (Random forest)  SVM (Support vector machine)  逻辑斯蒂回归 (Logistic regression)  判别分析 (Discrim...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2018/02/19/ml/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>机器学习各种算法对比总结</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2018-02-19
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#机器学习" title="Category: 机器学习" rel="category">机器学习</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0" title="Tag: 机器学习" rel="tag">机器学习</a-->
+        <a href="/tag/#机器学习" title="Tag: 机器学习" rel="tag">机器学习</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#近邻-nearest-neighbor" id="markdown-toc-近邻-nearest-neighbor">近邻 (Nearest Neighbor)</a></li>
+  <li><a href="#贝叶斯-bayesian" id="markdown-toc-贝叶斯-bayesian">贝叶斯 (Bayesian)</a></li>
+  <li><a href="#决策树-decision-tree" id="markdown-toc-决策树-decision-tree">决策树 (Decision tree)</a></li>
+  <li><a href="#随机森林-random-forest" id="markdown-toc-随机森林-random-forest">随机森林 (Random forest)</a></li>
+  <li><a href="#svm-support-vector-machine" id="markdown-toc-svm-support-vector-machine">SVM (Support vector machine)</a></li>
+  <li><a href="#逻辑斯蒂回归-logistic-regression" id="markdown-toc-逻辑斯蒂回归-logistic-regression">逻辑斯蒂回归 (Logistic regression)</a></li>
+  <li><a href="#判别分析-discriminant-analysis" id="markdown-toc-判别分析-discriminant-analysis">判别分析 (Discriminant analysis)</a></li>
+  <li><a href="#神经网络-neural-network" id="markdown-toc-神经网络-neural-network">神经网络 (Neural network)</a></li>
+  <li><a href="#rule-based-methods" id="markdown-toc-rule-based-methods">Rule-based methods</a></li>
+  <li><a href="#提升算法boosting" id="markdown-toc-提升算法boosting">提升算法（Boosting）</a></li>
+  <li><a href="#装袋算法bagging" id="markdown-toc-装袋算法bagging">装袋算法（Bagging）</a></li>
+  <li><a href="#stacking" id="markdown-toc-stacking">Stacking</a></li>
+  <li><a href="#多专家模型mixture-of-experts" id="markdown-toc-多专家模型mixture-of-experts">多专家模型（Mixture of Experts）</a></li>
+  <li><a href="#最大熵模型-maximum-entropy-model" id="markdown-toc-最大熵模型-maximum-entropy-model">最大熵模型 (Maximum entropy model)</a></li>
+  <li><a href="#lr其实就是使用最大熵模型作为优化目标的一个算法4" id="markdown-toc-lr其实就是使用最大熵模型作为优化目标的一个算法4">LR其实就是使用最大熵模型作为优化目标的一个算法4。</a></li>
+  <li><a href="#em" id="markdown-toc-em">EM</a></li>
+  <li><a href="#隐马尔科夫-hidden-markov-model" id="markdown-toc-隐马尔科夫-hidden-markov-model">隐马尔科夫 (Hidden Markov model)</a></li>
+  <li><a href="#1决策树decision-trees的优缺点" id="markdown-toc-1决策树decision-trees的优缺点">1决策树（Decision Trees）的优缺点</a></li>
+  <li><a href="#2-人工神经网络的优缺点" id="markdown-toc-2-人工神经网络的优缺点">2 人工神经网络的优缺点</a></li>
+  <li><a href="#3-遗传算法的优缺点" id="markdown-toc-3-遗传算法的优缺点">3 遗传算法的优缺点</a></li>
+  <li><a href="#4-knn算法k-nearest-neighbour-的优缺点" id="markdown-toc-4-knn算法k-nearest-neighbour-的优缺点">4 KNN算法(K-Nearest Neighbour) 的优缺点</a></li>
+  <li><a href="#knn算法缺点" id="markdown-toc-knn算法缺点">KNN算法缺点：</a></li>
+  <li><a href="#5-支持向量机svm的优缺点" id="markdown-toc-5-支持向量机svm的优缺点">5 支持向量机（SVM）的优缺点</a></li>
+  <li><a href="#6-朴素贝叶斯的优缺点" id="markdown-toc-6-朴素贝叶斯的优缺点">6 朴素贝叶斯的优缺点</a></li>
+  <li><a href="#7-adaboosting方法的优点" id="markdown-toc-7-adaboosting方法的优点">7 Adaboosting方法的优点</a></li>
+  <li><a href="#8-rocchio的优点" id="markdown-toc-8-rocchio的优点">8 Rocchio的优点</a></li>
+  <li><a href="#9各种分类算法比较" id="markdown-toc-9各种分类算法比较">9各种分类算法比较</a></li>
+</ul>
+<p>各种机器学习的应用场景分别是什么？例如，k近邻,贝叶斯，决策树，svm，逻辑斯蒂回归和最大熵模型。
+k近邻,贝叶斯，决策树，svm，逻辑斯蒂回归和最大熵模型,隐马尔科夫，条件随机场，adaboost，em 这些在一般工作中，分别用到的频率多大？一般用…</p>
+
+<p>关于这个问题我今天正好看到了这个文章。讲的正是各个算法的优劣分析，很中肯。</p>
+
+<p>https://zhuanlan.zhihu.com/p/25327755</p>
+
+<p>正好14年的时候有人做过一个实验<a href="Do we need hundreds of classifiers to solve real world classification problems.">1</a>，比较在不同数据集上（121个），不同的分类器（179个）的实际效果。</p>
+
+<p>论文题为：Do we Need Hundreds of Classifiers to Solve Real World Classification Problems?</p>
+
+<p>实验时间有点早，我尝试着结合我自己的理解、一些最近的实验，来谈一谈吧。主要针对分类器(Classifier)。</p>
+
+<p>写给懒得看的人：</p>
+
+<p>没有最好的分类器，只有最合适的分类器。
+随机森林平均来说最强，但也只在9.9%的数据集上拿到了第一，优点是鲜有短板。</p>
+
+<p>SVM的平均水平紧随其后，在10.7%的数据集上拿到第一。</p>
+
+<p>神经网络（13.2%）和boosting（~9%）表现不错。</p>
+
+<p>数据维度越高，随机森林就比AdaBoost强越多，但是整体不及SVM<a href="An empirical evaluation of supervised learning in high dimensions.">2</a>。</p>
+
+<p>数据量越大，神经网络就越强。</p>
+
+<h2 id="近邻-nearest-neighbor">近邻 (Nearest Neighbor)</h2>
+<p>典型的例子是KNN，它的思路就是——对于待判断的点，找到离它最近的几个数据点，根据它们的类型决定待判断点的类型。</p>
+
+<p>它的特点是完全跟着数据走，没有数学模型可言。</p>
+
+<p>适用情景：</p>
+
+<p>需要一个特别容易解释的模型的时候。</p>
+
+<p>比如需要向用户解释原因的推荐算法。</p>
+
+<h2 id="贝叶斯-bayesian">贝叶斯 (Bayesian)</h2>
+<p>典型的例子是Naive Bayes，核心思路是根据条件概率计算待判断点的类型。</p>
+
+<p>是相对容易理解的一个模型，至今依然被垃圾邮件过滤器使用。</p>
+
+<p>适用情景：</p>
+
+<p>需要一个比较容易解释，而且不同维度之间相关性较小的模型的时候。</p>
+
+<p>可以高效处理高维数据，虽然结果可能不尽如人意。</p>
+
+<h2 id="决策树-decision-tree">决策树 (Decision tree)</h2>
+<p>决策树的特点是它总是在沿着特征做切分。随着层层递进，这个划分会越来越细。</p>
+
+<p>虽然生成的树不容易给用户看，但是数据分析的时候，通过观察树的上层结构，能够对分类器的核心思路有一个直观的感受。</p>
+
+<p>举个简单的例子，当我们预测一个孩子的身高的时候，决策树的第一层可能是这个孩子的性别。男生走左边的树进行进一步预测，女生则走右边的树。这就说明性别对身高有很强的影响。</p>
+
+<p>适用情景：</p>
+
+<p>因为它能够生成清晰的基于特征(feature)选择不同预测结果的树状结构，数据分析师希望更好的理解手上的数据的时候往往可以使用决策树。</p>
+
+<p>同时它也是相对容易被攻击的分类器<a href="Man vs. Machine: Practical Adversarial Detection of Malicious Crowdsourcing Workers">3</a>。这里的攻击是指人为的改变一些特征，使得分类器判断错误。常见于垃圾邮件躲避检测中。因为决策树最终在底层判断是基于单个条件的，攻击者往往只需要改变很少的特征就可以逃过监测。</p>
+
+<p>受限于它的简单性，决策树更大的用处是作为一些更有用的算法的基石。</p>
+
+<h2 id="随机森林-random-forest">随机森林 (Random forest)</h2>
+<p>提到决策树就不得不提随机森林。顾名思义，森林就是很多树。</p>
+
+<p>严格来说，随机森林其实算是一种集成算法。它首先随机选取不同的特征(feature)和训练样本(training sample)，生成大量的决策树，然后综合这些决策树的结果来进行最终的分类。</p>
+
+<p>随机森林在现实分析中被大量使用，它相对于决策树，在准确性上有了很大的提升，同时一定程度上改善了决策树容易被攻击的特点。</p>
+
+<p>适用情景：</p>
+
+<p>数据维度相对低（几十维），同时对准确性有较高要求时。</p>
+
+<p>因为不需要很多参数调整就可以达到不错的效果，基本上不知道用什么方法的时候都可以先试一下随机森林。</p>
+
+<h2 id="svm-support-vector-machine">SVM (Support vector machine)</h2>
+<p>SVM的核心思想就是找到不同类别之间的分界面，使得两类样本尽量落在面的两边，而且离分界面尽量远。</p>
+
+<p>最早的SVM是平面的，局限很大。但是利用核函数(kernel function)，我们可以把平面投射(mapping)成曲面，进而大大提高SVM的适用范围。</p>
+
+<p>提高之后的SVM同样被大量使用，在实际分类中展现了很优秀的正确率。</p>
+
+<p>适用情景：</p>
+
+<p>SVM在很多数据集上都有优秀的表现。</p>
+
+<p>相对来说，SVM尽量保持与样本间距离的性质导致它抗攻击的能力更强。</p>
+
+<p>和随机森林一样，这也是一个拿到数据就可以先尝试一下的算法。</p>
+
+<h2 id="逻辑斯蒂回归-logistic-regression">逻辑斯蒂回归 (Logistic regression)</h2>
+<p>逻辑斯蒂回归这个名字太诡异了，我就叫它LR吧，反正讨论的是分类器，也没有别的方法叫LR。顾名思义，它其实是回归类方法的一个变体。</p>
+
+<p>回归方法的核心就是为函数找到最合适的参数，使得函数的值和样本的值最接近。例如线性回归(Linear regression)就是对于函数f(x)=ax+b，找到最合适的a,b。</p>
+
+<p>LR拟合的就不是线性函数了，它拟合的是一个概率学中的函数，f(x)的值这时候就反映了样本属于这个类的概率。</p>
+
+<p>适用情景：</p>
+
+<p>LR同样是很多分类算法的基础组件，它的好处是输出值自然地落在0到1之间，并且有概率意义。</p>
+
+<p>因为它本质上是一个线性的分类器，所以处理不好特征之间相关的情况。</p>
+
+<p>虽然效果一般，却胜在模型清晰，背后的概率学经得住推敲。它拟合出来的参数就代表了每一个特征(feature)对结果的影响。也是一个理解数据的好工具。</p>
+
+<h2 id="判别分析-discriminant-analysis">判别分析 (Discriminant analysis)</h2>
+<p>判别分析主要是统计那边在用，所以我也不是很熟悉，临时找统计系的闺蜜补了补课。这里就现学现卖了。</p>
+
+<p>判别分析的典型例子是线性判别分析(Linear discriminant analysis)，简称LDA。</p>
+
+<p>（这里注意不要和隐含狄利克雷分布(Latent Dirichlet allocation)弄混，虽然都叫LDA但说的不是一件事。）</p>
+
+<p>LDA的核心思想是把高维的样本投射(project)到低维上，如果要分成两类，就投射到一维。要分三类就投射到二维平面上。这样的投射当然有很多种不同的方式，LDA投射的标准就是让同类的样本尽量靠近，而不同类的尽量分开。对于未来要预测的样本，用同样的方式投射之后就可以轻易地分辨类别了。</p>
+
+<p>使用情景：</p>
+
+<p>判别分析适用于高维数据需要降维的情况，自带降维功能使得我们能方便地观察样本分布。它的正确性有数学公式可以证明，所以同样是很经得住推敲的方式。</p>
+
+<p>但是它的分类准确率往往不是很高，所以不是统计系的人就把它作为降维工具用吧。</p>
+
+<p>同时注意它是假定样本成正态分布的，所以那种同心圆形的数据就不要尝试了。</p>
+
+<h2 id="神经网络-neural-network">神经网络 (Neural network)</h2>
+<p>神经网络现在是火得不行啊。它的核心思路是利用训练样本(training sample)来逐渐地完善参数。还是举个例子预测身高的例子，如果输入的特征中有一个是性别（1:男；0:女），而输出的特征是身高（1:高；0:矮）。那么当训练样本是一个个子高的男生的时候，在神经网络中，从“男”到“高”的路线就会被强化。同理，如果来了一个个子高的女生，那从“女”到“高”的路线就会被强化。</p>
+
+<p>最终神经网络的哪些路线比较强，就由我们的样本所决定。</p>
+
+<p>神经网络的优势在于，它可以有很多很多层。如果输入输出是直接连接的，那它和LR就没有什么区别。但是通过大量中间层的引入，它就能够捕捉很多输入特征之间的关系。卷积神经网络有很经典的不同层的可视化展示(visulization)，我这里就不赘述了。</p>
+
+<p>神经网络的提出其实很早了，但是它的准确率依赖于庞大的训练集，原本受限于计算机的速度，分类效果一直不如随机森林和SVM这种经典算法。</p>
+
+<p>使用情景：</p>
+
+<p>数据量庞大，参数之间存在内在联系的时候。</p>
+
+<p>当然现在神经网络不只是一个分类器，它还可以用来生成数据，用来做降维，这些就不在这里讨论了。</p>
+
+<h2 id="rule-based-methods">Rule-based methods</h2>
+<p>这个我是真不熟，都不知道中文翻译是什么。</p>
+
+<p>它里面典型的算法是C5.0 Rules，一个基于决策树的变体。因为决策树毕竟是树状结构，理解上还是有一定难度。所以它把决策树的结果提取出来，形成一个一个两三个条件组成的小规则。</p>
+
+<p>使用情景：</p>
+
+<p>它的准确度比决策树稍低，很少见人用。大概需要提供明确小规则来解释决定的时候才会用吧。</p>
+
+<h2 id="提升算法boosting">提升算法（Boosting）</h2>
+<p>接下来讲的一系列模型，都属于集成学习算法(Ensemble Learning)，基于一个核心理念：三个臭皮匠，顶个诸葛亮。</p>
+
+<p>翻译过来就是：当我们把多个较弱的分类器结合起来的时候，它的结果会比一个强的分类器更</p>
+
+<p>典型的例子是AdaBoost。</p>
+
+<p>AdaBoost的实现是一个渐进的过程，从一个最基础的分类器开始，每次寻找一个最能解决当前错误样本的分类器。用加权取和(weighted sum)的方式把这个新分类器结合进已有的分类器中。</p>
+
+<p>它的好处是自带了特征选择（feature selection），只使用在训练集中发现有效的特征(feature)。这样就降低了分类时需要计算的特征数量，也在一定程度上解决了高维数据难以理解的问题。</p>
+
+<p>最经典的AdaBoost实现中，它的每一个弱分类器其实就是一个决策树。这就是之前为什么说决策树是各种算法的基石。</p>
+
+<p>使用情景：</p>
+
+<p>好的Boosting算法，它的准确性不逊于随机森林。虽然在<a href="Do we need hundreds of classifiers to solve real world classification problems.">1</a>的实验中只有一个挤进前十，但是实际使用中它还是很强的。因为自带特征选择（feature selection）所以对新手很友好，是一个“不知道用什么就试一下它吧”的算法。</p>
+
+<h2 id="装袋算法bagging">装袋算法（Bagging）</h2>
+<p>同样是弱分类器组合的思路，相对于Boosting，其实Bagging更好理解。它首先随机地抽取训练集（training set），以之为基础训练多个弱分类器。然后通过取平均，或者投票(voting)的方式决定最终的分类结果。</p>
+
+<p>因为它随机选取训练集的特点，Bagging可以一定程度上避免过渡拟合(overfit)。</p>
+
+<p>在<a href="Do we need hundreds of classifiers to solve real world classification problems.">1</a>中，最强的Bagging算法是基于SVM的。如果用定义不那么严格的话，随机森林也算是Bagging的一种。</p>
+
+<p>使用情景：</p>
+
+<p>相较于经典的必使算法，Bagging使用的人更少一些。一部分的原因是Bagging的效果和参数的选择关系比较大，用默认参数往往没有很好的效果。</p>
+
+<p>虽然调对参数结果会比决策树和LR好，但是模型也变得复杂了，没事有特别的原因就别用它了。</p>
+
+<h2 id="stacking">Stacking</h2>
+<p>这个我是真不知道中文怎么说了。它所做的是在多个分类器的结果上，再套一个新的分类器。</p>
+
+<p>这个新的分类器就基于弱分类器的分析结果，加上训练标签(training label)进行训练。一般这最后一层用的是LR。</p>
+
+<p>Stacking在<a href="Do we need hundreds of classifiers to solve real world classification problems.">1</a>里面的表现不好，可能是因为增加的一层分类器引入了更多的参数，也可能是因为有过渡拟合(overfit)的现象。</p>
+
+<p>使用情景：</p>
+
+<p>没事就别用了。</p>
+
+<p>（修订：</p>
+
+<p>@庄岩</p>
+
+<p>提醒说stacking在数据挖掘竞赛的网站kaggle上很火，相信参数调得好的话还是对结果能有帮助的。</p>
+
+<p>http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/</p>
+
+<p>这篇文章很好地介绍了stacking的好处。在kaggle这种一点点提升就意味着名次不同的场合下，stacking还是很有效的，但是对于一般商用，它所带来的提升就很难值回额外的复杂度了。）</p>
+
+<h2 id="多专家模型mixture-of-experts">多专家模型（Mixture of Experts）</h2>
+<p>最近这个模型还挺流行的，主要是用来合并神经网络的分类结果。我也不是很熟，对神经网络感兴趣，而且训练集异质性（heterogeneity）比较强的话可以研究一下这个。</p>
+
+<p>讲到这里分类器其实基本说完了。讲一下问题里面其他一些名词吧。</p>
+
+<h2 id="最大熵模型-maximum-entropy-model">最大熵模型 (Maximum entropy model)</h2>
+<p>最大熵模型本身不是分类器，它一般是用来判断模型预测结果的好坏的。</p>
+
+<p>对于它来说，分类器预测是相当于是：针对样本，给每个类一个出现概率。比如说样本的特征是：性别男。我的分类器可能就给出了下面这样一个概率：高（60%），矮（40%）。</p>
+
+<p>而如果这个样本真的是高的，那我们就得了一个分数60%。最大熵模型的目标就是让这些分数的乘积尽量大。</p>
+
+<h2 id="lr其实就是使用最大熵模型作为优化目标的一个算法4">LR其实就是使用最大熵模型作为优化目标的一个算法<a href="http://www.win-vector.com/dfiles/LogisticRegressionMaxEnt.pdf">4</a>。</h2>
+<h2 id="em">EM</h2>
+<p>就像最大熵模型一样，EM不是分类器，而是一个思路。很多算法都是基于这个思路实现的。</p>
+
+<p>@刘奕驰 已经讲得很清楚了，我就不多说了。</p>
+
+<h2 id="隐马尔科夫-hidden-markov-model">隐马尔科夫 (Hidden Markov model)</h2>
+<p>这是一个基于序列的预测方法，核心思想就是通过上一个（或几个）状态预测下一个状态。</p>
+
+<p>之所以叫“隐”马尔科夫是因为它的设定是状态本身我们是看不到的，我们只能根据状态生成的结果序列来学习可能的状态。</p>
+
+<p>适用场景：</p>
+
+<p>可以用于序列的预测，可以用来生成序列。</p>
+
+<p>条件随机场 (Conditional random field)
+典型的例子是linear-chain CRF。</p>
+
+<p>具体的使用 @Aron 有讲，我就不献丑了，因为我从来没用过这个。</p>
+
+<p>就是这些啦。</p>
+
+<p>相关的文章：</p>
+
+<p>Fernández-Delgado, Manuel, et al. J. Mach. Learn. Res 15.1 (2014)</p>
+
+<p>Rich Caruana, Nikos Karampatziakis, and Ainur Yessenalina. ICML ‘08</p>
+
+<p>Wang, G., Wang, T., Zheng, H., &amp; Zhao, B. Y. Usenix Security’14</p>
+
+<h2 id="1决策树decision-trees的优缺点">1决策树（Decision Trees）的优缺点</h2>
+
+<p>决策树的优点：</p>
+
+<p>一、           决策树易于理解和解释.人们在通过解释后都有能力去理解决策树所表达的意义。</p>
+
+<p>二、           对于决策树，数据的准备往往是简单或者是不必要的.其他的技术往往要求先把数据一般化，比如去掉多余的或者空白的属性。</p>
+
+<p>三、           能够同时处理数据型和常规型属性。其他的技术往往要求数据属性的单一。</p>
+
+<p>四、           决策树是一个白盒模型。如果给定一个观察的模型，那么根据所产生的决策树很容易推出相应的逻辑表达式。</p>
+
+<p>五、           易于通过静态测试来对模型进行评测。表示有可能测量该模型的可信度。</p>
+
+<p>六、          在相对短的时间内能够对大型数据源做出可行且效果良好的结果。</p>
+
+<p>七、           可以对有许多属性的数据集构造决策树。</p>
+
+<p>八、           决策树可很好地扩展到大型数据库中，同时它的大小独立于数据库的大小。</p>
+
+<p>决策树的缺点：</p>
+
+<p>一、           对于那些各类别样本数量不一致的数据，在决策树当中,信息增益的结果偏向于那些具有更多数值的特征。</p>
+
+<p>二、           决策树处理缺失数据时的困难。</p>
+
+<p>三、           过度拟合问题的出现。</p>
+
+<p>四、           忽略数据集中属性之间的相关性。</p>
+
+<h2 id="2-人工神经网络的优缺点">2 人工神经网络的优缺点</h2>
+
+<p>人工神经网络的优点：分类的准确度高,并行分布处理能力强,分布存储及学习能力强，对噪声神经有较强的鲁棒性和容错能力，能充分逼近复杂的非线性关系，具备联想记忆的功能等。</p>
+
+<p>人工神经网络的缺点：神经网络需要大量的参数，如网络拓扑结构、权值和阈值的初始值；不能观察之间的学习过程，输出结果难以解释，会影响到结果的可信度和可接受程度；学习时间过长,甚至可能达不到学习的目的。</p>
+
+<h2 id="3-遗传算法的优缺点">3 遗传算法的优缺点</h2>
+
+<p>遗传算法的优点：</p>
+
+<p>一、           与问题领域无关切快速随机的搜索能力。</p>
+
+<p>二、           搜索从群体出发，具有潜在的并行性，可以进行多个个体的同时比较，鲁棒性好。</p>
+
+<p>三、           搜索使用评价函数启发，过程简单。</p>
+
+<p>四、           使用概率机制进行迭代，具有随机性。</p>
+
+<p>五、           具有可扩展性，容易与其他算法结合。</p>
+
+<p>遗传算法的缺点：</p>
+
+<p>一、           遗传算法的编程实现比较复杂,首先需要对问题进行编码,找到最优解之后还需要对问题进行解码,</p>
+
+<p>二、           另外三个算子的实现也有许多参数,如交叉率和变异率,并且这些参数的选择严重影响解的品质,而目前这些参数的选择大部分是依靠经验.没有能够及时利用网络的反馈信息,故算法的搜索速度比较慢，要得要较精确的解需要较多的训练时间。</p>
+
+<p>三、           算法对初始种群的选择有一定的依赖性，能够结合一些启发算法进行改进。</p>
+
+<h2 id="4-knn算法k-nearest-neighbour-的优缺点">4 KNN算法(K-Nearest Neighbour) 的优缺点</h2>
+
+<p>KNN算法的优点：</p>
+
+<p>一、          简单、有效。</p>
+
+<p>二、          重新训练的代价较低（类别体系的变化和训练集的变化，在Web环境和电子商务应用中是很常见的）。</p>
+
+<p>三、          计算时间和空间线性于训练集的规模（在一些场合不算太大）。</p>
+
+<p>四、           由于KNN方法主要靠周围有限的邻近的样本，而不是靠判别类域的方法来确定所属类别的，因此对于类域的交叉或重叠较多的待分样本集来说，KNN方法较其他方法更为适合。</p>
+
+<p>五、           该算法比较适用于样本容量比较大的类域的自动分类，而那些样本容量较小的类域采用这种算法比较容易产生误分。</p>
+
+<h2 id="knn算法缺点">KNN算法缺点：</h2>
+
+<p>一、           KNN算法是懒散学习方法（lazy learning,基本上不学习），一些积极学习的算法要快很多。</p>
+
+<p>二、           类别评分不是规格化的（不像概率评分）。</p>
+
+<p>三、           输出的可解释性不强，例如决策树的可解释性较强。</p>
+
+<p>四、           该算法在分类时有个主要的不足是，当样本不平衡时，如一个类的样本容量很大，而其他类样本容量很小时，有可能导致当输入一个新样本时，该样本的K个邻居中大容量类的样本占多数。该算法只计算“最近的”邻居样本，某一类的样本数量很大，那么或者这类样本并不接近目标样本，或者这类样本很靠近目标样本。无论怎样，数量并不能影响运行结果。可以采用权值的方法（和该样本距离小的邻居权值大）来改进。</p>
+
+<p>五、           计算量较大。目前常用的解决方法是事先对已知样本点进行剪辑，事先去除对分类作用不大的样本。</p>
+
+<h2 id="5-支持向量机svm的优缺点">5 支持向量机（SVM）的优缺点</h2>
+
+<p>SVM的优点：</p>
+
+<p>一、           可以解决小样本情况下的机器学习问题。</p>
+
+<p>二、           可以提高泛化性能。</p>
+
+<p>三、           可以解决高维问题。</p>
+
+<p>四、           可以解决非线性问题。</p>
+
+<p>五、           可以避免神经网络结构选择和局部极小点问题。</p>
+
+<p>SVM的缺点：</p>
+
+<p>一、           对缺失数据敏感。</p>
+
+<p>二、           对非线性问题没有通用解决方案，必须谨慎选择Kernelfunction来处理。</p>
+
+<h2 id="6-朴素贝叶斯的优缺点">6 朴素贝叶斯的优缺点</h2>
+
+<p>优点：</p>
+
+<p>一、           朴素贝叶斯模型发源于古典数学理论，有着坚实的数学基础，以及稳定的分类效率。</p>
+
+<p>二、           NBC模型所需估计的参数很少，对缺失数据不太敏感，算法也比较简单。</p>
+
+<p>缺点：</p>
+
+<p>一、           理论上，NBC模型与其他分类方法相比具有最小的误差率。但是实际上并非总是如此，这是因为NBC模型假设属性之间相互独立，这个假设在实际应用中往往是不成立的（可以考虑用聚类算法先将相关性较大的属性聚类），这给NBC模型的正确分类带来了一定影响。在属性个数比较多或者属性之间相关性较大时，NBC模型的分类效率比不上决策树模型。而在属性相关性较小时，NBC模型的性能最为良好。</p>
+
+<p>二、           需要知道先验概率。</p>
+
+<p>三、           分类决策存在错误率</p>
+
+<h2 id="7-adaboosting方法的优点">7 Adaboosting方法的优点</h2>
+
+<p>一、           adaboost是一种有很高精度的分类器。</p>
+
+<p>二、           可以使用各种方法构建子分类器，Adaboost算法提供的是框架。</p>
+
+<p>三、           当使用简单分类器时，计算出的结果是可以理解的。而且弱分类器构造极其简单。</p>
+
+<p>四、           简单，不用做特征筛选。</p>
+
+<p>五、           不用担心overfitting。</p>
+
+<h2 id="8-rocchio的优点">8 Rocchio的优点</h2>
+
+<p>Rocchio算法的突出优点是容易实现，计算（训练和分类）特别简单，它通常用来实现衡量分类系统性能的基准系统，而实用的分类系统很少采用这种算法解决具体的分类问题。</p>
+
+<h2 id="9各种分类算法比较">9各种分类算法比较</h2>
+
+<p>根据这篇论文所得出的结论,</p>
+
+<p>Calibrated boosted trees的性能最好，随机森林第二，uncalibrated bagged trees第三,calibratedSVMs第四， uncalibrated neural nets第五。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>性能较差的是朴素贝叶斯，决策树。
+
+有些算法在特定的数据集下表现较好。 from:http://bbs.pinggu.org/thread-2604496-1-1.html 参考文献：
+</code></pre></div></div>
+
+<p><a href="Do we need hundreds of classifiers to solve real world classification problems.">1</a> 罗森林, 马俊, 潘丽敏.数据挖掘理论与技术[M].电子工业出版社.2013.126-126</p>
+
+<p><a href="An empirical evaluation of supervised learning in high dimensions.">2</a> 杨晓帆,陈廷槐.人工神经网络固有的优点和缺点[J].计算机科学.1994(vol.21).23-26</p>
+
+<p><a href="Man vs. Machine: Practical Adversarial Detection of Malicious Crowdsourcing Workers">3</a> Steve.遗传算法的优缺点.http://blog.sina.com.cn/s/blog_6377a3100100h1mj.html</p>
+
+<p><a href="http://www.win-vector.com/dfiles/LogisticRegressionMaxEnt.pdf">4</a> 杨建武.文本自动分类技术.</p>
+
+<p>www.icst.pku.edu.cn/course/mining/12-13spring/TextMining04-%E5%88%86%E7%B1%BB.pdf</p>
+
+<p>[5] 白云球工作室. SVM(支持向量机)综述.http://blog.sina.com.cn/s/blog_52574bc10100cnov.html</p>
+
+<p>[6] 张夏天. 统计学习理论和SVM的不足（1）.http://blog.sciencenet.cn/blog-230547-248821.html</p>
+
+<p>[7] RichCaruana，AlexandruNiculescu-Mizil.An Empirical Comparison of Supervised LearningAlgorithms.2006</p>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2019/01/16/datamining/">Kmeans文本聚类实施过程
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/05/datamining/">Louvain 社团发现算法学习
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2018/02/13/python7/">Python3网络爬虫(五)：爬取人物头像</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/03/16/ml/">如何实现一个基本的微信文章分类器</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2018/02/19/ml/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2018/02/19/ml/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

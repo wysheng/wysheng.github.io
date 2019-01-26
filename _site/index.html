@@ -141,6 +141,14 @@
                 
                     
                 
+                    
+                
+                    
+                
+                    
+                
+                    
+                
             </ul>
         </nav>
     </div>
@@ -217,11 +225,11 @@
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2018/02/13/python7/">Python3网络爬虫(五)：爬取人物头像</a>
+                  <a class="post-link" href="/2019/01/19/dl/">深度学习与语音识别—常用声学模型简介</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2018-02-13
+                        <i class="fa fa-calendar"></i>2019-01-19
                     </div>
                     <div class="label-card">
                         
@@ -239,7 +247,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#Python网络爬虫" title="Category: Python网络爬虫" rel="category">Python网络爬虫</a>
+        <a href="/category/#深度学习" title="Category: 深度学习" rel="category">深度学习</a>
     
   
 
@@ -256,9 +264,7 @@
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a>&nbsp;
-    
-        <a href="/tag/#网络爬虫" title="Tag: 网络爬虫" rel="tag">网络爬虫</a>
+        <a href="/tag/#神经网络" title="Tag: 神经网络" rel="tag">神经网络</a>
     
   
 
@@ -268,195 +274,79 @@
                 </div>
                 <div class="excerpt">
                     <ul id="markdown-toc">
-  <li><a href="#一预备知识" id="markdown-toc-一预备知识">（一）预备知识</a></li>
-  <li><a href="#二实战" id="markdown-toc-二实战">(二)实战</a></li>
-  <li><a href="#三-总结" id="markdown-toc-三-总结">(三) 总结</a></li>
+  <li><a href="#1混合声学模型" id="markdown-toc-1混合声学模型">（1）混合声学模型</a></li>
+  <li><a href="#2端到端的声学模型" id="markdown-toc-2端到端的声学模型">（2）端到端的声学模型</a></li>
+  <li><a href="#各个模型的优缺点介绍" id="markdown-toc-各个模型的优缺点介绍">各个模型的优缺点介绍</a></li>
 </ul>
+<p>006年，Hinton提出深度学习网络，指出深度神经网络因为层数过多导致训练参数多的问题可以利用逐层初始化解决。在工业界和学术界掀起了深度学习的浪潮，并在语音识别和图像处理领域取得了巨大成功。2011年微软和谷歌在语音识别上采用DNN模型，将词错误率降低20%-30%。这里的DNN主要采用的是DBN，即深度置信网络。随着语音识别以及深度学习的发展，研究人员发现将CNN和RNN模型应用于语音识别领域可以取得更好的效果。本文中主要介绍声学模型的优缺点。</p>
 
-<p>运行平台：Windows 
-Python版本：Python3.x 
-IDE：Sublime text3</p>
-<h2 id="一预备知识">（一）预备知识</h2>
-<p>为了也能够学习到新知识，本次爬虫教程使用requests第三方库，这个库可不是Python3内置的urllib.request库，而是一个强大的基于urllib3的第三方库</p>
+<p>    CNN模型，即卷积神经网络，最开始应用于图像处理。而语音识别中的频谱图，应用于CNN模型，可以克服传统语音识别中采用时间、频率而导致的不稳定问题。DBN和CNN模型没有考虑语音之间的关联信息。而RNN模型，充分考虑了语音之间的相互关系，因此取得更加好的效果。现有的最好的基于深度学习的语音识别一般是基于DBN+CNN+RNN模型的。</p>
 
-<p>requests库的基础方法如下：</p>
+<p>上述总结成为，现有的声学模型建立，一般可分为：</p>
+<h2 id="1混合声学模型">（1）混合声学模型</h2>
 
-<p><img src="https://img-blog.csdn.net/20170521121032110?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-官方中文教程地址：http://docs.python-requests.org/zh_CN/latest/user/quickstart.html</p>
+<p>混合高斯-隐马尔科夫模型   GMM-HMM</p>
 
-<p>因为官方给出的《快速上手》教程已经整理的很好了，并且本次教程使用的也是最简单的requests.get()，因此第三方库requests的使用方法，不再累述。详情请看官方中文教程，有urllib2基础的人，还是好上手的。</p>
+<p>深度神经网络-隐马尔科夫模型   DNN-HMM</p>
 
-<h2 id="二实战">(二)实战</h2>
-<p>2.1 背景
-    爬取《帅啊》网的帅哥图片！</p>
+<p>深度循环神经网络-隐马尔科夫模型   RNN-HMM</p>
 
-<p>URL : http://www.shuaia.net/index.html</p>
+<p>深度卷积神经网络-隐马尔科夫模型   CNN-HMM</p>
 
-<p>先看一眼网站的样子：
-<img src="https://img-blog.csdn.net/20170521121231569?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<h2 id="2端到端的声学模型">（2）端到端的声学模型</h2>
 
-<p>2.2 requests安装
-    在cmd中，使用如下指令安装第三方库requests：
-pip3 install requests
-    或者：
-easy_install requests
-2.3 爬取单页目标连接
-    通过审查元素，我们不难发现，目标的地址存储在class属性为”item-img”的<a>标签的href属性中。这时候，有人可能会问为啥不用下面的<img />标签的src属性？因为这个图片是首页的浏览图片，根据这个地址保存下来的图片，太小了，并且不清清楚。秉承着热爱“高清无码”的精神，这种图片可不是我想要的。因此，先获取目标的地址，也就是我们点击图片之后，进入的网页地址，然后根据下一个网页，找到图片的地址。
-<img src="https://img-blog.csdn.net/20170521121440034?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- 代码：</a></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> # -*- coding:UTF-8 -*-
-from bs4 import BeautifulSoup
-import requests
+<p>连接时序分类-长短时记忆模型CTC-LSTM</p>
 
-if __name__ == '__main__':
-    url = 'http://www.shuaia.net/index.html'
-    headers = {
-            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-    }
-    req = requests.get(url = url,headers = headers)
-    req.encoding = 'utf-8'
-    html = req.text
-    bf = BeautifulSoup(html, 'lxml')
-    targets_url = bf.find_all(class_='item-img')
-    list_url = []
-    for each in targets_url:
-        list_url.append(each.img.get('alt') + '=' + each.get('href'))
-    print(list_url)
-</code></pre></div></div>
-<p>我们将爬取的信息保存到list中，图片名字和图片地址使用”=”连接，运行结果：
- <img src="https://img-blog.csdn.net/20170521121615323?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<p>注意力模型Attention</p>
 
-<p>2.4 爬取多页目标连接
-    翻到第二页的时候，很容易就发现地址变为了:www.shuaia.net/index_2.html。第三页、第四页、第五页依此类推。
-<img src="https://img-blog.csdn.net/20170521121727325?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-代码：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding:UTF-8 -*-
-from bs4 import BeautifulSoup
-import requests
+<h2 id="各个模型的优缺点介绍">各个模型的优缺点介绍</h2>
 
-if __name__ == '__main__':
-    list_url = []
-    for num in range(1,20):
-        if num == 1:
-            url = 'http://www.shuaia.net/index.html'
-        else:
-            url = 'http://www.shuaia.net/index_%d.html' % num
-        headers = {
-                "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-        }
-        req = requests.get(url = url,headers = headers)
-        req.encoding = 'utf-8'
-        html = req.text
-        bf = BeautifulSoup(html, 'lxml')
-        targets_url = bf.find_all(class_='item-img')
+<p>（1）基于GMM-HMM的声学模型</p>
 
-        for each in targets_url:
-            list_url.append(each.img.get('alt') + '=' + each.get('href'))
-    print(list_url)
-</code></pre></div></div>
-<p>我们少爬取一些，爬取前19页的目标连接：
-<img src="https://img-blog.csdn.net/20170521121837177?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-2.5 单张图片下载
-    进入目标地址，审查元素。可以看到，图片地址保存在了class属性为”wr-single-content-list “的div-&gt;div-&gt;img的src属性中。
-<img src="https://img-blog.csdn.net/20170521121936116?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- 代码：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> target_url = 'http://www.shuaia.net/rihanshuaige/2017-05-18/1294.html'
-filename = '张根硕拍摄机车型男写真帅气十足' + '.jpg'
-headers = {
-    "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-    }
-img_req = requests.get(url = target_url,headers = headers)
-img_req.encoding = 'utf-8'
-img_html = img_req.text
-img_bf_1 = BeautifulSoup(img_html, 'lxml')
-img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
-img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
-img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
-if 'images' not in os.listdir():
-    os.makedirs('images')
-urlretrieve(url = img_url,filename = 'images/' + filename)
-print('下载完成！')
-</code></pre></div></div>
-<p>我们将图片保存在程序文件所在目录的imgase目录下：
- <img src="https://img-blog.csdn.net/20170521122107585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- <img src="https://img-blog.csdn.net/20170521122141523?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- 2.6 整体代码
-已经获取到了每张图片的连接，我们就可以下载了。整合下代码，先少下载一点，下载前2页的图片。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding:UTF-8 -*-
-from bs4 import BeautifulSoup
-from urllib.request import urlretrieve
-import requests
-import os
-import time
+<p>优点：GMM训练速度快</p>
 
-if __name__ == '__main__':
-    list_url = []
-    for num in range(1,3):
-        if num == 1:
-            url = 'http://www.shuaia.net/index.html'
-        else:
-            url = 'http://www.shuaia.net/index_%d.html' % num
-        headers = {
-                "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-        }
-        req = requests.get(url = url,headers = headers)
-        req.encoding = 'utf-8'
-        html = req.text
-        bf = BeautifulSoup(html, 'lxml')
-        targets_url = bf.find_all(class_='item-img')
+<p>           声学模型较小，容易移植到嵌入式平台</p>
 
-        for each in targets_url:
-            list_url.append(each.img.get('alt') + '=' + each.get('href'))
+<p>缺点：GMM没有利用帧的上下文信息</p>
 
-    print('连接采集完成')
+<p>            GMM不能学习深层非线性特征变换</p>
 
-    for each_img in list_url:
-        img_info = each_img.split('=')
-        target_url = img_info[1]
-        filename = img_info[0] + '.jpg'
-        print('下载：' + filename)
-        headers = {
-            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-        }
-        img_req = requests.get(url = target_url,headers = headers)
-        img_req.encoding = 'utf-8'
-        img_html = img_req.text
-        img_bf_1 = BeautifulSoup(img_html, 'lxml')
-        img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
-        img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
-        img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
-        if 'images' not in os.listdir():
-            os.makedirs('images')
-        urlretrieve(url = img_url,filename = 'images/' + filename)
-        time.sleep(1)
+<p>（2）基于DNN-HMM模型</p>
 
-    print('下载完成！')
-</code></pre></div></div>
-<p>运行结果如下：
-<img src="https://img-blog.csdn.net/20170521122323428?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-最终下载的图片：
-<img src="https://img-blog.csdn.net/20170521122401947?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<p>优点： DNN能利用帧的上下文信息，比如前后个扩展5帧</p>
 
-<h2 id="三-总结">(三) 总结</h2>
-<p>    图片是不是很帅？还算满意吧？
-    这种爬取方法是比较简单的，速度慢。服务器有防爬虫程序，所以不能爬太快，每下载一个图片需要加个1秒延时，否则会被服务器断开连接。当然，解决办法还是有的，因为不是本文重点，以后有机会再细说。
-    爬取图片的原理就是这样了，如果想爬取妹子图的可以去《煎蛋网》看看，包你满意。</p>
+<p>             DNN能学习深层非线性特征变换，表现优于GMM</p>
 
+<p>缺点： 不能利用历史信息来辅助当前任务</p>
+
+<p>（3）基于RNN-HMM模型：</p>
+
+<p>优点：  RNN能有效利用历史信息，将历史消息持久化</p>
+
+<p>              在很多任务上，RNN性能变现优于DNN</p>
+
+<p>缺点：  RNN随着层数的增加，会导致梯度爆炸或者梯度消失</p>
+
+<p>（4）基于CNN-HMM声学模型</p>
+
+<p>优点：CNN对于语音信号，采用时间延迟卷积神经网络可以很好地对信号进行描述学习</p>
+
+<p>            CNN比其他神经网络更能捕捉到特征的不变形</p>
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2018/02/13/python7/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2019/01/19/dl/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2018/02/13/python6/">Python3网络爬虫(五)：爬取人物头像</a>
+                  <a class="post-link" href="/2019/01/16/datamining/">Kmeans文本聚类实施过程</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2018-02-13
+                        <i class="fa fa-calendar"></i>2019-01-16
                     </div>
                     <div class="label-card">
                         
@@ -474,7 +364,7 @@ if __name__ == '__main__':
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#Python网络爬虫" title="Category: Python网络爬虫" rel="category">Python网络爬虫</a>
+        <a href="/category/#数据挖掘" title="Category: 数据挖掘" rel="category">数据挖掘</a>
     
   
 
@@ -491,9 +381,11 @@ if __name__ == '__main__':
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a>&nbsp;
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>&nbsp;
     
-        <a href="/tag/#网络爬虫" title="Tag: 网络爬虫" rel="tag">网络爬虫</a>
+        <a href="/tag/#kmeans" title="Tag: kmeans" rel="tag">kmeans</a>&nbsp;
+    
+        <a href="/tag/#机器学习" title="Tag: 机器学习" rel="tag">机器学习</a>
     
   
 
@@ -503,195 +395,58 @@ if __name__ == '__main__':
                 </div>
                 <div class="excerpt">
                     <ul id="markdown-toc">
-  <li><a href="#一预备知识" id="markdown-toc-一预备知识">（一）预备知识</a></li>
-  <li><a href="#二实战" id="markdown-toc-二实战">(二)实战</a></li>
-  <li><a href="#三-总结" id="markdown-toc-三-总结">(三) 总结</a></li>
+  <li><a href="#1训练词向量" id="markdown-toc-1训练词向量">1、训练词向量</a></li>
+  <li><a href="#2对已经准备好的聚类的语料xhj_wordsegmenttxt进行两步操作清理分词" id="markdown-toc-2对已经准备好的聚类的语料xhj_wordsegmenttxt进行两步操作清理分词">2、对已经准备好的聚类的语料（XHJ_wordsegment.txt）进行两步操作：清理，分词</a></li>
+  <li><a href="#3计算每一行的文本的向量和" id="markdown-toc-3计算每一行的文本的向量和">3、计算每一行的文本的向量和</a></li>
+  <li><a href="#4kmeans聚类" id="markdown-toc-4kmeans聚类">4、kmeans聚类</a></li>
+  <li><a href="#5抽取聚类结果" id="markdown-toc-5抽取聚类结果">5、抽取聚类结果</a></li>
 </ul>
+<h2 id="1训练词向量">1、训练词向量</h2>
+<p>参考资料url：http://www.52nlp.cn/中英文维基百科语料上的word2vec实验
+①准备数据，这里假设使用wiki百科的1G数据，其中需要做一个繁体转简体，转格式为utf8，分词过程，参见上面的博客，这里我已经转好了，下载地址见百度网盘：https://pan.baidu.com/s/1htn3gig passwd:d6ss。
+②安装好python以及对应的模块 gensim，这里我们是用 gensim训练词向量
+③写训练词向量的python脚本，参见上面的博客
+④开始训练</p>
 
-<p>运行平台：Windows 
-Python版本：Python3.x 
-IDE：Sublime text3</p>
-<h2 id="一预备知识">（一）预备知识</h2>
-<p>为了也能够学习到新知识，本次爬虫教程使用requests第三方库，这个库可不是Python3内置的urllib.request库，而是一个强大的基于urllib3的第三方库</p>
-
-<p>requests库的基础方法如下：</p>
-
-<p><img src="https://img-blog.csdn.net/20170521121032110?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-官方中文教程地址：http://docs.python-requests.org/zh_CN/latest/user/quickstart.html</p>
-
-<p>因为官方给出的《快速上手》教程已经整理的很好了，并且本次教程使用的也是最简单的requests.get()，因此第三方库requests的使用方法，不再累述。详情请看官方中文教程，有urllib2基础的人，还是好上手的。</p>
-
-<h2 id="二实战">(二)实战</h2>
-<p>2.1 背景
-    爬取《帅啊》网的帅哥图片！</p>
-
-<p>URL : http://www.shuaia.net/index.html</p>
-
-<p>先看一眼网站的样子：
-<img src="https://img-blog.csdn.net/20170521121231569?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
-
-<p>2.2 requests安装
-    在cmd中，使用如下指令安装第三方库requests：
-pip3 install requests
-    或者：
-easy_install requests
-2.3 爬取单页目标连接
-    通过审查元素，我们不难发现，目标的地址存储在class属性为”item-img”的<a>标签的href属性中。这时候，有人可能会问为啥不用下面的<img />标签的src属性？因为这个图片是首页的浏览图片，根据这个地址保存下来的图片，太小了，并且不清清楚。秉承着热爱“高清无码”的精神，这种图片可不是我想要的。因此，先获取目标的地址，也就是我们点击图片之后，进入的网页地址，然后根据下一个网页，找到图片的地址。
-<img src="https://img-blog.csdn.net/20170521121440034?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- 代码：</a></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> # -*- coding:UTF-8 -*-
-from bs4 import BeautifulSoup
-import requests
-
-if __name__ == '__main__':
-    url = 'http://www.shuaia.net/index.html'
-    headers = {
-            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-    }
-    req = requests.get(url = url,headers = headers)
-    req.encoding = 'utf-8'
-    html = req.text
-    bf = BeautifulSoup(html, 'lxml')
-    targets_url = bf.find_all(class_='item-img')
-    list_url = []
-    for each in targets_url:
-        list_url.append(each.img.get('alt') + '=' + each.get('href'))
-    print(list_url)
+<p>开始词向量的训练，如下命令，请在命令行下执行：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python train_word2vec_model.py wiki.zh.text.jian.utf-8.seg wiki.zh.text.model wiki.zh.text.vector &gt;log.txt &amp;
 </code></pre></div></div>
-<p>我们将爬取的信息保存到list中，图片名字和图片地址使用”=”连接，运行结果：
- <img src="https://img-blog.csdn.net/20170521121615323?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<h2 id="2对已经准备好的聚类的语料xhj_wordsegmenttxt进行两步操作清理分词">2、对已经准备好的聚类的语料（XHJ_wordsegment.txt）进行两步操作：清理，分词</h2>
 
-<p>2.4 爬取多页目标连接
-    翻到第二页的时候，很容易就发现地址变为了:www.shuaia.net/index_2.html。第三页、第四页、第五页依此类推。
-<img src="https://img-blog.csdn.net/20170521121727325?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-代码：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding:UTF-8 -*-
-from bs4 import BeautifulSoup
-import requests
+<h2 id="3计算每一行的文本的向量和">3、计算每一行的文本的向量和</h2>
 
-if __name__ == '__main__':
-    list_url = []
-    for num in range(1,20):
-        if num == 1:
-            url = 'http://www.shuaia.net/index.html'
-        else:
-            url = 'http://www.shuaia.net/index_%d.html' % num
-        headers = {
-                "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-        }
-        req = requests.get(url = url,headers = headers)
-        req.encoding = 'utf-8'
-        html = req.text
-        bf = BeautifulSoup(html, 'lxml')
-        targets_url = bf.find_all(class_='item-img')
+<p>(1)由于聚类需要计算每一行文本的向量，这里我们将所有分好的词的向量和作为该行文本的向量表示
+(2)由于文本数据过多，所以我们将文本分按照10000条为单位进行了分割，分别求各个文件中文本的向量和，最终再做一次合并
+(3)文本分割
+(4)DIV()
+(5)分别求每个文件中文本的向量和
+(6)calVec()
+(7)合并求出来的每个文件的向量和
+(8)sumvec()</p>
 
-        for each in targets_url:
-            list_url.append(each.img.get('alt') + '=' + each.get('href'))
-    print(list_url)
+<h2 id="4kmeans聚类">4、kmeans聚类</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>save_cluster_results()
 </code></pre></div></div>
-<p>我们少爬取一些，爬取前19页的目标连接：
-<img src="https://img-blog.csdn.net/20170521121837177?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-2.5 单张图片下载
-    进入目标地址，审查元素。可以看到，图片地址保存在了class属性为”wr-single-content-list “的div-&gt;div-&gt;img的src属性中。
-<img src="https://img-blog.csdn.net/20170521121936116?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- 代码：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> target_url = 'http://www.shuaia.net/rihanshuaige/2017-05-18/1294.html'
-filename = '张根硕拍摄机车型男写真帅气十足' + '.jpg'
-headers = {
-    "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-    }
-img_req = requests.get(url = target_url,headers = headers)
-img_req.encoding = 'utf-8'
-img_html = img_req.text
-img_bf_1 = BeautifulSoup(img_html, 'lxml')
-img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
-img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
-img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
-if 'images' not in os.listdir():
-    os.makedirs('images')
-urlretrieve(url = img_url,filename = 'images/' + filename)
-print('下载完成！')
+<h2 id="5抽取聚类结果">5、抽取聚类结果</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>saveRes()
 </code></pre></div></div>
-<p>我们将图片保存在程序文件所在目录的imgase目录下：
- <img src="https://img-blog.csdn.net/20170521122107585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- <img src="https://img-blog.csdn.net/20170521122141523?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- 2.6 整体代码
-已经获取到了每张图片的连接，我们就可以下载了。整合下代码，先少下载一点，下载前2页的图片。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding:UTF-8 -*-
-from bs4 import BeautifulSoup
-from urllib.request import urlretrieve
-import requests
-import os
-import time
-
-if __name__ == '__main__':
-    list_url = []
-    for num in range(1,3):
-        if num == 1:
-            url = 'http://www.shuaia.net/index.html'
-        else:
-            url = 'http://www.shuaia.net/index_%d.html' % num
-        headers = {
-                "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-        }
-        req = requests.get(url = url,headers = headers)
-        req.encoding = 'utf-8'
-        html = req.text
-        bf = BeautifulSoup(html, 'lxml')
-        targets_url = bf.find_all(class_='item-img')
-
-        for each in targets_url:
-            list_url.append(each.img.get('alt') + '=' + each.get('href'))
-
-    print('连接采集完成')
-
-    for each_img in list_url:
-        img_info = each_img.split('=')
-        target_url = img_info[1]
-        filename = img_info[0] + '.jpg'
-        print('下载：' + filename)
-        headers = {
-            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-        }
-        img_req = requests.get(url = target_url,headers = headers)
-        img_req.encoding = 'utf-8'
-        img_html = img_req.text
-        img_bf_1 = BeautifulSoup(img_html, 'lxml')
-        img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
-        img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
-        img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
-        if 'images' not in os.listdir():
-            os.makedirs('images')
-        urlretrieve(url = img_url,filename = 'images/' + filename)
-        time.sleep(1)
-
-    print('下载完成！')
-</code></pre></div></div>
-<p>运行结果如下：
-<img src="https://img-blog.csdn.net/20170521122323428?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-最终下载的图片：
-<img src="https://img-blog.csdn.net/20170521122401947?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
-
-<h2 id="三-总结">(三) 总结</h2>
-<p>    图片是不是很帅？还算满意吧？
-    这种爬取方法是比较简单的，速度慢。服务器有防爬虫程序，所以不能爬太快，每下载一个图片需要加个1秒延时，否则会被服务器断开连接。当然，解决办法还是有的，因为不是本文重点，以后有机会再细说。
-    爬取图片的原理就是这样了，如果想爬取妹子图的可以去《煎蛋网》看看，包你满意。</p>
-
+<p>具体代码参见： 
+https://github.com/aiainui/kmeans/blob/master/main.py</p>
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2018/02/13/python6/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2019/01/16/datamining/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2018/02/01/Hive2/">Hive的几种常见的数据导入方式</a>
+                  <a class="post-link" href="/2018/11/23/datamining/">文本数据挖掘-----词向量</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2018-02-01
+                        <i class="fa fa-calendar"></i>2018-11-23
                     </div>
                     <div class="label-card">
                         
@@ -709,7 +464,7 @@ if __name__ == '__main__':
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#大数据技术" title="Category: 大数据技术" rel="category">大数据技术</a>
+        <a href="/category/#数据挖掘" title="Category: 数据挖掘" rel="category">数据挖掘</a>
     
   
 
@@ -726,9 +481,11 @@ if __name__ == '__main__':
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#Hive" title="Tag: Hive" rel="tag">Hive</a>&nbsp;
+        <a href="/tag/#文本挖掘" title="Tag: 文本挖掘" rel="tag">文本挖掘</a>&nbsp;
     
-        <a href="/tag/#大数据技术" title="Tag: 大数据技术" rel="tag">大数据技术</a>
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>&nbsp;
+    
+        <a href="/tag/#中文分词" title="Tag: 中文分词" rel="tag">中文分词</a>
     
   
 
@@ -737,35 +494,55 @@ if __name__ == '__main__':
                     </div>
                 </div>
                 <div class="excerpt">
-                    <ul id="markdown-toc">
-  <li><a href="#hive的几种常见的数据导入方式" id="markdown-toc-hive的几种常见的数据导入方式">Hive的几种常见的数据导入方式</a></li>
-  <li><a href="#一从本地文件系统中导入数据到hive表" id="markdown-toc-一从本地文件系统中导入数据到hive表">一、从本地文件系统中导入数据到Hive表</a></li>
-</ul>
+                    <p>中文数据挖掘的难点在于如何把文本变成计算机处理的向量，一个好的词向量方法可以提升分类或者其他应用效果。我把自己接触的词向量技术总结一下，方便自己复习和其他感兴趣的小伙伴交流学习。</p>
 
-<h2 id="hive的几种常见的数据导入方式">Hive的几种常见的数据导入方式</h2>
-<p>这里介绍四种：    <br />
-（1）、从本地文件系统中导入数据到Hive表；<br />
-（2）、从HDFS上导入数据到Hive表；<br />
-（3）、从别的表中查询出相应的数据并导入到Hive表中；<br />
-（4）、在创建表的时候通过从别的表中查询出相应的记录并插入到所创建的表中。</p>
+<p>使用结巴或者其他中文分词工具分完词后就需要生成词向量了，方便后期的数据挖掘工作的展开。</p>
+<font color="red">  词向量技术：我接触的大致可以分成（1）基于统计的方法（2）基于图的方法（3）基于主题模型的方法（4）基于深度学习的方法 </font>
+<p>（1）基于统计的方法：</p>
 
-<h2 id="一从本地文件系统中导入数据到hive表">一、从本地文件系统中导入数据到Hive表</h2>
+<p>  相似度，卡方，互信息(优点：可以得到对结果影响大的词；缺点：计算量比较大，需要先验知识，比如类别)</p>
+
+<p>          tf-idf (优点：简单、效果不错，可以得到每个词的权重；缺点：没考虑词的顺序，需要多篇语料才能得到比较好的词)</p>
+
+<p>           n-gram (优点：2-gram以上考虑了词顺序，提升了效果；缺点：随着n的增大，字典迅速扩大，而且训练用的向量特别稀疏)</p>
+
+<p>          bag of words （one hot编码，优点：简单；缺点：没有对词进行过滤，导致词比较多，进而影响字典的数量，而且没有考虑词频，以及词的顺序）</p>
+
+<p>         （2）基于图的方法：</p>
+
+<p> textrank(优点：把网页排名的算法pagerrank进行变化，得到每个词的重要性，可以针对一篇文章得到重要的词语；缺点：计算复杂度比较高)</p>
+
+<p>          (3)基于主题模型的方法</p>
+
+<p>         LDA (使用了共现矩阵；缺点：没有考虑词序)</p>
+
+<p>PLSA</p>
+
+<p>SVD </p>
+
+<p>(4)基于深度学习的方法：</p>
+
+<p>word2vec(优点：考虑了词的上下文信息，通过神经网络的投影层得到词向量，属于有监督的学习方法，这里的有监督的意思是把中间词one-hot的编码看成已知的向量进行训练模型，如果考虑是否使用了文章的类别，是无监督的方法；缺点：计算量比较大，训练时间比较久）</p>
+
+<p>doc2vec()</p>
+
+<p>fasttext(优点：优化了word2vec，使速度大范围提升，不用生成词向量了，直接用于分类等其他任务，属于有监督的学习方法)</p>
 
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2018/02/01/Hive2/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/11/23/datamining/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2018/02/01/Hive1/">Hive的几种常见的数据导入方式</a>
+                  <a class="post-link" href="/2018/10/28/datamining/">TF-IDF提取文章关键词算法</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2018-02-01
+                        <i class="fa fa-calendar"></i>2018-10-28
                     </div>
                     <div class="label-card">
                         
@@ -783,7 +560,7 @@ if __name__ == '__main__':
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#大数据技术" title="Category: 大数据技术" rel="category">大数据技术</a>
+        <a href="/category/#数据挖掘" title="Category: 数据挖掘" rel="category">数据挖掘</a>
     
   
 
@@ -800,9 +577,11 @@ if __name__ == '__main__':
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#Hive" title="Tag: Hive" rel="tag">Hive</a>&nbsp;
+        <a href="/tag/#文本挖掘" title="Tag: 文本挖掘" rel="tag">文本挖掘</a>&nbsp;
     
-        <a href="/tag/#大数据技术" title="Tag: 大数据技术" rel="tag">大数据技术</a>
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>&nbsp;
+    
+        <a href="/tag/#中文分词" title="Tag: 中文分词" rel="tag">中文分词</a>
     
   
 
@@ -812,34 +591,92 @@ if __name__ == '__main__':
                 </div>
                 <div class="excerpt">
                     <ul id="markdown-toc">
-  <li><a href="#hive的几种常见的数据导入方式" id="markdown-toc-hive的几种常见的数据导入方式">Hive的几种常见的数据导入方式</a></li>
-  <li><a href="#一从本地文件系统中导入数据到hive表" id="markdown-toc-一从本地文件系统中导入数据到hive表">一、从本地文件系统中导入数据到Hive表</a></li>
+  <li><a href="#一tf-idf简介" id="markdown-toc-一tf-idf简介">一、TF-IDF简介</a></li>
+  <li><a href="#二算法实现" id="markdown-toc-二算法实现">二、算法实现</a></li>
+  <li><a href="#三测试案例" id="markdown-toc-三测试案例">三、测试案例</a></li>
+  <li><a href="#python代码实现" id="markdown-toc-python代码实现">python代码实现</a></li>
 </ul>
+<h2 id="一tf-idf简介">一、TF-IDF简介</h2>
 
-<h2 id="hive的几种常见的数据导入方式">Hive的几种常见的数据导入方式</h2>
-<p>这里介绍四种：    <br />
-（1）、从本地文件系统中导入数据到Hive表；<br />
-（2）、从HDFS上导入数据到Hive表；<br />
-（3）、从别的表中查询出相应的数据并导入到Hive表中；<br />
-（4）、在创建表的时候通过从别的表中查询出相应的记录并插入到所创建的表中。</p>
+<p>TF-IDF（terms frequency-inverse document frequency）是一种用于信息检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用来评估一字词对于一篇文章的重要程度。一个词语对一篇文章的重要性主要是依靠它在文件中出现的次数，如果这个词语在这篇文章中的出现次数越高，则表明这个词语对于这篇文章的重要性越高。同时，它还与这个词语在语料库中出现的文章篇数有关，随着出现的篇数越多，则会降低这个词语在这篇文章中的重要性，具体的算法请看下面。</p>
 
-<h2 id="一从本地文件系统中导入数据到hive表">一、从本地文件系统中导入数据到Hive表</h2>
+<h2 id="二算法实现">二、算法实现</h2>
 
+<p>1、在实现这个算法之前，我们需要对一篇文章进行分词，在进行中文分词的时候，推荐一个python库，jieba分词，作者将这个项目发布到了GitHub上，是开源的，GitHub地址https://github.com/fxsjy/jieba</p>
+
+<p>2、TF词频的计算</p>
+
+<p>词频（TF）=某个词语在文章中的出现次数</p>
+
+<p>由于我们需要考虑不同的文章，长度不同，我们需要将词频进行归一化处理</p>
+
+<p>词频（TF）=某个词语在文章中的出现次数/文章的总词数 或者 词频（TF）=某个词语在文章中的出现次数/这篇文章出现最多的词的出现次数</p>
+
+<p>3、IDF的计算</p>
+
+<p>逆文档频率（IDF）=log（语料库的文档总数/包含该词的文档数+1），语料库可以自己去网上下载，计算逆文档频率的原因是为了去除哪些经常出现的词语，比如说，“的”、“我们”、“他”等这类的词语，这些词语对于整篇文档重要性不高、但是出现的频率会比较多，就有可能会影响到我们最后的计算结果，如果是经常出现的词语就不能作为我们文章的关键词。</p>
+
+<p>4、计算TF-IDF的值</p>
+
+<p>TF-IDF = 词频（TF）* 逆文档频率（IDF）</p>
+
+<p>5、排序</p>
+
+<p>对文章词语的TF-IDF值进行排序，我们可以选择提取TF-IDF值比较大的词语</p>
+
+<p>6、总结</p>
+
+<p>TF-IDF算法的优点是简单快速，结果比较符合实际情况。但，TF-IDF算法是单纯的以“词频”来衡量一个词的重要性，就显得不够全面，这些词语就不一定能体现出文章的主要思想突出文章的主题。而且，这种算法也无法体现出词语所处的不同位置对于文章的重要性不同，如果想解决这个问题，我们可以采用对于词语所处的不同位置给他们设定不同的权重。</p>
+
+<h2 id="三测试案例">三、测试案例</h2>
+
+<p>下面的例子是使用jieba库，来实现TF-IDF算法的，下面是文章的内容</p>
+
+<p>有很多不同的数学公式可以用来计算tf-idf。
+这边的例子以上述的数学公式来计算。
+词频（tf）是一词语出现的次数除以该文件的总词语数。
+假如一篇文件的总词语数是100个，而词语“母牛”出现了3次，
+那么“母牛”一词在该文件中的词频就是3/100=0.03。
+一个计算文件频率（DF）的方法是测定有多少份文件出现过“母牛”一词，
+然后除以文件集里包含的文件总数。所以，如果“母牛”一词在1,000份文件出现过，
+而文件总数是10,000,000份的话，其逆向文件频率就是log（10,000,000 / 1,000）=4。
+最后的tf-idf的分数为0.03 * 4=0.12。</p>
+<h2 id="python代码实现">python代码实现</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import sys
+sys.path.append('../')
+ 
+import jieba
+import jieba.analyse
+from optparse import OptionParser
+ 
+file_name = "../txt/test.txt"
+ 
+content = open(file_name, 'rb').read()
+ 
+#10表示输出的前10个
+tags = jieba.analyse.extract_tags(content, topK=10)
+ 
+print(",".join(tags))
+
+</code></pre></div></div>
+<p>输出结果</p>
+
+<p>000,文件,母牛,词语,tf,词频,100,idf,10,0.03</p>
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2018/02/01/Hive1/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/10/28/datamining/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2018/01/11/python5/">Python3网络爬虫(四)：Python3安装Scrapy</a>
+                  <a class="post-link" href="/2018/10/12/datamining/">基于用户的协同过滤推荐算法java实现（UserCF）</a>
                 </h2>
                 <div class="label">
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>2018-01-11
+                        <i class="fa fa-calendar"></i>2018-10-12
                     </div>
                     <div class="label-card">
                         
@@ -857,7 +694,7 @@ if __name__ == '__main__':
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#Python网络爬虫" title="Category: Python网络爬虫" rel="category">Python网络爬虫</a>
+        <a href="/category/#数据挖掘" title="Category: 数据挖掘" rel="category">数据挖掘</a>
     
   
 
@@ -874,9 +711,11 @@ if __name__ == '__main__':
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a>&nbsp;
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>&nbsp;
     
-        <a href="/tag/#网络爬虫" title="Tag: 网络爬虫" rel="tag">网络爬虫</a>
+        <a href="/tag/#推荐算法" title="Tag: 推荐算法" rel="tag">推荐算法</a>&nbsp;
+    
+        <a href="/tag/#java" title="Tag: java" rel="tag">java</a>
     
   
 
@@ -885,62 +724,114 @@ if __name__ == '__main__':
                     </div>
                 </div>
                 <div class="excerpt">
-                    <ul id="markdown-toc">
-  <li><a href="#一scrapy简介" id="markdown-toc-一scrapy简介">一、Scrapy简介</a></li>
-</ul>
+                    <p>UserCF的核心思想即为根据用户数据模拟向量相似度，我们根据这个相似度，来找出指定用户的相似用户，然后将相似用户买过的而指定用户没有买的东西推荐给指定用户，推荐度的计算也是结合了相似用户与指定用户的相似度累加。注意这里我们默认是用户的隐反馈行为，所以每一个物品的影响因子默认为1。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">cn</span><span class="p">.</span><span class="n">csu</span><span class="p">.</span><span class="n">CFUtils</span><span class="p">;</span>
+ 
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">HashMap</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">HashSet</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Iterator</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Map</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Entry</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Scanner</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="k">Set</span><span class="p">;</span>
+ 
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">基于用户的协同过滤推荐算法实现</span>
+<span class="n">A</span> <span class="n">a</span> <span class="n">b</span> <span class="n">d</span>
+<span class="n">B</span> <span class="n">a</span> <span class="n">c</span>
+<span class="n">C</span> <span class="n">b</span> <span class="n">e</span>
+<span class="n">D</span> <span class="n">c</span> <span class="n">d</span> <span class="n">e</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">author</span> <span class="n">Administrator</span>
+ <span class="p">*</span>
+ <span class="p">*/</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">UserCF</span> <span class="p">{</span>
+ 
+	<span class="k">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span><span class="k">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+		<span class="p">/**</span>
+		 <span class="p">*</span> <span class="err">输入用户</span><span class="p">--&gt;</span><span class="err">物品条目</span>  <span class="err">一个用户对应多个物品</span>
+		 <span class="p">*</span> <span class="err">用户</span><span class="n">ID</span>	<span class="err">物品</span><span class="n">ID</span><span class="err">集合</span>
+		 <span class="p">*</span>   <span class="n">A</span>		<span class="n">a</span> <span class="n">b</span> <span class="n">d</span>
+		 <span class="p">*</span>   <span class="n">B</span>		<span class="n">a</span> <span class="n">c</span>
+		 <span class="p">*</span>   <span class="n">C</span>		<span class="n">b</span> <span class="n">e</span>
+		 <span class="p">*</span>   <span class="n">D</span>		<span class="n">c</span> <span class="n">d</span> <span class="n">e</span>
+		 <span class="p">*/</span>
+		<span class="n">Scanner</span> <span class="n">scanner</span> <span class="p">=</span> <span class="n">new</span> <span class="n">Scanner</span><span class="p">(</span><span class="nf">System</span><span class="p">.</span><span class="k">in</span><span class="p">);</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s2">"Input the total users number:"</span><span class="p">);</span>
+		<span class="p">//</span><span class="err">输入用户总量</span>
+		<span class="n">int</span> <span class="n">N</span> <span class="p">=</span> <span class="n">scanner</span><span class="p">.</span><span class="n">nextInt</span><span class="p">();</span>
+		<span class="n">int</span><span class="p">[][]</span> <span class="n">sparseMatrix</span> <span class="p">=</span> <span class="n">new</span> <span class="n">int</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">];//</span><span class="err">建立用户稀疏矩阵，用于用户相似度计算【相似度矩阵】</span>
+		<span class="n">Map</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Integer</span><span class="p">&gt;</span> <span class="n">userItemLength</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();//</span><span class="err">存储每一个用户对应的不同物品总数</span>  <span class="n">eg</span><span class="p">:</span> <span class="n">A</span> <span class="m">3</span>
+		<span class="n">Map</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;&gt;</span> <span class="n">itemUserCollection</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();//</span><span class="err">建立物品到用户的倒排表</span> <span class="n">eg</span><span class="p">:</span> <span class="n">a</span> <span class="n">A</span> <span class="n">B</span>
+		<span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;</span> <span class="n">items</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashSet</span><span class="p">&lt;&gt;();//</span><span class="err">辅助存储物品集合</span>
+		<span class="n">Map</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Integer</span><span class="p">&gt;</span> <span class="n">userID</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();//</span><span class="err">辅助存储每一个用户的用户</span><span class="n">ID</span><span class="err">映射</span>
+		<span class="n">Map</span><span class="p">&lt;</span><span class="k">Integer</span><span class="p">,</span> <span class="k">String</span><span class="p">&gt;</span> <span class="n">idUser</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();//</span><span class="err">辅助存储每一个</span><span class="n">ID</span><span class="err">对应的用户映射</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s2">"Input user--items maping infermation:&lt;eg:A a b d&gt;"</span><span class="p">);</span>
+		<span class="n">scanner</span><span class="p">.</span><span class="n">nextLine</span><span class="p">();</span>
+		<span class="n">for</span><span class="p">(</span><span class="n">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">N</span> <span class="p">;</span> <span class="n">i</span><span class="p">++){//</span><span class="err">依次处理</span><span class="n">N</span><span class="err">个用户</span> <span class="err">输入数据</span>  <span class="err">以空格间隔</span>
+			<span class="k">String</span><span class="p">[]</span> <span class="n">user_item</span> <span class="p">=</span> <span class="n">scanner</span><span class="p">.</span><span class="n">nextLine</span><span class="p">().</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">);</span>
+			<span class="n">int</span> <span class="n">length</span> <span class="p">=</span> <span class="n">user_item</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+			<span class="n">userItemLength</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">],</span> <span class="n">length</span><span class="p">-</span><span class="m">1</span><span class="p">);//</span><span class="n">eg</span><span class="p">:</span> <span class="n">A</span> <span class="m">3</span>
+			<span class="n">userID</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">],</span> <span class="n">i</span><span class="p">);//</span><span class="err">用户</span><span class="n">ID</span><span class="err">与稀疏矩阵建立对应关系</span>
+			<span class="n">idUser</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">]);</span>
+			<span class="p">//</span><span class="err">建立物品</span><span class="p">--</span><span class="err">用户倒排表</span>
+			<span class="n">for</span><span class="p">(</span><span class="n">int</span> <span class="n">j</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span> <span class="n">j</span> <span class="p">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">j</span> <span class="p">++){</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">items</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">])){//</span><span class="err">如果已经包含对应的物品</span><span class="p">--</span><span class="err">用户映射，直接添加对应的用户</span>
+					<span class="n">itemUserCollection</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">]).</span><span class="n">add</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">]);</span>
+				<span class="p">}</span><span class="k">else</span><span class="p">{//</span><span class="err">否则创建对应物品</span><span class="p">--</span><span class="err">用户集合映射</span>
+					<span class="n">items</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+					<span class="n">itemUserCollection</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">new</span> <span class="n">HashSet</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;());//</span><span class="err">创建物品</span><span class="p">--</span><span class="err">用户倒排关系</span>
+					<span class="n">itemUserCollection</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="n">j</span><span class="p">]).</span><span class="n">add</span><span class="p">(</span><span class="n">user_item</span><span class="p">[</span><span class="m">0</span><span class="p">]);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">itemUserCollection</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
+		<span class="p">//</span><span class="err">计算相似度矩阵【稀疏】</span>
+		<span class="k">Set</span><span class="p">&lt;</span><span class="n">Entry</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;&gt;&gt;</span> <span class="n">entrySet</span> <span class="p">=</span> <span class="n">itemUserCollection</span><span class="p">.</span><span class="n">entrySet</span><span class="p">();</span>
+		<span class="n">Iterator</span><span class="p">&lt;</span><span class="n">Entry</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;&gt;&gt;</span> <span class="n">iterator</span> <span class="p">=</span> <span class="n">entrySet</span><span class="p">.</span><span class="n">iterator</span><span class="p">();</span>
+		<span class="k">while</span><span class="p">(</span><span class="n">iterator</span><span class="p">.</span><span class="n">hasNext</span><span class="p">()){</span>
+			<span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;</span> <span class="n">commonUsers</span> <span class="p">=</span> <span class="n">iterator</span><span class="p">.</span><span class="k">next</span><span class="p">().</span><span class="nf">getValue</span><span class="p">();</span>
+			<span class="n">for</span> <span class="p">(</span><span class="k">String</span> <span class="n">user_u</span> <span class="p">:</span> <span class="n">commonUsers</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">for</span> <span class="p">(</span><span class="k">String</span> <span class="n">user_v</span> <span class="p">:</span> <span class="n">commonUsers</span><span class="p">)</span> <span class="p">{</span>
+					<span class="k">if</span><span class="p">(</span><span class="n">user_u</span><span class="p">.</span><span class="n">equals</span><span class="p">(</span><span class="n">user_v</span><span class="p">)){</span>
+						<span class="n">continue</span><span class="p">;</span>
+					<span class="p">}</span>
+					<span class="n">sparseMatrix</span><span class="p">[</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_u</span><span class="p">)][</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_v</span><span class="p">)]</span> <span class="p">+=</span> <span class="m">1</span><span class="p">;//</span><span class="err">计算用户</span><span class="n">u</span><span class="err">与用户</span><span class="n">v</span><span class="err">都有正反馈的物品总数</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s2">"Input the user for recommendation:&lt;eg:A&gt;"</span><span class="p">);</span>
+		<span class="k">String</span> <span class="n">recommendUser</span> <span class="p">=</span> <span class="n">scanner</span><span class="p">.</span><span class="n">nextLine</span><span class="p">();</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUser</span><span class="p">));</span>
+		<span class="p">//</span><span class="err">计算用户之间的相似度【余弦相似性】</span>
+		<span class="n">int</span> <span class="n">recommendUserId</span> <span class="p">=</span> <span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUser</span><span class="p">);</span>
+		<span class="n">for</span> <span class="p">(</span><span class="n">int</span> <span class="n">j</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span><span class="n">j</span> <span class="p">&lt;</span> <span class="n">sparseMatrix</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">j</span><span class="p">++)</span> <span class="p">{</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">j</span> <span class="c1">!= recommendUserId){
+</span>					<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">idUser</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUserId</span><span class="p">)+</span><span class="s2">"--"</span><span class="p">+</span><span class="n">idUser</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">j</span><span class="p">)+</span><span class="s2">"相似度:"</span><span class="p">+</span><span class="n">sparseMatrix</span><span class="p">[</span><span class="n">recommendUserId</span><span class="p">][</span><span class="n">j</span><span class="p">]/</span><span class="n">Math</span><span class="p">.</span><span class="nb">sqrt</span><span class="p">(</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">idUser</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUserId</span><span class="p">))*</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">idUser</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">j</span><span class="p">))));</span>
+				<span class="p">}</span>
+		<span class="p">}</span>
+		
+		<span class="p">//</span><span class="err">计算指定用户</span><span class="n">recommendUser</span><span class="err">的物品推荐度</span>
+		<span class="n">for</span><span class="p">(</span><span class="k">String</span> <span class="n">item</span><span class="p">:</span> <span class="n">items</span><span class="p">){//</span><span class="err">遍历每一件物品</span>
+			<span class="k">Set</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;</span> <span class="n">users</span> <span class="p">=</span> <span class="n">itemUserCollection</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">item</span><span class="p">);//</span><span class="err">得到购买当前物品的所有用户集合</span>
+			<span class="k">if</span><span class="p">(</span><span class="c1">!users.contains(recommendUser)){//如果被推荐用户没有购买当前物品，则进行推荐度计算
+</span>				<span class="n">double</span> <span class="n">itemRecommendDegree</span> <span class="p">=</span> <span class="m">0.0</span><span class="p">;</span>
+				<span class="n">for</span><span class="p">(</span><span class="k">String</span> <span class="n">user</span><span class="p">:</span> <span class="n">users</span><span class="p">){</span>
+					<span class="n">itemRecommendDegree</span> <span class="p">+=</span> <span class="n">sparseMatrix</span><span class="p">[</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUser</span><span class="p">)][</span><span class="n">userID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="p">)]/</span><span class="n">Math</span><span class="p">.</span><span class="nb">sqrt</span><span class="p">(</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">recommendUser</span><span class="p">)*</span><span class="n">userItemLength</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="p">));//</span><span class="err">推荐度计算</span>
+				<span class="p">}</span>
+				<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s2">"The item "</span><span class="p">+</span><span class="n">item</span><span class="p">+</span><span class="s2">" for "</span><span class="p">+</span><span class="n">recommendUser</span> <span class="p">+</span><span class="s2">"'s recommended degree:"</span><span class="p">+</span><span class="n">itemRecommendDegree</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="n">scanner</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+	<span class="p">}</span>
+ 
+<span class="p">}</span>
 
-<p>运行平台：Windows 
-Python版本：Python3.x 
-IDE：Sublime text3</p>
-<h2 id="一scrapy简介">一、Scrapy简介</h2>
-
-<p>    Scrapy是一个为了爬取网站数据提取结构性数据而编写的应用框架，可以应用于数据挖掘，信息处理或存储历史数据等一些列的程序中。Scrapy最初就是为了网络爬取而设计的。现在，Scrapy已经推出了曾承诺过的Python3.x版本。</p>
-
-<p>    为什么学习Scrapy呢？它能我们更好的完成爬虫任务，自己写Python爬虫程序好比孤军奋战，而使用了Scrapy就好比手底下有了千军万马。Scrapy可以起到事半功倍(甚至好几倍<em>.</em>)的效果。所以，学习Scrapy也就显得很有必要了。</p>
-
-<p>二、Scrapy安装</p>
-
-<p>    1.直接使用指令pip3 install scrapy，发现有诸多错误。</p>
-
-<p>Failed building wheel for lxml
-Microsoft Visual C++ 10.0 is required
-Failed building twisted
-Unable to find vcvarsall.bat
-    遇到的错误，如下图所示：
-<img src="https://img-blog.csdn.net/20170303232553247?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-<img src="https://img-blog.csdn.net/20170303232540981?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-<img src="https://img-blog.csdn.net/20170303232629888?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
-
-<p>2.解决办法</p>
-
-<p>    在http://www.lfd.uci.edu/~gohlke/pythonlibs/有很多用于windows的编译好的Python第三方库，我们下载好对应自己Python版本的库即可。</p>
-
-<p>    (1)在cmd中输入指令python，查看python的版本，如下：
-<img src="https://img-blog.csdn.net/20170303232721966?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-从上图可以看出可以看出我的Python版本为Python3.5.2-64bit。</p>
-
-<p>    (2)登陆http://www.lfd.uci.edu/~gohlke/pythonlibs/，Ctrl+F搜索Lxml、Twisted、Scrapy，下载对应的版本，例如：lxml-3.7.3-cp35-cp35m-win_adm64.whl，表示lxml的版本为3.7.3，对应的python版本为3.5-64bit。我下载的版本如下图所示：
-<img src="https://img-blog.csdn.net/20170303233515040?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-<img src="https://img-blog.csdn.net/20170303232806890?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-<img src="https://img-blog.csdn.net/20170303232817859?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- (3)在cmd中输入DOS指令，进入下载好的whl文件夹下，例如我的三个whl文件放在了Scrapy文件夹下：
- <img src="https://img-blog.csdn.net/20170303232903170?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
- (4)依次执行如下命令：
- a.pip3 install wheel
- b.pip3 install lxml-3.7.3-cp35-cp35m-win_amd64.whl
- c.pip3 install Twisted-17.1.0-cp35-cp35m-win_amd64.whl
- d.pip3 install Scrapy-1.3.2-py2.py3-none-any.whl
- 这样Scrapy的安装就完成了，请忽略最后两行让我升级pip的信息。<em>.</em></p>
-
-<p>    (5)Srapy已经安装成功，还要下载pywin32，找到对应版本下载，一路下一步安装即可。安装完成后，就可以正常使用Scrapy了。</p>
-
-<p><img src="https://img-blog.csdn.net/20170303233239661?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
-   至此，大功告成，我们可以愉快的使用Scrapy了。</p>
-
+</code></pre></div></div>
 
                 </div>
                 <div class="read-all">
-                    <a  href="/2018/01/11/python5/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="/2018/10/12/datamining/"><i class="fa fa-newspaper-o"></i>Read All</a>
                 </div>
                 <hr>
               </li>
@@ -955,10 +846,10 @@ Unable to find vcvarsall.bat
             <span class="previous disable"><i class="fa fa-angle-double-left"></i></span>
             <span class="previous disable"><i class="fa fa-angle-left"></i></span>
           
-          <span class="page_number ">1/6</span>
+          <span class="page_number ">1/10</span>
           
             <a href="/page2" class="next"><i class="fa fa-angle-right"></i></a>
-            <a href="/page6" class="next"><i class="fa fa-angle-double-right"></i></a>
+            <a href="/page10" class="next"><i class="fa fa-angle-double-right"></i></a>
           
         </div>
     </div>
@@ -974,23 +865,23 @@ Unable to find vcvarsall.bat
                     
                         <li><a href="/2019/01/25/test/">Hello World!</a></li>
                     
-                        <li><a href="/2018/02/13/python7/">Python3网络爬虫(五)：爬取人物头像</a></li>
+                        <li><a href="/2019/01/19/dl/">深度学习与语音识别—常用声学模型简介</a></li>
                     
-                        <li><a href="/2018/02/13/python6/">Python3网络爬虫(五)：爬取人物头像</a></li>
+                        <li><a href="/2019/01/16/datamining/">Kmeans文本聚类实施过程</a></li>
                     
-                        <li><a href="/2018/02/01/Hive2/">Hive的几种常见的数据导入方式</a></li>
+                        <li><a href="/2018/11/23/datamining/">文本数据挖掘-----词向量</a></li>
                     
-                        <li><a href="/2018/02/01/Hive1/">Hive的几种常见的数据导入方式</a></li>
+                        <li><a href="/2018/10/28/datamining/">TF-IDF提取文章关键词算法</a></li>
                     
-                        <li><a href="/2018/01/11/python5/">Python3网络爬虫(四)：Python3安装Scrapy</a></li>
+                        <li><a href="/2018/10/12/datamining/">基于用户的协同过滤推荐算法java实现（UserCF）</a></li>
                     
-                        <li><a href="/2017/09/16/1-Algorams3/">剑指offer:链表中倒数第k个节点</a></li>
+                        <li><a href="/2018/10/05/datamining/">Louvain 社团发现算法学习</a></li>
                     
-                        <li><a href="/2017/09/16/1-Algorams2/">剑指offer:链表中倒数第k个节点</a></li>
+                        <li><a href="/2018/09/26/datamining/">使用python提取文章关键词</a></li>
                     
-                        <li><a href="/2017/06/11/JavaScript-function/">JavaScript 函数</a></li>
+                        <li><a href="/2018/07/11/datamining/">基于内容的推荐 java实现</a></li>
                     
-                        <li><a href="/2017/05/22/python4/">Python3网络爬虫(三)：使用User Agent和代理IP隐藏身份</a></li>
+                        <li><a href="/2018/07/11/datamining/">机器学习算法——PCA算法介绍以及Java实现</a></li>
                     
                 </ul>
             </div>
@@ -1002,6 +893,15 @@ Unable to find vcvarsall.bat
                     目录
                 </div>
                 <ul class="content-ul" cate>
+                    
+                    <li>
+                        <a href="/category/#数据挖掘" class="categories-list-item" cate="数据挖掘">
+                            <span class="name">
+                                数据挖掘
+                            </span>
+                            <span class="badge">10</span>
+                        </a>
+                    </li>
                     
                     <li>
                         <a href="/category/#大数据技术" class="categories-list-item" cate="大数据技术">
@@ -1031,9 +931,27 @@ Unable to find vcvarsall.bat
                     </li>
                     
                     <li>
+                        <a href="/category/#Python" class="categories-list-item" cate="Python">
+                            <span class="name">
+                                Python
+                            </span>
+                            <span class="badge">3</span>
+                        </a>
+                    </li>
+                    
+                    <li>
                         <a href="/category/#Java" class="categories-list-item" cate="Java">
                             <span class="name">
                                 Java
+                            </span>
+                            <span class="badge">2</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#开发工具" class="categories-list-item" cate="开发工具">
+                            <span class="name">
+                                开发工具
                             </span>
                             <span class="badge">2</span>
                         </a>
@@ -1049,15 +967,6 @@ Unable to find vcvarsall.bat
                     </li>
                     
                     <li>
-                        <a href="/category/#Python" class="categories-list-item" cate="Python">
-                            <span class="name">
-                                Python
-                            </span>
-                            <span class="badge">1</span>
-                        </a>
-                    </li>
-                    
-                    <li>
                         <a href="/category/#jekyll" class="categories-list-item" cate="jekyll">
                             <span class="name">
                                 jekyll
@@ -1067,9 +976,18 @@ Unable to find vcvarsall.bat
                     </li>
                     
                     <li>
-                        <a href="/category/#开发工具" class="categories-list-item" cate="开发工具">
+                        <a href="/category/#机器学习" class="categories-list-item" cate="机器学习">
                             <span class="name">
-                                开发工具
+                                机器学习
+                            </span>
+                            <span class="badge">7</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#R" class="categories-list-item" cate="R">
+                            <span class="name">
+                                R
                             </span>
                             <span class="badge">1</span>
                         </a>
@@ -1081,6 +999,24 @@ Unable to find vcvarsall.bat
                                 Python网络爬虫
                             </span>
                             <span class="badge">6</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#深度学习" class="categories-list-item" cate="深度学习">
+                            <span class="name">
+                                深度学习
+                            </span>
+                            <span class="badge">4</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#数据分析" class="categories-list-item" cate="数据分析">
+                            <span class="name">
+                                数据分析
+                            </span>
+                            <span class="badge">1</span>
                         </a>
                     </li>
                     
@@ -1106,6 +1042,34 @@ Unable to find vcvarsall.bat
                       
                       
                       
+                      <a href="/tag/#数据挖掘" style="font-size: 18pt; color: #000;">数据挖掘</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#机器学习" style="font-size: 15.5pt; color: #333;">机器学习</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#深度学习" style="font-size: 11pt; color: #777;">深度学习</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#推荐算法" style="font-size: 12.5pt; color: #555;">推荐算法</a>
+                    
+                      
+                      
+                      
+                      
+                      
                       <a href="/tag/#Hadoop" style="font-size: 9pt; color: #999;">Hadoop</a>
                     
                       
@@ -1113,14 +1077,14 @@ Unable to find vcvarsall.bat
                       
                       
                       
-                      <a href="/tag/#大数据技术" style="font-size: 11.5pt; color: #666;">大数据技术</a>
+                      <a href="/tag/#大数据技术" style="font-size: 10pt; color: #888;">大数据技术</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#GitHub" style="font-size: 10.5pt; color: #888;">GitHub</a>
+                      <a href="/tag/#GitHub" style="font-size: 10pt; color: #888;">GitHub</a>
                     
                       
                       
@@ -1141,7 +1105,14 @@ Unable to find vcvarsall.bat
                       
                       
                       
-                      <a href="/tag/#JavaScript" style="font-size: 14pt; color: #444;">JavaScript</a>
+                      <a href="/tag/#JavaScript" style="font-size: 12.5pt; color: #555;">JavaScript</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#python" style="font-size: 14.5pt; color: #444;">python</a>
                     
                       
                       
@@ -1162,42 +1133,49 @@ Unable to find vcvarsall.bat
                       
                       
                       
-                      <a href="/tag/#Java" style="font-size: 18pt; color: #000;">Java</a>
+                      <a href="/tag/#Java" style="font-size: 17pt; color: #111;">Java</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#数据结构" style="font-size: 15.5pt; color: #333;">数据结构</a>
+                      <a href="/tag/#Myeclipse" style="font-size: 9pt; color: #999;">Myeclipse</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#剑指offer" style="font-size: 15.5pt; color: #333;">剑指offer</a>
+                      <a href="/tag/#软件开发工具" style="font-size: 9pt; color: #999;">软件开发工具</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#面试" style="font-size: 15.5pt; color: #333;">面试</a>
+                      <a href="/tag/#数据结构" style="font-size: 13.5pt; color: #444;">数据结构</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#python" style="font-size: 9pt; color: #999;">python</a>
+                      <a href="/tag/#剑指offer" style="font-size: 13.5pt; color: #444;">剑指offer</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#jekyll" style="font-size: 11.5pt; color: #666;">jekyll</a>
+                      <a href="/tag/#面试" style="font-size: 13.5pt; color: #444;">面试</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#jekyll" style="font-size: 11pt; color: #777;">jekyll</a>
                     
                       
                       
@@ -1232,6 +1210,13 @@ Unable to find vcvarsall.bat
                       
                       
                       
+                      <a href="/tag/#R" style="font-size: 9pt; color: #999;">R</a>
+                    
+                      
+                      
+                      
+                      
+                      
                       <a href="/tag/#正则" style="font-size: 9pt; color: #999;">正则</a>
                     
                       
@@ -1246,21 +1231,112 @@ Unable to find vcvarsall.bat
                       
                       
                       
-                      <a href="/tag/#Python" style="font-size: 15.5pt; color: #333;">Python</a>
+                      <a href="/tag/#Python" style="font-size: 13.5pt; color: #444;">Python</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#网络爬虫" style="font-size: 15.5pt; color: #333;">网络爬虫</a>
+                      <a href="/tag/#网络爬虫" style="font-size: 13.5pt; color: #444;">网络爬虫</a>
                     
                       
                       
                       
                       
                       
-                      <a href="/tag/#Hive" style="font-size: 10.5pt; color: #888;">Hive</a>
+                      <a href="/tag/#文本挖掘" style="font-size: 11.5pt; color: #666;">文本挖掘</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#中文分词" style="font-size: 11pt; color: #777;">中文分词</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#数据分析" style="font-size: 10pt; color: #888;">数据分析</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#可视化" style="font-size: 9pt; color: #999;">可视化</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#Hive" style="font-size: 9pt; color: #999;">Hive</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#特征选择" style="font-size: 10pt; color: #888;">特征选择</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#DNN" style="font-size: 9pt; color: #999;">DNN</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#情感分析" style="font-size: 9pt; color: #999;">情感分析</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#神经网络" style="font-size: 10pt; color: #888;">神经网络</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#数据仓库" style="font-size: 9pt; color: #999;">数据仓库</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#ETL" style="font-size: 9pt; color: #999;">ETL</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#java" style="font-size: 11pt; color: #777;">java</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#PCA" style="font-size: 9pt; color: #999;">PCA</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#kmeans" style="font-size: 9pt; color: #999;">kmeans</a>
                     
                 </div>
             </div>

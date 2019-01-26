@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Python 常用库整理（yml、ujson、hashlib、base64、cgi、markdown篇）</title>
+    <meta name="description" content="  配置文件：yml  使用 ujson: 更加快  加密：hashlib  注意分析K的作用  编码：对一些文本数据，二进制数据进行编码，如图片数字签名等  defaultdict 有默认值的字段  HTML 标签与实体进行转换配置文件：ymlimport yamlwith open("test.yml", '...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2016/05/27/python5/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Python 常用库整理（yml、ujson、hashlib、base64、cgi、markdown篇）</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-05-27
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Python" title="Category: Python" rel="category">Python</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#python" title="Tag: python" rel="tag">python</a-->
+        <a href="/tag/#python" title="Tag: python" rel="tag">python</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#配置文件yml" id="markdown-toc-配置文件yml">配置文件：yml</a></li>
+  <li><a href="#使用-ujson-更加快" id="markdown-toc-使用-ujson-更加快">使用 ujson: 更加快</a></li>
+  <li><a href="#加密hashlib" id="markdown-toc-加密hashlib">加密：hashlib</a></li>
+  <li><a href="#注意分析k的作用" id="markdown-toc-注意分析k的作用">注意分析K的作用</a></li>
+  <li><a href="#编码对一些文本数据二进制数据进行编码如图片数字签名等" id="markdown-toc-编码对一些文本数据二进制数据进行编码如图片数字签名等">编码：对一些文本数据，二进制数据进行编码，如图片数字签名等</a></li>
+  <li><a href="#defaultdict-有默认值的字段" id="markdown-toc-defaultdict-有默认值的字段">defaultdict 有默认值的字段</a></li>
+  <li><a href="#html-标签与实体进行转换" id="markdown-toc-html-标签与实体进行转换">HTML 标签与实体进行转换</a></li>
+</ul>
+<h2 id="配置文件yml">配置文件：yml</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import yaml
+
+with open("test.yml", 'r') as f:
+    obj = yaml.load(f.read())
+    print obj
+</code></pre></div></div>
+<h2 id="使用-ujson-更加快">使用 ujson: 更加快</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import ujson as json
+
+print json.dumps({"a":1})
+</code></pre></div></div>
+<h2 id="加密hashlib">加密：hashlib</h2>
+<p>md5摘要：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import hashlib
+md5 = hashlib.md5()
+md5.update("a")
+print md5.hexdigest()  # 长度32
+</code></pre></div></div>
+<p>sha1 / sha256</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import hashlib
+sha256 = hashlib.sha256()
+sha256.update("a")
+print sha256.hexdigest()  # 长度64
+</code></pre></div></div>
+<p>非对称加密, 签名/验证</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.Signature import PKCS1_PSS
+# 建议使用上面的两个方法进行加解密
+
+pri_key = RSA.importKey("private.pem")
+pub_key = RSA.importKey("public.pem")
+
+plain_text = "hello, world!"
+K = 1
+
+# 公钥加密，私钥解密
+encrypted_text = pub_key.encrypt(plain_text, K)
+plain = pri_key.decrypt(encrypted_text)
+print plain
+
+# 私钥签名，公钥验证
+sign = pri_key.sign(plain_text, K)
+is_true = pub_key.verify(plain_text, sign)
+print is_true
+
+</code></pre></div></div>
+<h2 id="注意分析k的作用">注意分析K的作用</h2>
+<p>留空</p>
+
+<p>秘钥生成</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from Crypto import Random
+from Crypto.PublicKey import RSA
+
+rsa_gen = RSA.generate(1024, Random.new().read)
+
+# 生成私钥
+private_key = rsa_gen.exportKey()
+public_key = rsa_gen.publickey().exportKey()
+# 写入文件即可
+
+</code></pre></div></div>
+
+<h2 id="编码对一些文本数据二进制数据进行编码如图片数字签名等">编码：对一些文本数据，二进制数据进行编码，如图片数字签名等</h2>
+<p>base64 编码，
+将二进制数据 3 个字节编码为 4 个字符
+3 个字节 24 bit , 化为4组每组6bit 总共可表示64个字符，这就是64的由来
+对于转换后的每组四个字符都是通过查询 字符表而来</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import base64
+
+tmp = base64.b64encode("hello,world")
+# tmp = base64.urlsafe_b64encode("hello,world")  # 与上面的区别就是将 + / 换为了-_
+print base64.b64decode(tmp)
+</code></pre></div></div>
+<p>注意，一些会将后面的==号去掉，在解码的时候注意长度补齐4的倍数，也就是补充=号</p>
+
+<h2 id="defaultdict-有默认值的字段">defaultdict 有默认值的字段</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from collections import defaultdict
+
+dd = defaultdict(lambda :"N/A")
+print dd["a"]  # 输出 "N/A"
+
+dd = defaultdict(int)
+print dd["a"]  # 输出 0
+</code></pre></div></div>
+
+<h2 id="html-标签与实体进行转换">HTML 标签与实体进行转换</h2>
+<p>主要用到cgi和HTMLParser</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import cgi
+import HTMLParser
+text = "&lt;p&gt;hello&lt;/p&gt;"
+tmp = cgi.escape(text)
+print tmp
+parser = HTMLParser.HTMLParser()
+print parser.unescape(tmp)
+</code></pre></div></div>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/09/26/datamining/">使用python提取文章关键词
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2016/04/23/baidu-ife-2-javascript/">JavaScript 基础</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2016/06/12/JavaScript-this/">JavaScript 中的 this</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2016/05/27/python5/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2016/05/27/python5/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

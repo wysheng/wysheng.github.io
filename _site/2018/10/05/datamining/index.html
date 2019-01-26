@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Louvain 社团发现算法学习</title>
+    <meta name="description" content="  算法介绍：  模块度增益的计算，请继续看下文算法介绍：Louvain 算法是基于模块度的社区发现算法，该算法在效率和效果上都表现较好，并且能够发现层次性的社区结构，其优化目标是最大化整个社区网络的模块度。社区网络的模块度（Modularity）是评估一个社区网络划分好坏的度量方法，它的含义是社区内节点的连边数...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2018/10/05/datamining/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Louvain 社团发现算法学习</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2018-10-05
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#机器学习" title="Category: 机器学习" rel="category">机器学习</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0" title="Tag: 机器学习" rel="tag">机器学习</a-->
+        <a href="/tag/#机器学习" title="Tag: 机器学习" rel="tag">机器学习</a>&nbsp;
+    
+        <!--a href="/tag/#%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95" title="Tag: 推荐算法" rel="tag">推荐算法</a-->
+        <a href="/tag/#推荐算法" title="Tag: 推荐算法" rel="tag">推荐算法</a>&nbsp;
+    
+        <!--a href="/tag/#%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98" title="Tag: 数据挖掘" rel="tag">数据挖掘</a-->
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#算法介绍" id="markdown-toc-算法介绍">算法介绍：</a></li>
+  <li><a href="#模块度增益的计算请继续看下文" id="markdown-toc-模块度增益的计算请继续看下文">模块度增益的计算，请继续看下文</a></li>
+  <li><a href="#文章原文及代码" id="markdown-toc-文章原文及代码">文章原文及代码：</a></li>
+</ul>
+<h2 id="算法介绍">算法介绍：</h2>
+
+<p>Louvain 算法是基于模块度的社区发现算法，该算法在效率和效果上都表现较好，并且能够发现层次性的社区结构，其优化目标是最大化整个社区网络的模块度。</p>
+
+<p>社区网络的模块度（Modularity）是评估一个社区网络划分好坏的度量方法，它的含义是社区内节点的连边数与随机情况下的边数之差，它的取值范围是 (0,1)，其定义如下：
+<img src="https://img-blog.csdn.net/20170414185610724?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+上式中，Aij代表结点i和j之间的边权值（当图不带权时，边权值可以看成1）。 ki代表结点i的領街边的边权和（当图不带权时，即为结点的度数）。
+m为图中所有边的边权和。 ci为结点i所在的社团编号。
+模块度的公式定义可以做如下的简化：
+<img src="https://img-blog.csdn.net/20170414193226025?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+其中Sigma in表示社区c内的边的权重之和，Sigma tot表示与社区c内的节点相连的边的权重之和。
+我们的目标，是要找出各个结点处于哪一个社团，并且让这个划分结构的模块度最大。
+Louvain算法的思想很简单：</p>
+
+<p>1）将图中的每个节点看成一个独立的社区，次数社区的数目与节点个数相同；
+2）对每个节点i，依次尝试把节点i分配到其每个邻居节点所在的社区，计算分配前与分配后的模块度变化Delta Q，并记录Delta Q最大的那个邻居节点，如果maxDelta Q&gt;0，则把节点i分配Delta Q最大的那个邻居节点所在的社区，否则保持不变；
+3）重复2），直到所有节点的所属社区不再变化；
+4）对图进行压缩，将所有在同一个社区的节点压缩成一个新节点，社区内节点之间的边的权重转化为新节点的环的权重，社区间的边权重转化为新节点间的边权重；
+5）重复1）直到整个图的模块度不再发生变化。
+在写代码时，要注意几个要点：</p>
+
+<ul>
+  <li>
+    <p>第二步，尝试分配结点时，并不是只尝试独立的结点，也可以尝试所在社区的结点数大于1的点，我在看paper时一开始把这个部分看错了，导致算法出问题。</p>
+  </li>
+  <li>
+    <p>第三步，重复2）的时候，并不是将每个点遍历一次后就对图进行一次重构，而是要不断循环的遍历每个结点，直到一次循环中所有结点所在社区都不更新了，表示当前网络已经稳定，然后才进行图的重构。</p>
+  </li>
+  <li>
+    <h2 id="模块度增益的计算请继续看下文">模块度增益的计算，请继续看下文</h2>
+    <p>过程如下图所示：
+<img src="https://img-blog.csdn.net/20170414195729001?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+可以看出，louvain是一个启发式的贪心算法。我们需要对模块度进行一个启发式的更新。这样的话这个算法会有如下几个问题：</p>
+  </li>
+</ul>
+
+<p>1：尝试将节点i分配到相邻社团时，如果真的移动结点i，重新计算模块度，那么算法的效率很难得到保证</p>
+
+<p>2：在本问题中，贪心算法只能保证局部最优，而不能够保证全局最优</p>
+
+<p>3：将节点i尝试分配至相邻社团时，要依据一个什么样的顺序</p>
+
+<p>……
+第一个问题，在该算法的paper中给了我们解答。我们实际上不用真的把节点i加入相邻社团后重新计算模块度，paper中给了我们一个计算把结点i移动至社团c时，模块度的增益公式：
+——————— 
+<img src="https://img-blog.csdn.net/20170414194703112?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+其中Sigma in表示起点终点都在社区c内的边的权重之和，Sigma tot表示入射社区c内的边的权重之和，ki代表结点i的带权度数和，m为所有边权和。</p>
+
+<p>但是该增益公式还是过于复杂，仍然会影响算法的时间效率。</p>
+
+<p>但是请注意，我们只是想通过模块增益度来判断一个结点i是否能移动到社团c中，而我们实际上是没有必要真正的去求精确的模块度，只需要知道，当前的这步操作，模块度是否发生了增长。</p>
+
+<p>因此，就有了相对增益公式的出现：</p>
+
+<p><img src="https://img-blog.csdn.net/20170414200159913?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1NDcyNzY1NDI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" />
+相对增益的值可能大于1，不是真正的模块度增长值，但是它的正负表示了当前的操作是否增加了模块度。用该公式能大大降低算法的时间复杂度。
+第二个问题，该算法的确不能够保证全局最优。但是我们该算法的启发式规则很合理，因此我们能够得到一个十分精确的近似结果。
+同时，为了校准结果，我们可以以不同的序列多次调用该算法，保留一个模块度最大的最优结果。
+第三个问题，在第二个问题中也出现了，就是给某个结点i找寻領接点时，应当以一个什么顺序？递增or随机or其它规则？我想这个问题需要用实验数据去分析。</p>
+
+<p>在paper中也有提到一些能够使结果更精确的序列。我的思路是，如果要尝试多次取其最优，取随机序列应该是比较稳定比较精确的方式。</p>
+
+<p>说了这么多，下面给上本人的Louvain算法java实现供参考。 本人代码注释比较多，适合学习。</p>
+
+<p>我的代码后面是国外大牛的代码，时空复杂度和我的代码一样，但是常数比我小很多，速度要快很多，而且答案更精准（迭代了10次），适合实际运用~</p>
+<h2 id="文章原文及代码">文章原文及代码：</h2>
+<p><a href="https://blog.csdn.net/qq547276542/article/details/70175157">原文</a></p>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2019/01/16/datamining/">Kmeans文本聚类实施过程
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/11/23/datamining/">文本数据挖掘-----词向量
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/28/datamining/">TF-IDF提取文章关键词算法
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/12/datamining/">基于用户的协同过滤推荐算法java实现（UserCF）
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/09/26/datamining/">使用python提取文章关键词
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/07/11/datamining/">基于内容的推荐 java实现
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2018/09/26/datamining/">使用python提取文章关键词</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/10/12/datamining/">基于用户的协同过滤推荐算法java实现（UserCF）</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2018/10/05/datamining/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2018/10/05/datamining/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

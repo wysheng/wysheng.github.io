@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>TF-IDF提取文章关键词算法</title>
+    <meta name="description" content="  一、TF-IDF简介  二、算法实现  三、测试案例  python代码实现一、TF-IDF简介TF-IDF（terms frequency-inverse document frequency）是一种用于信息检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用来评估一字词对于一篇文章的重要程度。一个...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2018/10/28/datamining/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>TF-IDF提取文章关键词算法</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2018-10-28
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#数据挖掘" title="Category: 数据挖掘" rel="category">数据挖掘</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%96%87%E6%9C%AC%E6%8C%96%E6%8E%98" title="Tag: 文本挖掘" rel="tag">文本挖掘</a-->
+        <a href="/tag/#文本挖掘" title="Tag: 文本挖掘" rel="tag">文本挖掘</a>&nbsp;
+    
+        <!--a href="/tag/#%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98" title="Tag: 数据挖掘" rel="tag">数据挖掘</a-->
+        <a href="/tag/#数据挖掘" title="Tag: 数据挖掘" rel="tag">数据挖掘</a>&nbsp;
+    
+        <!--a href="/tag/#%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D" title="Tag: 中文分词" rel="tag">中文分词</a-->
+        <a href="/tag/#中文分词" title="Tag: 中文分词" rel="tag">中文分词</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#一tf-idf简介" id="markdown-toc-一tf-idf简介">一、TF-IDF简介</a></li>
+  <li><a href="#二算法实现" id="markdown-toc-二算法实现">二、算法实现</a></li>
+  <li><a href="#三测试案例" id="markdown-toc-三测试案例">三、测试案例</a></li>
+  <li><a href="#python代码实现" id="markdown-toc-python代码实现">python代码实现</a></li>
+</ul>
+<h2 id="一tf-idf简介">一、TF-IDF简介</h2>
+
+<p>TF-IDF（terms frequency-inverse document frequency）是一种用于信息检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用来评估一字词对于一篇文章的重要程度。一个词语对一篇文章的重要性主要是依靠它在文件中出现的次数，如果这个词语在这篇文章中的出现次数越高，则表明这个词语对于这篇文章的重要性越高。同时，它还与这个词语在语料库中出现的文章篇数有关，随着出现的篇数越多，则会降低这个词语在这篇文章中的重要性，具体的算法请看下面。</p>
+
+<h2 id="二算法实现">二、算法实现</h2>
+
+<p>1、在实现这个算法之前，我们需要对一篇文章进行分词，在进行中文分词的时候，推荐一个python库，jieba分词，作者将这个项目发布到了GitHub上，是开源的，GitHub地址https://github.com/fxsjy/jieba</p>
+
+<p>2、TF词频的计算</p>
+
+<p>词频（TF）=某个词语在文章中的出现次数</p>
+
+<p>由于我们需要考虑不同的文章，长度不同，我们需要将词频进行归一化处理</p>
+
+<p>词频（TF）=某个词语在文章中的出现次数/文章的总词数 或者 词频（TF）=某个词语在文章中的出现次数/这篇文章出现最多的词的出现次数</p>
+
+<p>3、IDF的计算</p>
+
+<p>逆文档频率（IDF）=log（语料库的文档总数/包含该词的文档数+1），语料库可以自己去网上下载，计算逆文档频率的原因是为了去除哪些经常出现的词语，比如说，“的”、“我们”、“他”等这类的词语，这些词语对于整篇文档重要性不高、但是出现的频率会比较多，就有可能会影响到我们最后的计算结果，如果是经常出现的词语就不能作为我们文章的关键词。</p>
+
+<p>4、计算TF-IDF的值</p>
+
+<p>TF-IDF = 词频（TF）* 逆文档频率（IDF）</p>
+
+<p>5、排序</p>
+
+<p>对文章词语的TF-IDF值进行排序，我们可以选择提取TF-IDF值比较大的词语</p>
+
+<p>6、总结</p>
+
+<p>TF-IDF算法的优点是简单快速，结果比较符合实际情况。但，TF-IDF算法是单纯的以“词频”来衡量一个词的重要性，就显得不够全面，这些词语就不一定能体现出文章的主要思想突出文章的主题。而且，这种算法也无法体现出词语所处的不同位置对于文章的重要性不同，如果想解决这个问题，我们可以采用对于词语所处的不同位置给他们设定不同的权重。</p>
+
+<h2 id="三测试案例">三、测试案例</h2>
+
+<p>下面的例子是使用jieba库，来实现TF-IDF算法的，下面是文章的内容</p>
+
+<p>有很多不同的数学公式可以用来计算tf-idf。
+这边的例子以上述的数学公式来计算。
+词频（tf）是一词语出现的次数除以该文件的总词语数。
+假如一篇文件的总词语数是100个，而词语“母牛”出现了3次，
+那么“母牛”一词在该文件中的词频就是3/100=0.03。
+一个计算文件频率（DF）的方法是测定有多少份文件出现过“母牛”一词，
+然后除以文件集里包含的文件总数。所以，如果“母牛”一词在1,000份文件出现过，
+而文件总数是10,000,000份的话，其逆向文件频率就是log（10,000,000 / 1,000）=4。
+最后的tf-idf的分数为0.03 * 4=0.12。</p>
+<h2 id="python代码实现">python代码实现</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import sys
+sys.path.append('../')
+ 
+import jieba
+import jieba.analyse
+from optparse import OptionParser
+ 
+file_name = "../txt/test.txt"
+ 
+content = open(file_name, 'rb').read()
+ 
+#10表示输出的前10个
+tags = jieba.analyse.extract_tags(content, topK=10)
+ 
+print(",".join(tags))
+
+</code></pre></div></div>
+<p>输出结果</p>
+
+<p>000,文件,母牛,词语,tf,词频,100,idf,10,0.03</p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2019/01/16/datamining/">Kmeans文本聚类实施过程
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/11/23/datamining/">文本数据挖掘-----词向量
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/12/datamining/">基于用户的协同过滤推荐算法java实现（UserCF）
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/10/05/datamining/">Louvain 社团发现算法学习
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/09/26/datamining/">使用python提取文章关键词
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/07/11/datamining/">基于内容的推荐 java实现
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2018/10/12/datamining/">基于用户的协同过滤推荐算法java实现（UserCF）</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/11/23/datamining/">文本数据挖掘-----词向量</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2018/10/28/datamining/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2018/10/28/datamining/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>
