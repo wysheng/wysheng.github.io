@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "百度Web前端技术学院(2)-JavaScript 基础"
-date:   2015-04-22 19:06:05
+title:  "JavaScript 基础"
+date:   2016-04-22 19:06:05
 categories: JavaScript
-tags: Baidu ife JavaScript 正则 Regular
+tags:  JavaScript  
 ---
 
 * content

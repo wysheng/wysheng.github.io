@@ -1,133 +1,467 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>王永胜</title>
+    <title>王者勇胜</title>
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 24 Jan 2019 00:36:30 +0800</pubDate>
-    <lastBuildDate>Thu, 24 Jan 2019 00:36:30 +0800</lastBuildDate>
+    <pubDate>Sat, 26 Jan 2019 16:49:38 +0800</pubDate>
+    <lastBuildDate>Sat, 26 Jan 2019 16:49:38 +0800</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
-        <title>vscode 插件 markdown-schedule-snippet</title>
+        <title>Hello World!</title>
+        <description>
+&lt;img src=&quot;https://timgsa.baidu.com/timg?image&amp;amp;quality=80&amp;amp;size=b9999_10000&amp;amp;sec=1548499900740&amp;amp;di=bfd99b433569f2063994beef5364ef04&amp;amp;imgtype=0&amp;amp;src=http%3A%2F%2Fi10.hoopchina.com.cn%2Fhupuapp%2Fbbs%2F128729619991460%2Fthread_128729619991460_20180823182744_s_49705_w_300_h_300_20087.gif&quot; alt=&quot;&quot; /&gt;
+
+</description>
+        <pubDate>Fri, 25 Jan 2019 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/01/25/test/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/01/25/test/</guid>
+        
+        <category>JavaScript</category>
+        
+        
+        <category>JavaScript</category>
+        
+      </item>
+    
+      <item>
+        <title>Python3网络爬虫(五)：爬取人物头像</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#起因&quot; id=&quot;markdown-toc-起因&quot;&gt;起因&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#一预备知识&quot; id=&quot;markdown-toc-一预备知识&quot;&gt;（一）预备知识&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#二实战&quot; id=&quot;markdown-toc-二实战&quot;&gt;(二)实战&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#三-总结&quot; id=&quot;markdown-toc-三-总结&quot;&gt;(三) 总结&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
+运行平台：Windows 
+Python版本：Python3.x 
+IDE：Sublime text3
+&lt;h2 id=&quot;一预备知识&quot;&gt;（一）预备知识&lt;/h2&gt;
+为了也能够学习到新知识，本次爬虫教程使用requests第三方库，这个库可不是Python3内置的urllib.request库，而是一个强大的基于urllib3的第三方库
 
-不知道大家是怎样安排自己的日常计划的，我习惯是建立一个仓库，按照年/周记录在 markdown 里，平时这个仓库也写点简单的 demo，目录类似如下：
+requests库的基础方法如下：
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;week
-├── 2016
-├── 2017
-├── 2018
-│   ├── 20180102.md
-│   ├── 20180108.md
-│   ├── 20180115.md
-│   ├── 20180122.md
-│   ├── 20180126.md
-│   ├── ...
-│   ├── ...
-│   ├── ...
-│   ├── 20181007.md
-│   ├── pixi.md
-│   ├── schedule.md
-│   ├── temp.css
-│   ├── temp.html
-│   ├── temp.js
-│   ├── temp.json
-│   └── temp.md
-├── package.json
-└── yarn.lock
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121032110?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+官方中文教程地址：http://docs.python-requests.org/zh_CN/latest/user/quickstart.html
+
+因为官方给出的《快速上手》教程已经整理的很好了，并且本次教程使用的也是最简单的requests.get()，因此第三方库requests的使用方法，不再累述。详情请看官方中文教程，有urllib2基础的人，还是好上手的。
+
+&lt;h2 id=&quot;二实战&quot;&gt;(二)实战&lt;/h2&gt;
+2.1 背景
+    爬取《帅啊》网的帅哥图片！
+
+URL : http://www.shuaia.net/index.html
+
+先看一眼网站的样子：
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121231569?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+
+2.2 requests安装
+    在cmd中，使用如下指令安装第三方库requests：
+pip3 install requests
+    或者：
+easy_install requests
+2.3 爬取单页目标连接
+    通过审查元素，我们不难发现，目标的地址存储在class属性为”item-img”的&lt;a&gt;标签的href属性中。这时候，有人可能会问为啥不用下面的&lt;img /&gt;标签的src属性？因为这个图片是首页的浏览图片，根据这个地址保存下来的图片，太小了，并且不清清楚。秉承着热爱“高清无码”的精神，这种图片可不是我想要的。因此，先获取目标的地址，也就是我们点击图片之后，进入的网页地址，然后根据下一个网页，找到图片的地址。
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121440034?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ 代码：&lt;/a&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; # -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+import requests
+
+if __name__ == '__main__':
+    url = 'http://www.shuaia.net/index.html'
+    headers = {
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+    }
+    req = requests.get(url = url,headers = headers)
+    req.encoding = 'utf-8'
+    html = req.text
+    bf = BeautifulSoup(html, 'lxml')
+    targets_url = bf.find_all(class_='item-img')
+    list_url = []
+    for each in targets_url:
+        list_url.append(each.img.get('alt') + '=' + each.get('href'))
+    print(list_url)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+我们将爬取的信息保存到list中，图片名字和图片地址使用”=”连接，运行结果：
+ &lt;img src=&quot;https://img-blog.csdn.net/20170521121615323?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+
+2.4 爬取多页目标连接
+    翻到第二页的时候，很容易就发现地址变为了:www.shuaia.net/index_2.html。第三页、第四页、第五页依此类推。
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121727325?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+代码：
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+import requests
+
+if __name__ == '__main__':
+    list_url = []
+    for num in range(1,20):
+        if num == 1:
+            url = 'http://www.shuaia.net/index.html'
+        else:
+            url = 'http://www.shuaia.net/index_%d.html' % num
+        headers = {
+                &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+        }
+        req = requests.get(url = url,headers = headers)
+        req.encoding = 'utf-8'
+        html = req.text
+        bf = BeautifulSoup(html, 'lxml')
+        targets_url = bf.find_all(class_='item-img')
+
+        for each in targets_url:
+            list_url.append(each.img.get('alt') + '=' + each.get('href'))
+    print(list_url)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+我们少爬取一些，爬取前19页的目标连接：
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121837177?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+2.5 单张图片下载
+    进入目标地址，审查元素。可以看到，图片地址保存在了class属性为”wr-single-content-list “的div-&amp;gt;div-&amp;gt;img的src属性中。
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121936116?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ 代码：
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; target_url = 'http://www.shuaia.net/rihanshuaige/2017-05-18/1294.html'
+filename = '张根硕拍摄机车型男写真帅气十足' + '.jpg'
+headers = {
+    &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+    }
+img_req = requests.get(url = target_url,headers = headers)
+img_req.encoding = 'utf-8'
+img_html = img_req.text
+img_bf_1 = BeautifulSoup(img_html, 'lxml')
+img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
+img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
+img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
+if 'images' not in os.listdir():
+    os.makedirs('images')
+urlretrieve(url = img_url,filename = 'images/' + filename)
+print('下载完成！')
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+我们将图片保存在程序文件所在目录的imgase目录下：
+ &lt;img src=&quot;https://img-blog.csdn.net/20170521122107585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ &lt;img src=&quot;https://img-blog.csdn.net/20170521122141523?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ 2.6 整体代码
+已经获取到了每张图片的连接，我们就可以下载了。整合下代码，先少下载一点，下载前2页的图片。
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+from urllib.request import urlretrieve
+import requests
+import os
+import time
+
+if __name__ == '__main__':
+    list_url = []
+    for num in range(1,3):
+        if num == 1:
+            url = 'http://www.shuaia.net/index.html'
+        else:
+            url = 'http://www.shuaia.net/index_%d.html' % num
+        headers = {
+                &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+        }
+        req = requests.get(url = url,headers = headers)
+        req.encoding = 'utf-8'
+        html = req.text
+        bf = BeautifulSoup(html, 'lxml')
+        targets_url = bf.find_all(class_='item-img')
+
+        for each in targets_url:
+            list_url.append(each.img.get('alt') + '=' + each.get('href'))
+
+    print('连接采集完成')
+
+    for each_img in list_url:
+        img_info = each_img.split('=')
+        target_url = img_info[1]
+        filename = img_info[0] + '.jpg'
+        print('下载：' + filename)
+        headers = {
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+        }
+        img_req = requests.get(url = target_url,headers = headers)
+        img_req.encoding = 'utf-8'
+        img_html = img_req.text
+        img_bf_1 = BeautifulSoup(img_html, 'lxml')
+        img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
+        img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
+        img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
+        if 'images' not in os.listdir():
+            os.makedirs('images')
+        urlretrieve(url = img_url,filename = 'images/' + filename)
+        time.sleep(1)
+
+    print('下载完成！')
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+运行结果如下：
+&lt;img src=&quot;https://img-blog.csdn.net/20170521122323428?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+最终下载的图片：
+&lt;img src=&quot;https://img-blog.csdn.net/20170521122401947?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+
+&lt;h2 id=&quot;三-总结&quot;&gt;(三) 总结&lt;/h2&gt;
+    图片是不是很帅？还算满意吧？
+    这种爬取方法是比较简单的，速度慢。服务器有防爬虫程序，所以不能爬太快，每下载一个图片需要加个1秒延时，否则会被服务器断开连接。当然，解决办法还是有的，因为不是本文重点，以后有机会再细说。
+    爬取图片的原理就是这样了，如果想爬取妹子图的可以去《煎蛋网》看看，包你满意。
 
 </description>
-        <pubDate>Wed, 10 Oct 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/10/10/vscode-plugin-schedule/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/10/10/vscode-plugin-schedule/</guid>
+        <pubDate>Tue, 13 Feb 2018 18:46:18 +0800</pubDate>
+        <link>http://localhost:4000/2018/02/13/python7/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/02/13/python7/</guid>
         
-        <category>效率</category>
+        <category>Python</category>
         
-        <category>vscode</category>
-        
-        <category>markdown</category>
+        <category>网络爬虫</category>
         
         
-        <category>JavaScript</category>
+        <category>Python网络爬虫</category>
         
       </item>
     
       <item>
-        <title>从设计师和开发的角度使用 lottie</title>
+        <title>Python3网络爬虫(五)：爬取人物头像</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#简介&quot; id=&quot;markdown-toc-简介&quot;&gt;简介&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#一预备知识&quot; id=&quot;markdown-toc-一预备知识&quot;&gt;（一）预备知识&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#二实战&quot; id=&quot;markdown-toc-二实战&quot;&gt;(二)实战&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#三-总结&quot; id=&quot;markdown-toc-三-总结&quot;&gt;(三) 总结&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;img src=&quot;https://gw.alicdn.com/tfs/TB1yLBduDqWBKNjSZFAXXanSpXa-800-600.gif&quot; alt=&quot;&quot; /&gt;
+运行平台：Windows 
+Python版本：Python3.x 
+IDE：Sublime text3
+&lt;h2 id=&quot;一预备知识&quot;&gt;（一）预备知识&lt;/h2&gt;
+为了也能够学习到新知识，本次爬虫教程使用requests第三方库，这个库可不是Python3内置的urllib.request库，而是一个强大的基于urllib3的第三方库
 
-&lt;h2 id=&quot;简介&quot;&gt;简介&lt;/h2&gt;
+requests库的基础方法如下：
 
-&lt;a href=&quot;https://airbnb.design/lottie/&quot;&gt;lottie&lt;/a&gt; 是一个可以轻易的给各种 native app 添加高质量动画的类库。可以在 iOS、Android 和 React Native 实时渲染 After Effects 动画，就像使用静态图片一样容易。上图即为 lottie 的 logo。
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121032110?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+官方中文教程地址：http://docs.python-requests.org/zh_CN/latest/user/quickstart.html
 
-简单的说，lottie 动画制作的流程是，通过 Bodymovin 扩展将 AE 动画导出为 json 数据，然后再将这个 json 渲染在客户端或者 web 端。如下图：
+因为官方给出的《快速上手》教程已经整理的很好了，并且本次教程使用的也是最简单的requests.get()，因此第三方库requests的使用方法，不再累述。详情请看官方中文教程，有urllib2基础的人，还是好上手的。
+
+&lt;h2 id=&quot;二实战&quot;&gt;(二)实战&lt;/h2&gt;
+2.1 背景
+    爬取《帅啊》网的帅哥图片！
+
+URL : http://www.shuaia.net/index.html
+
+先看一眼网站的样子：
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121231569?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+
+2.2 requests安装
+    在cmd中，使用如下指令安装第三方库requests：
+pip3 install requests
+    或者：
+easy_install requests
+2.3 爬取单页目标连接
+    通过审查元素，我们不难发现，目标的地址存储在class属性为”item-img”的&lt;a&gt;标签的href属性中。这时候，有人可能会问为啥不用下面的&lt;img /&gt;标签的src属性？因为这个图片是首页的浏览图片，根据这个地址保存下来的图片，太小了，并且不清清楚。秉承着热爱“高清无码”的精神，这种图片可不是我想要的。因此，先获取目标的地址，也就是我们点击图片之后，进入的网页地址，然后根据下一个网页，找到图片的地址。
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121440034?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ 代码：&lt;/a&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; # -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+import requests
+
+if __name__ == '__main__':
+    url = 'http://www.shuaia.net/index.html'
+    headers = {
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+    }
+    req = requests.get(url = url,headers = headers)
+    req.encoding = 'utf-8'
+    html = req.text
+    bf = BeautifulSoup(html, 'lxml')
+    targets_url = bf.find_all(class_='item-img')
+    list_url = []
+    for each in targets_url:
+        list_url.append(each.img.get('alt') + '=' + each.get('href'))
+    print(list_url)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+我们将爬取的信息保存到list中，图片名字和图片地址使用”=”连接，运行结果：
+ &lt;img src=&quot;https://img-blog.csdn.net/20170521121615323?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+
+2.4 爬取多页目标连接
+    翻到第二页的时候，很容易就发现地址变为了:www.shuaia.net/index_2.html。第三页、第四页、第五页依此类推。
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121727325?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+代码：
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+import requests
+
+if __name__ == '__main__':
+    list_url = []
+    for num in range(1,20):
+        if num == 1:
+            url = 'http://www.shuaia.net/index.html'
+        else:
+            url = 'http://www.shuaia.net/index_%d.html' % num
+        headers = {
+                &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+        }
+        req = requests.get(url = url,headers = headers)
+        req.encoding = 'utf-8'
+        html = req.text
+        bf = BeautifulSoup(html, 'lxml')
+        targets_url = bf.find_all(class_='item-img')
+
+        for each in targets_url:
+            list_url.append(each.img.get('alt') + '=' + each.get('href'))
+    print(list_url)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+我们少爬取一些，爬取前19页的目标连接：
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121837177?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+2.5 单张图片下载
+    进入目标地址，审查元素。可以看到，图片地址保存在了class属性为”wr-single-content-list “的div-&amp;gt;div-&amp;gt;img的src属性中。
+&lt;img src=&quot;https://img-blog.csdn.net/20170521121936116?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ 代码：
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; target_url = 'http://www.shuaia.net/rihanshuaige/2017-05-18/1294.html'
+filename = '张根硕拍摄机车型男写真帅气十足' + '.jpg'
+headers = {
+    &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+    }
+img_req = requests.get(url = target_url,headers = headers)
+img_req.encoding = 'utf-8'
+img_html = img_req.text
+img_bf_1 = BeautifulSoup(img_html, 'lxml')
+img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
+img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
+img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
+if 'images' not in os.listdir():
+    os.makedirs('images')
+urlretrieve(url = img_url,filename = 'images/' + filename)
+print('下载完成！')
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+我们将图片保存在程序文件所在目录的imgase目录下：
+ &lt;img src=&quot;https://img-blog.csdn.net/20170521122107585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ &lt;img src=&quot;https://img-blog.csdn.net/20170521122141523?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ 2.6 整体代码
+已经获取到了每张图片的连接，我们就可以下载了。整合下代码，先少下载一点，下载前2页的图片。
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+from urllib.request import urlretrieve
+import requests
+import os
+import time
+
+if __name__ == '__main__':
+    list_url = []
+    for num in range(1,3):
+        if num == 1:
+            url = 'http://www.shuaia.net/index.html'
+        else:
+            url = 'http://www.shuaia.net/index_%d.html' % num
+        headers = {
+                &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+        }
+        req = requests.get(url = url,headers = headers)
+        req.encoding = 'utf-8'
+        html = req.text
+        bf = BeautifulSoup(html, 'lxml')
+        targets_url = bf.find_all(class_='item-img')
+
+        for each in targets_url:
+            list_url.append(each.img.get('alt') + '=' + each.get('href'))
+
+    print('连接采集完成')
+
+    for each_img in list_url:
+        img_info = each_img.split('=')
+        target_url = img_info[1]
+        filename = img_info[0] + '.jpg'
+        print('下载：' + filename)
+        headers = {
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36&quot;
+        }
+        img_req = requests.get(url = target_url,headers = headers)
+        img_req.encoding = 'utf-8'
+        img_html = img_req.text
+        img_bf_1 = BeautifulSoup(img_html, 'lxml')
+        img_url = img_bf_1.find_all('div', class_='wr-single-content-list')
+        img_bf_2 = BeautifulSoup(str(img_url), 'lxml')
+        img_url = 'http://www.shuaia.net' + img_bf_2.div.img.get('src')
+        if 'images' not in os.listdir():
+            os.makedirs('images')
+        urlretrieve(url = img_url,filename = 'images/' + filename)
+        time.sleep(1)
+
+    print('下载完成！')
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+运行结果如下：
+&lt;img src=&quot;https://img-blog.csdn.net/20170521122323428?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+最终下载的图片：
+&lt;img src=&quot;https://img-blog.csdn.net/20170521122401947?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+
+&lt;h2 id=&quot;三-总结&quot;&gt;(三) 总结&lt;/h2&gt;
+    图片是不是很帅？还算满意吧？
+    这种爬取方法是比较简单的，速度慢。服务器有防爬虫程序，所以不能爬太快，每下载一个图片需要加个1秒延时，否则会被服务器断开连接。当然，解决办法还是有的，因为不是本文重点，以后有机会再细说。
+    爬取图片的原理就是这样了，如果想爬取妹子图的可以去《煎蛋网》看看，包你满意。
 
 </description>
-        <pubDate>Mon, 10 Sep 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/09/10/lottie/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/09/10/lottie/</guid>
+        <pubDate>Tue, 13 Feb 2018 18:46:18 +0800</pubDate>
+        <link>http://localhost:4000/2018/02/13/python6/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/02/13/python6/</guid>
         
-        <category>动画</category>
+        <category>Python</category>
         
-        <category>CSS</category>
-        
-        <category>airbnb</category>
-        
-        <category>lottie</category>
-        
-        <category>JavaScript</category>
+        <category>网络爬虫</category>
         
         
-        <category>JavaScript</category>
+        <category>Python网络爬虫</category>
         
       </item>
     
       <item>
-        <title>提升用户体验的前端动画</title>
-        <description>
-与其他开发人员不同的是，前端开发都是在端上游走舞者，直接与用户交流沟通，这就需要前端开发具有更敏锐的交互体验思考，或者能更精准地理解设计师们意图，将最佳的用户体验带给用户。优质的交互体验对于用户来说学习成本应该是极低的，都是非常自然的操作，却可以让用户感到畅快愉悦，甚至惊喜。本文将通过一个看似简单的 poplayer 来分析我在这其中通过思考做的体验优化，获得类似 native 的体验感。
+        <title>Hive的几种常见的数据导入方式</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#hive的几种常见的数据导入方式&quot; id=&quot;markdown-toc-hive的几种常见的数据导入方式&quot;&gt;Hive的几种常见的数据导入方式&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#一从本地文件系统中导入数据到hive表&quot; id=&quot;markdown-toc-一从本地文件系统中导入数据到hive表&quot;&gt;一、从本地文件系统中导入数据到Hive表&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;img src=&quot;https://ws1.sinaimg.cn/large/7011d6cfgy1frx9jv0kpfj208w0fracu.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;h2 id=&quot;hive的几种常见的数据导入方式&quot;&gt;Hive的几种常见的数据导入方式&lt;/h2&gt;
+这里介绍四种：    &lt;br /&gt;
+（1）、从本地文件系统中导入数据到Hive表；&lt;br /&gt;
+（2）、从HDFS上导入数据到Hive表；&lt;br /&gt;
+（3）、从别的表中查询出相应的数据并导入到Hive表中；&lt;br /&gt;
+（4）、在创建表的时候通过从别的表中查询出相应的记录并插入到所创建的表中。
+
+&lt;h2 id=&quot;一从本地文件系统中导入数据到hive表&quot;&gt;一、从本地文件系统中导入数据到Hive表&lt;/h2&gt;
 
 </description>
-        <pubDate>Fri, 01 Jun 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/06/01/animation/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/06/01/animation/</guid>
+        <pubDate>Thu, 01 Feb 2018 23:46:18 +0800</pubDate>
+        <link>http://localhost:4000/2018/02/01/Hive2/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/02/01/Hive2/</guid>
         
-        <category>动画</category>
-        
-        <category>手势</category>
-        
-        
-        <category>JavaScript</category>
-        
-      </item>
-    
-      <item>
-        <title>Hive入门学习随笔</title>
-        <description>
-test
-</description>
-        <pubDate>Tue, 21 Mar 2017 23:14:54 +0800</pubDate>
-        <link>http://localhost:4000/2017/03/21/Hive%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/03/21/Hive%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94/</guid>
+        <category>Hive</category>
         
         <category>大数据技术</category>
         
-        <category>hive</category>
         
-        <category>数据仓库</category>
+        <category>大数据技术</category>
+        
+      </item>
+    
+      <item>
+        <title>Hive的几种常见的数据导入方式</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#hive的几种常见的数据导入方式&quot; id=&quot;markdown-toc-hive的几种常见的数据导入方式&quot;&gt;Hive的几种常见的数据导入方式&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#一从本地文件系统中导入数据到hive表&quot; id=&quot;markdown-toc-一从本地文件系统中导入数据到hive表&quot;&gt;一、从本地文件系统中导入数据到Hive表&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;hive的几种常见的数据导入方式&quot;&gt;Hive的几种常见的数据导入方式&lt;/h2&gt;
+这里介绍四种：    &lt;br /&gt;
+（1）、从本地文件系统中导入数据到Hive表；&lt;br /&gt;
+（2）、从HDFS上导入数据到Hive表；&lt;br /&gt;
+（3）、从别的表中查询出相应的数据并导入到Hive表中；&lt;br /&gt;
+（4）、在创建表的时候通过从别的表中查询出相应的记录并插入到所创建的表中。
+
+&lt;h2 id=&quot;一从本地文件系统中导入数据到hive表&quot;&gt;一、从本地文件系统中导入数据到Hive表&lt;/h2&gt;
+
+</description>
+        <pubDate>Thu, 01 Feb 2018 23:46:18 +0800</pubDate>
+        <link>http://localhost:4000/2018/02/01/Hive1/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/02/01/Hive1/</guid>
+        
+        <category>Hive</category>
+        
+        <category>大数据技术</category>
         
         
         <category>大数据技术</category>
@@ -135,144 +469,332 @@ test
       </item>
     
       <item>
-        <title>前端如何写一个精确的倒计时</title>
-        <description>
-关于写倒计时大家可能都都比较熟悉，使用 setTimeout 或 setInterval 就可以搞定。几秒钟或者几分钟的倒计时这样写没有问题，但是如果是长时间的倒计时，这样写就会不准确。如果用户修改了他的设备时间，这样的倒计时就没有意义了。今天就说说写一个精确的倒计时的方法。
+        <title>Python3网络爬虫(四)：Python3安装Scrapy</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#一scrapy简介&quot; id=&quot;markdown-toc-一scrapy简介&quot;&gt;一、Scrapy简介&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;img src=&quot;https://img.alicdn.com/tfs/TB18QnlOpXXXXcVXpXXXXXXXXXX-388-256.png&quot; alt=&quot;&quot; /&gt;
+运行平台：Windows 
+Python版本：Python3.x 
+IDE：Sublime text3
+&lt;h2 id=&quot;一scrapy简介&quot;&gt;一、Scrapy简介&lt;/h2&gt;
+
+    Scrapy是一个为了爬取网站数据提取结构性数据而编写的应用框架，可以应用于数据挖掘，信息处理或存储历史数据等一些列的程序中。Scrapy最初就是为了网络爬取而设计的。现在，Scrapy已经推出了曾承诺过的Python3.x版本。
+
+    为什么学习Scrapy呢？它能我们更好的完成爬虫任务，自己写Python爬虫程序好比孤军奋战，而使用了Scrapy就好比手底下有了千军万马。Scrapy可以起到事半功倍(甚至好几倍&lt;em&gt;.&lt;/em&gt;)的效果。所以，学习Scrapy也就显得很有必要了。
+
+二、Scrapy安装
+
+    1.直接使用指令pip3 install scrapy，发现有诸多错误。
+
+Failed building wheel for lxml
+Microsoft Visual C++ 10.0 is required
+Failed building twisted
+Unable to find vcvarsall.bat
+    遇到的错误，如下图所示：
+&lt;img src=&quot;https://img-blog.csdn.net/20170303232553247?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://img-blog.csdn.net/20170303232540981?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://img-blog.csdn.net/20170303232629888?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+
+2.解决办法
+
+    在http://www.lfd.uci.edu/~gohlke/pythonlibs/有很多用于windows的编译好的Python第三方库，我们下载好对应自己Python版本的库即可。
+
+    (1)在cmd中输入指令python，查看python的版本，如下：
+&lt;img src=&quot;https://img-blog.csdn.net/20170303232721966?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+从上图可以看出可以看出我的Python版本为Python3.5.2-64bit。
+
+    (2)登陆http://www.lfd.uci.edu/~gohlke/pythonlibs/，Ctrl+F搜索Lxml、Twisted、Scrapy，下载对应的版本，例如：lxml-3.7.3-cp35-cp35m-win_adm64.whl，表示lxml的版本为3.7.3，对应的python版本为3.5-64bit。我下载的版本如下图所示：
+&lt;img src=&quot;https://img-blog.csdn.net/20170303233515040?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://img-blog.csdn.net/20170303232806890?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://img-blog.csdn.net/20170303232817859?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ (3)在cmd中输入DOS指令，进入下载好的whl文件夹下，例如我的三个whl文件放在了Scrapy文件夹下：
+ &lt;img src=&quot;https://img-blog.csdn.net/20170303232903170?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+ (4)依次执行如下命令：
+ a.pip3 install wheel
+ b.pip3 install lxml-3.7.3-cp35-cp35m-win_amd64.whl
+ c.pip3 install Twisted-17.1.0-cp35-cp35m-win_amd64.whl
+ d.pip3 install Scrapy-1.3.2-py2.py3-none-any.whl
+ 这样Scrapy的安装就完成了，请忽略最后两行让我升级pip的信息。&lt;em&gt;.&lt;/em&gt;
+
+    (5)Srapy已经安装成功，还要下载pywin32，找到对应版本下载，一路下一步安装即可。安装完成后，就可以正常使用Scrapy了。
+
+&lt;img src=&quot;https://img-blog.csdn.net/20170303233239661?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+   至此，大功告成，我们可以愉快的使用Scrapy了。
 
 </description>
-        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2016/11/25/how-to-write-a-count-down/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/11/25/how-to-write-a-count-down/</guid>
+        <pubDate>Thu, 11 Jan 2018 18:46:18 +0800</pubDate>
+        <link>http://localhost:4000/2018/01/11/python5/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/01/11/python5/</guid>
         
-        <category>countdown</category>
+        <category>Python</category>
         
-        <category>JavaScript</category>
+        <category>网络爬虫</category>
         
         
-        <category>JavaScript</category>
+        <category>Python网络爬虫</category>
         
       </item>
     
       <item>
-        <title>使用 JavaScript 创建并下载文件</title>
+        <title>剑指offer:链表中倒数第k个节点</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#先上代码&quot; id=&quot;markdown-toc-先上代码&quot;&gt;先上代码&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#题目描述&quot; id=&quot;markdown-toc-题目描述&quot;&gt;题目描述&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#思路&quot; id=&quot;markdown-toc-思路&quot;&gt;思路&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-本文将介绍如何使用 JavaScript 创建文件，并自动/手动将文件下载。这在导出原始数据时会比较方便。
+&lt;h2 id=&quot;题目描述&quot;&gt;题目描述&lt;/h2&gt;
 
-&lt;h2 id=&quot;先上代码&quot;&gt;先上代码&lt;/h2&gt;
+题目来自 [剑指offer] &lt;br /&gt;
+输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，我们从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6.这个链表的倒数第3个节点是值为4的节点。
+&lt;h2 id=&quot;思路&quot;&gt;思路&lt;/h2&gt;
+可以定义两个指针。第一个指针从链表的头指针开始遍历向后走k-1步，第二个指针保持不动；从第k步开始，第二个指针也开始从链表的头指针开始遍历。由于两个指针的距离保持在k-1，当第一个指针到达链表的尾节点时，第二个指针正好指向倒数第k个节点。
+注意：
+（1）输入的链表头指针为空；
+（2）输入的链表节点总数小于k；
+（3）输入的参数k为0.
+———————
 
-&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/**
- * 创建并下载文件
- * @param  {String} fileName 文件名
- * @param  {String} content  文件内容
+Java代码如下：
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.Scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+ 
+&lt;span class=&quot;cm&quot;&gt;/**
+ * 剑指Offer:链表中倒数第k个节点
  */&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;createAndDownloadFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fileName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aTag&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'a'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;blob&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Blob&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;aTag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;download&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fileName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;aTag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;href&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;URL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createObjectURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;blob&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;aTag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;URL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;revokeObjectURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;blob&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FinkKthToTail&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+ 
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;//创建链表&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;CreateList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;//打印链表中的元素&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;//寻找链表中的倒数第K个数&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;findKthToTail&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Scanner&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;hasNext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextLine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;,&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseInt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseInt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextLine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;FinkKthToTail&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sk&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FinkKthToTail&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;CreateList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;sk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findKthToTail&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Null&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-很简单对吧，直接调用这个方法，传入文件名和文件内容，程序新建 a 标签，新建 Blob 对象，将文件名赋给 a 标签，同时将 Blob 对象作为 Url 也赋给 a 标签，模拟点击事件，自动下载成功，最后再回收内存。下面我们来看看具体是怎么操作的。
-
+&lt;hr /&gt;
 </description>
-        <pubDate>Tue, 22 Nov 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2016/11/22/js-create-file-and-download/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/11/22/js-create-file-and-download/</guid>
+        <pubDate>Sat, 16 Sep 2017 23:35:18 +0800</pubDate>
+        <link>http://localhost:4000/2017/09/16/1-Algorams3/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/16/1-Algorams3/</guid>
         
-        <category>文件</category>
+        <category>数据结构</category>
         
-        <category>下载</category>
+        <category>Java</category>
         
-        <category>JavaScript</category>
+        <category>剑指offer</category>
+        
+        <category>面试</category>
         
         
-        <category>JavaScript</category>
+        <category>算法和数据结构</category>
         
       </item>
     
       <item>
-        <title>Fisher–Yates shuffle 洗牌算法</title>
-        <description>
-简单来说 Fisher–Yates shuffle 算法是一个用来将一个有限集合生成一个随机排列的算法（数组随机排序）。这个算法生成的随机排列是等概率的。同时这个算法非常高效。
-
-本文主要介绍这个算法的来源、演变、原理。并举出一个例子为大家清晰的描述每次迭代过程。最后使用 JavaScript 代码将算法实现。
-
-&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Riffle_shuffle.jpg/320px-Riffle_shuffle.jpg&quot; alt=&quot;&quot; /&gt;
-
-</description>
-        <pubDate>Sun, 16 Oct 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2016/10/16/shuffle-algorithm/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/10/16/shuffle-algorithm/</guid>
-        
-        <category>算法</category>
-        
-        <category>shuffle</category>
-        
-        <category>乱序</category>
-        
-        <category>洗牌</category>
-        
-        
-        <category>JavaScript</category>
-        
-      </item>
-    
-      <item>
-        <title>Git 如何 clone 非 master 分支的代码</title>
+        <title>剑指offer:链表中倒数第k个节点</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#问题描述&quot; id=&quot;markdown-toc-问题描述&quot;&gt;问题描述&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#题目描述&quot; id=&quot;markdown-toc-题目描述&quot;&gt;题目描述&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#思路&quot; id=&quot;markdown-toc-思路&quot;&gt;思路&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;问题描述&quot;&gt;问题描述&lt;/h2&gt;
+&lt;h2 id=&quot;题目描述&quot;&gt;题目描述&lt;/h2&gt;
 
-我们每次使用命令
+题目来自 [剑指offer] &lt;br /&gt;
+输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，我们从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6.这个链表的倒数第3个节点是值为4的节点。
+&lt;h2 id=&quot;思路&quot;&gt;思路&lt;/h2&gt;
+可以定义两个指针。第一个指针从链表的头指针开始遍历向后走k-1步，第二个指针保持不动；从第k步开始，第二个指针也开始从链表的头指针开始遍历。由于两个指针的距离保持在k-1，当第一个指针到达链表的尾节点时，第二个指针正好指向倒数第k个节点。
+注意：
+（1）输入的链表头指针为空；
+（2）输入的链表节点总数小于k；
+（3）输入的参数k为0.
+———————
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone git@gitlab.xxx.com:xxxxx.git
+Java代码如下：
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.Scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+ 
+&lt;span class=&quot;cm&quot;&gt;/**
+ * 剑指Offer:链表中倒数第k个节点
+ */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FinkKthToTail&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+ 
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;//创建链表&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;CreateList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;//打印链表中的元素&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;//寻找链表中的倒数第K个数&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;findKthToTail&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pAhead&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pBehind&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Scanner&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;hasNext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextLine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;,&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseInt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseInt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextLine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;FinkKthToTail&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sk&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FinkKthToTail&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;CreateList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;sk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;ListNode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findKthToTail&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Null&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+ 
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;scanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-默认 clone 的是这个仓库的 master 分支。如果最新的代码不在 master 分支上，该如何拿到呢？如下图所示，最新的代码可能在&lt;code class=&quot;highlighter-rouge&quot;&gt;daily/1.4.1&lt;/code&gt;分支上，我们希望拿到这个分支上的代码。
-
+&lt;hr /&gt;
 </description>
-        <pubDate>Thu, 07 Jul 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2016/07/07/git-clone-not-master-branch/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/07/07/git-clone-not-master-branch/</guid>
+        <pubDate>Sat, 16 Sep 2017 23:35:18 +0800</pubDate>
+        <link>http://localhost:4000/2017/09/16/1-Algorams2/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/16/1-Algorams2/</guid>
         
-        <category>Git</category>
+        <category>数据结构</category>
         
-        <category>GitHub</category>
+        <category>Java</category>
         
-        <category>分支</category>
+        <category>剑指offer</category>
+        
+        <category>面试</category>
         
         
-        <category>GitHub</category>
+        <category>算法和数据结构</category>
         
       </item>
     
       <item>
-        <title>如何使用 babel</title>
+        <title>JavaScript 函数</title>
         <description>
-&lt;a href=&quot;https://babeljs.io/&quot;&gt;Babel&lt;/a&gt; 用于将 ES6 的代码转化为 ES5，使得 ES6 可以在目前的浏览器环境下使用。学习使用 babel 是为了使用 ES2015 做准备。本文将介绍如何使用 babel，以及一些相关的配置。
+本文为慕课网 &lt;a href=&quot;http://www.imooc.com/learn/277&quot;&gt;JavaScript深入浅出&lt;/a&gt; JavaScript 函数笔记。
 
 </description>
-        <pubDate>Tue, 14 Jun 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2016/06/14/how-to-use-babel/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/06/14/how-to-use-babel/</guid>
+        <pubDate>Sun, 11 Jun 2017 22:06:05 +0800</pubDate>
+        <link>http://localhost:4000/2017/06/11/JavaScript-function/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/06/11/JavaScript-function/</guid>
         
-        <category>ES2015</category>
-        
-        <category>ES6</category>
-        
-        <category>ES5</category>
-        
-        <category>babel</category>
+        <category>JavaScript</category>
         
         
         <category>JavaScript</category>
@@ -280,21 +802,171 @@ test
       </item>
     
       <item>
-        <title>JavaScript 语言精粹笔记3-方法、毒瘤等</title>
-        <description>
-记录一下阅读蝴蝶书的笔记，本篇为书中最后一部分：方法、代码风格、优美的特性、毒瘤、糟粕等。
+        <title>Python3网络爬虫(三)：使用User Agent和代理IP隐藏身份</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#一为何要设置user-agent&quot; id=&quot;markdown-toc-一为何要设置user-agent&quot;&gt;一、为何要设置User Agent&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#二常见的user-agent&quot; id=&quot;markdown-toc-二常见的user-agent&quot;&gt;二、常见的User Agent&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#三设置user-agent的方法&quot; id=&quot;markdown-toc-三设置user-agent的方法&quot;&gt;三、设置User Agent的方法&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#方法一&quot; id=&quot;markdown-toc-方法一&quot;&gt;方法一：&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#方法二&quot; id=&quot;markdown-toc-方法二&quot;&gt;方法二：&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#四ip代理的使用&quot; id=&quot;markdown-toc-四ip代理的使用&quot;&gt;四、IP代理的使用&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+运行平台：Windows 
+Python版本：Python3.x 
+IDE：Sublime text3
+&lt;h2 id=&quot;一为何要设置user-agent&quot;&gt;一、为何要设置User Agent&lt;/h2&gt;
+
+    有一些网站不喜欢被爬虫程序访问，所以会检测连接对象，如果是爬虫程序，也就是非人点击访问，它就会不让你继续访问，所以为了要让程序可以正常运行，需要隐藏自己的爬虫程序的身份。此时，我们就可以通过设置User Agent的来达到隐藏身份的目的，User Agent的中文名为用户代理，简称UA。
+
+    User Agent存放于Headers中，服务器就是通过查看Headers中的User Agent来判断是谁在访问。在Python中，如果不设置User Agent，程序将使用默认的参数，那么这个User Agent就会有Python的字样，如果服务器检查User Agent，那么没有设置User Agent的Python程序将无法正常访问网站。
+
+    Python允许我们修改这个User Agent来模拟浏览器访问，它的强大毋庸置疑。
+
+&lt;h2 id=&quot;二常见的user-agent&quot;&gt;二、常见的User Agent&lt;/h2&gt;
+
+1.Android
+
+Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19
+Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30
+Mozilla/5.0 (Linux; U; Android 2.2; en-gb; GT-P1000 Build/FROYO) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1
+2.Firefox
+
+Mozilla/5.0 (Windows NT 6.2; WOW64; rv:21.0) Gecko/20100101 Firefox/21.0
+Mozilla/5.0 (Android; Mobile; rv:14.0) Gecko/14.0 Firefox/14.0
+3.Google Chrome
+
+Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36
+Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19
+4.iOS
+
+Mozilla/5.0 (iPad; CPU OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3
+Mozilla/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/3A101a Safari/419.3
+    上面列举了Andriod、Firefox、Google Chrome、iOS的一些User Agent，直接copy就能用。
+
+&lt;h2 id=&quot;三设置user-agent的方法&quot;&gt;三、设置User Agent的方法&lt;/h2&gt;
+先看下urllib.request.Request()
+&lt;img src=&quot;https://img-blog.csdn.net/20170303123244632?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+从上图可以看出，在创建Request对象的时候，可以传入headers参数。 
+    因此，想要设置User Agent，有两种方法：
+
+    1.在创建Request对象的时候，填入headers参数(包含User Agent信息)，这个Headers参数要求为字典；
+
+    2.在创建Request对象的时候不添加headers参数，在创建完成之后，使用add_header()的方法，添加headers。
+
+&lt;h2 id=&quot;方法一&quot;&gt;方法一：&lt;/h2&gt;
+创建文件urllib_test09.py，使用上面提到的Android的第一个User Agent，在创建Request对象的时候传入headers参数，编写代码如下：
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# -*- coding: UTF-8 -*-
+from urllib import request
+
+if __name__ == &quot;__main__&quot;:
+    #以CSDN为例，CSDN不更改User Agent是无法访问的
+    url = 'http://www.csdn.net/'
+    head = {}
+    #写入User Agent信息
+    head['User-Agent'] = 'Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19'
+ #创建Request对象
+    req = request.Request(url, headers=head)
+    #传入创建好的Request对象
+    response = request.urlopen(req)
+    #读取响应信息并解码
+    html = response.read().decode('utf-8')
+    #打印信息
+    print(html)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+运行结果如下：
+&lt;img src=&quot;https://img-blog.csdn.net/20170303123738649?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+&lt;h2 id=&quot;方法二&quot;&gt;方法二：&lt;/h2&gt;
+创建文件urllib_test10.py，使用上面提到的Android的第一个User Agent，在创建Request对象时不传入headers参数，创建之后使用add_header()方法，添加headers，编写代码如下：
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   # -*- coding: UTF-8 -*-
+from urllib import request
+
+if __name__ == &quot;__main__&quot;:
+    #以CSDN为例，CSDN不更改User Agent是无法访问的
+    url = 'http://www.csdn.net/'
+    #创建Request对象
+    req = request.Request(url)
+    #传入headers
+    req.add_header('User-Agent', 'Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19')
+    #传入创建好的Request对象
+    response = request.urlopen(req)
+    #读取响应信息并解码
+    html = response.read().decode('utf-8')
+    #打印信息
+    print(html)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+运行结果和上一个方法是一样的。
+
+&lt;h2 id=&quot;四ip代理的使用&quot;&gt;四、IP代理的使用&lt;/h2&gt;
+
+1.为何使用IP代理
+
+    User Agent已经设置好了，但是还应该考虑一个问题，程序的运行速度是很快的，如果我们利用一个爬虫程序在网站爬取东西，一个固定IP的访问频率就会很高，这不符合人为操作的标准，因为人操作不可能在几ms内，进行如此频繁的访问。所以一些网站会设置一个IP访问频率的阈值，如果一个IP访问频率超过这个阈值，说明这个不是人在访问，而是一个爬虫程序。
+
+2.一般步骤说明
+
+    一个很简单的解决办法就是设置延时，但是这显然不符合爬虫快速爬取信息的目的，所以另一种更好的方法就是使用IP代理。使用代理的步骤：
+
+    (1)调用urlib.request.ProxyHandler()，proxies参数为一个字典。
+
+    (2)创建Opener(类似于urlopen，这个代开方式是我们自己定制的)
+
+    (3)安装Opener
+
+    使用install_opener方法之后，会将程序默认的urlopen方法替换掉。也就是说，如果使用install_opener之后，在该文件中，再次调用urlopen会使用自己创建好的opener。如果不想替换掉，只是想临时使用一下，可以使用opener.open(url)，这样就不会对程序默认的urlopen有影响。
+
+3.代理IP选取
+
+    在写代码之前，先在代理IP网站选好一个IP地址，推荐西刺代理IP。
+
+    URL：http://www.xicidaili.com/
+
+    注意：当然也可以写个正则表达式从网站直接爬取IP，但是要记住不要太频繁爬取，加个延时什么的，太频繁给服务器带来压力了，服务器会直接把你block，不让你访问的，我就被封了两天。
+
+    从西刺网站选出信号好的IP，我的选择如下：(106.46.136.112:808)
+&lt;img src=&quot;https://img-blog.csdn.net/20170303124651091?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+编写代码访问http://www.whatismyip.com.tw/，该网站是测试自己IP为多少的网址，服务器会返回访问者的IP。
+
+4.代码实例
+创建文件urllib_test11.py，编写代码如下：
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# -*- coding: UTF-8 -*-
+from urllib import request
+
+if __name__ == &quot;__main__&quot;:
+    #访问网址
+    url = 'http://www.whatismyip.com.tw/'
+    #这是代理IP
+    proxy = {'http':'106.46.136.112:808'}
+    #创建ProxyHandler
+    proxy_support = request.ProxyHandler(proxy)
+    #创建Opener
+    opener = request.build_opener(proxy_support)
+    #添加User Angent
+    opener.addheaders = [('User-Agent','Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36')]
+    #安装OPener
+    request.install_opener(opener)
+    #使用自己安装好的Opener
+    response = request.urlopen(url)
+    #读取相应信息并解码
+    html = response.read().decode(&quot;utf-8&quot;)
+    #打印信息
+    print(html)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+运行结果如下：
+ &lt;img src=&quot;https://img-blog.csdn.net/20170303124823038?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;&quot; /&gt;
+  从上图可以看出，访问的IP已经伪装成了106.46.136.112。
 
 </description>
-        <pubDate>Fri, 10 Jun 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2016/06/10/JavaScript-good-parts-note3/</link>
-        <guid isPermaLink="true">http://localhost:4000/2016/06/10/JavaScript-good-parts-note3/</guid>
+        <pubDate>Mon, 22 May 2017 00:46:18 +0800</pubDate>
+        <link>http://localhost:4000/2017/05/22/python4/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/05/22/python4/</guid>
         
-        <category>函数</category>
+        <category>Python</category>
         
-        <category>JavaScript</category>
+        <category>网络爬虫</category>
         
         
-        <category>JavaScript</category>
+        <category>Python网络爬虫</category>
         
       </item>
     

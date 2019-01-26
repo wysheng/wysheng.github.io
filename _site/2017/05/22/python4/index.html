@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Python3网络爬虫(三)：使用User Agent和代理IP隐藏身份</title>
+    <meta name="description" content="  一、为何要设置User Agent  二、常见的User Agent  三、设置User Agent的方法  方法一：  方法二：  四、IP代理的使用运行平台：Windows Python版本：Python3.x IDE：Sublime text3一、为何要设置User Agent    有一些网站不喜欢被...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2017/05/22/python4/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Python3网络爬虫(三)：使用User Agent和代理IP隐藏身份</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-05-22
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Python网络爬虫" title="Category: Python网络爬虫" rel="category">Python网络爬虫</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a-->
+        <a href="/tag/#Python" title="Tag: Python" rel="tag">Python</a>&nbsp;
+    
+        <!--a href="/tag/#%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB" title="Tag: 网络爬虫" rel="tag">网络爬虫</a-->
+        <a href="/tag/#网络爬虫" title="Tag: 网络爬虫" rel="tag">网络爬虫</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#一为何要设置user-agent" id="markdown-toc-一为何要设置user-agent">一、为何要设置User Agent</a></li>
+  <li><a href="#二常见的user-agent" id="markdown-toc-二常见的user-agent">二、常见的User Agent</a></li>
+  <li><a href="#三设置user-agent的方法" id="markdown-toc-三设置user-agent的方法">三、设置User Agent的方法</a></li>
+  <li><a href="#方法一" id="markdown-toc-方法一">方法一：</a></li>
+  <li><a href="#方法二" id="markdown-toc-方法二">方法二：</a></li>
+  <li><a href="#四ip代理的使用" id="markdown-toc-四ip代理的使用">四、IP代理的使用</a></li>
+</ul>
+
+<p>运行平台：Windows 
+Python版本：Python3.x 
+IDE：Sublime text3</p>
+<h2 id="一为何要设置user-agent">一、为何要设置User Agent</h2>
+
+<p>    有一些网站不喜欢被爬虫程序访问，所以会检测连接对象，如果是爬虫程序，也就是非人点击访问，它就会不让你继续访问，所以为了要让程序可以正常运行，需要隐藏自己的爬虫程序的身份。此时，我们就可以通过设置User Agent的来达到隐藏身份的目的，User Agent的中文名为用户代理，简称UA。</p>
+
+<p>    User Agent存放于Headers中，服务器就是通过查看Headers中的User Agent来判断是谁在访问。在Python中，如果不设置User Agent，程序将使用默认的参数，那么这个User Agent就会有Python的字样，如果服务器检查User Agent，那么没有设置User Agent的Python程序将无法正常访问网站。</p>
+
+<p>    Python允许我们修改这个User Agent来模拟浏览器访问，它的强大毋庸置疑。</p>
+
+<h2 id="二常见的user-agent">二、常见的User Agent</h2>
+
+<p>1.Android</p>
+
+<p>Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19
+Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30
+Mozilla/5.0 (Linux; U; Android 2.2; en-gb; GT-P1000 Build/FROYO) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1
+2.Firefox</p>
+
+<p>Mozilla/5.0 (Windows NT 6.2; WOW64; rv:21.0) Gecko/20100101 Firefox/21.0
+Mozilla/5.0 (Android; Mobile; rv:14.0) Gecko/14.0 Firefox/14.0
+3.Google Chrome</p>
+
+<p>Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36
+Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19
+4.iOS</p>
+
+<p>Mozilla/5.0 (iPad; CPU OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3
+Mozilla/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/3A101a Safari/419.3
+    上面列举了Andriod、Firefox、Google Chrome、iOS的一些User Agent，直接copy就能用。</p>
+
+<h2 id="三设置user-agent的方法">三、设置User Agent的方法</h2>
+<p>先看下urllib.request.Request()
+<img src="https://img-blog.csdn.net/20170303123244632?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+从上图可以看出，在创建Request对象的时候，可以传入headers参数。 
+    因此，想要设置User Agent，有两种方法：</p>
+
+<p>    1.在创建Request对象的时候，填入headers参数(包含User Agent信息)，这个Headers参数要求为字典；</p>
+
+<p>    2.在创建Request对象的时候不添加headers参数，在创建完成之后，使用add_header()的方法，添加headers。</p>
+
+<h2 id="方法一">方法一：</h2>
+<p>创建文件urllib_test09.py，使用上面提到的Android的第一个User Agent，在创建Request对象的时候传入headers参数，编写代码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding: UTF-8 -*-
+from urllib import request
+
+if __name__ == "__main__":
+    #以CSDN为例，CSDN不更改User Agent是无法访问的
+    url = 'http://www.csdn.net/'
+    head = {}
+    #写入User Agent信息
+    head['User-Agent'] = 'Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19'
+ #创建Request对象
+    req = request.Request(url, headers=head)
+    #传入创建好的Request对象
+    response = request.urlopen(req)
+    #读取响应信息并解码
+    html = response.read().decode('utf-8')
+    #打印信息
+    print(html)
+</code></pre></div></div>
+<p>运行结果如下：
+<img src="https://img-blog.csdn.net/20170303123738649?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" /></p>
+<h2 id="方法二">方法二：</h2>
+<p>创建文件urllib_test10.py，使用上面提到的Android的第一个User Agent，在创建Request对象时不传入headers参数，创建之后使用add_header()方法，添加headers，编写代码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   # -*- coding: UTF-8 -*-
+from urllib import request
+
+if __name__ == "__main__":
+    #以CSDN为例，CSDN不更改User Agent是无法访问的
+    url = 'http://www.csdn.net/'
+    #创建Request对象
+    req = request.Request(url)
+    #传入headers
+    req.add_header('User-Agent', 'Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19')
+    #传入创建好的Request对象
+    response = request.urlopen(req)
+    #读取响应信息并解码
+    html = response.read().decode('utf-8')
+    #打印信息
+    print(html)
+</code></pre></div></div>
+<p>运行结果和上一个方法是一样的。</p>
+
+<h2 id="四ip代理的使用">四、IP代理的使用</h2>
+
+<p>1.为何使用IP代理</p>
+
+<p>    User Agent已经设置好了，但是还应该考虑一个问题，程序的运行速度是很快的，如果我们利用一个爬虫程序在网站爬取东西，一个固定IP的访问频率就会很高，这不符合人为操作的标准，因为人操作不可能在几ms内，进行如此频繁的访问。所以一些网站会设置一个IP访问频率的阈值，如果一个IP访问频率超过这个阈值，说明这个不是人在访问，而是一个爬虫程序。</p>
+
+<p>2.一般步骤说明</p>
+
+<p>    一个很简单的解决办法就是设置延时，但是这显然不符合爬虫快速爬取信息的目的，所以另一种更好的方法就是使用IP代理。使用代理的步骤：</p>
+
+<p>    (1)调用urlib.request.ProxyHandler()，proxies参数为一个字典。</p>
+
+<p>    (2)创建Opener(类似于urlopen，这个代开方式是我们自己定制的)</p>
+
+<p>    (3)安装Opener</p>
+
+<p>    使用install_opener方法之后，会将程序默认的urlopen方法替换掉。也就是说，如果使用install_opener之后，在该文件中，再次调用urlopen会使用自己创建好的opener。如果不想替换掉，只是想临时使用一下，可以使用opener.open(url)，这样就不会对程序默认的urlopen有影响。</p>
+
+<p>3.代理IP选取</p>
+
+<p>    在写代码之前，先在代理IP网站选好一个IP地址，推荐西刺代理IP。</p>
+
+<p>    URL：http://www.xicidaili.com/</p>
+
+<p>    注意：当然也可以写个正则表达式从网站直接爬取IP，但是要记住不要太频繁爬取，加个延时什么的，太频繁给服务器带来压力了，服务器会直接把你block，不让你访问的，我就被封了两天。</p>
+
+<p>    从西刺网站选出信号好的IP，我的选择如下：(106.46.136.112:808)
+<img src="https://img-blog.csdn.net/20170303124651091?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+编写代码访问http://www.whatismyip.com.tw/，该网站是测试自己IP为多少的网址，服务器会返回访问者的IP。</p>
+
+<p>4.代码实例
+创建文件urllib_test11.py，编写代码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -*- coding: UTF-8 -*-
+from urllib import request
+
+if __name__ == "__main__":
+    #访问网址
+    url = 'http://www.whatismyip.com.tw/'
+    #这是代理IP
+    proxy = {'http':'106.46.136.112:808'}
+    #创建ProxyHandler
+    proxy_support = request.ProxyHandler(proxy)
+    #创建Opener
+    opener = request.build_opener(proxy_support)
+    #添加User Angent
+    opener.addheaders = [('User-Agent','Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36')]
+    #安装OPener
+    request.install_opener(opener)
+    #使用自己安装好的Opener
+    response = request.urlopen(url)
+    #读取相应信息并解码
+    html = response.read().decode("utf-8")
+    #打印信息
+    print(html)
+</code></pre></div></div>
+<p>运行结果如下：
+ <img src="https://img-blog.csdn.net/20170303124823038?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="" />
+  从上图可以看出，访问的IP已经伪装成了106.46.136.112。</p>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/02/13/python7/">Python3网络爬虫(五)：爬取人物头像
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/02/13/python6/">Python3网络爬虫(五)：爬取人物头像
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2018/01/11/python5/">Python3网络爬虫(四)：Python3安装Scrapy
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2017/05/22/python3/">Python3网络爬虫(二)：利用urllib.urlopen向有道翻译发送数据获得翻译结果
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2017/05/22/python3/">Python3网络爬虫(二)：利用urllib.urlopen向有道翻译发送数据获得翻译结果</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2017/06/11/JavaScript-function/">JavaScript 函数</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2017/05/22/python4/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2017/05/22/python4/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

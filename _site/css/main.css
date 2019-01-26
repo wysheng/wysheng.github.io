@@ -125,10 +125,10 @@ header {
     margin: 0 auto;
     line-height: 52px; }
     header .wrapper .brand {
-      font-size: 18px; }
+      font-size: 26px; }
     header .wrapper small {
-      margin-left: 26px;
-      font-size: 14px; }
+      margin-left: 20px;
+      font-size: 16px; }
     header .wrapper .menu {
       display: none; }
     header .wrapper nav {
@@ -139,7 +139,7 @@ header {
         padding: 0; }
         header .wrapper nav ul li {
           list-style: none;
-          font-size: 14px;
+          font-size: 18px;
           display: inline-block;
           -webkit-transition: 0.2s ease;
           transition: 0.2s ease; }

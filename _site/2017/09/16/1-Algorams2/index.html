@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>剑指offer:链表中倒数第k个节点</title>
+    <meta name="description" content="  题目描述  思路题目描述题目来自 [剑指offer] 输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，我们从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6.这个链表的倒数第3个节点是值为4的节点。思路可以定义两个指针。...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2017/09/16/1-Algorams2/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>剑指offer:链表中倒数第k个节点</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-09-16
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#算法和数据结构" title="Category: 算法和数据结构" rel="category">算法和数据结构</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" title="Tag: 数据结构" rel="tag">数据结构</a-->
+        <a href="/tag/#数据结构" title="Tag: 数据结构" rel="tag">数据结构</a>&nbsp;
+    
+        <!--a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a-->
+        <a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a>&nbsp;
+    
+        <!--a href="/tag/#%E5%89%91%E6%8C%87offer" title="Tag: 剑指offer" rel="tag">剑指offer</a-->
+        <a href="/tag/#剑指offer" title="Tag: 剑指offer" rel="tag">剑指offer</a>&nbsp;
+    
+        <!--a href="/tag/#%E9%9D%A2%E8%AF%95" title="Tag: 面试" rel="tag">面试</a-->
+        <a href="/tag/#面试" title="Tag: 面试" rel="tag">面试</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#题目描述" id="markdown-toc-题目描述">题目描述</a></li>
+  <li><a href="#思路" id="markdown-toc-思路">思路</a></li>
+</ul>
+
+<h2 id="题目描述">题目描述</h2>
+
+<p>题目来自 [剑指offer] <br />
+输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，我们从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6.这个链表的倒数第3个节点是值为4的节点。</p>
+<h2 id="思路">思路</h2>
+<p>可以定义两个指针。第一个指针从链表的头指针开始遍历向后走k-1步，第二个指针保持不动；从第k步开始，第二个指针也开始从链表的头指针开始遍历。由于两个指针的距离保持在k-1，当第一个指针到达链表的尾节点时，第二个指针正好指向倒数第k个节点。
+注意：
+（1）输入的链表头指针为空；
+（2）输入的链表节点总数小于k；
+（3）输入的参数k为0.
+———————</p>
+
+<p>Java代码如下：</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+ 
+<span class="cm">/**
+ * 剑指Offer:链表中倒数第k个节点
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FinkKthToTail</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ListNode</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+ 
+        <span class="n">ListNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+ 
+    <span class="c1">//创建链表</span>
+    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">CreateList</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ListNode</span> <span class="n">head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="n">head</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">pAhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">ListNode</span> <span class="n">q</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="n">q</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">q</span><span class="o">;</span>
+            <span class="n">pAhead</span> <span class="o">=</span> <span class="n">q</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">head</span><span class="o">;</span>
+    <span class="o">}</span>
+ 
+    <span class="c1">//打印链表中的元素</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">Print</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ListNode</span> <span class="n">pAhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">pAhead</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">pAhead</span><span class="o">.</span><span class="na">val</span> <span class="o">+</span> <span class="s">" "</span><span class="o">);</span>
+            <span class="n">pAhead</span> <span class="o">=</span> <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+    <span class="o">}</span>
+ 
+    <span class="c1">//寻找链表中的倒数第K个数</span>
+    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">findKthToTail</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">head</span><span class="o">==</span><span class="kc">null</span><span class="o">||</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">pAhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">pBehind</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+                <span class="n">pAhead</span> <span class="o">=</span> <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">pBehind</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">pAhead</span> <span class="o">=</span> <span class="n">pAhead</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">pBehind</span> <span class="o">=</span> <span class="n">pBehind</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">pBehind</span><span class="o">;</span>
+    <span class="o">}</span>
+ 
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">String</span><span class="o">[]</span> <span class="n">str</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">().</span><span class="na">split</span><span class="o">(</span><span class="s">","</span><span class="o">);</span>
+            <span class="kt">int</span><span class="o">[]</span> <span class="n">num</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">num</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">str</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="o">}</span>
+            <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">());</span>
+            <span class="n">FinkKthToTail</span> <span class="n">sk</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FinkKthToTail</span><span class="o">();</span>
+            <span class="n">ListNode</span> <span class="n">head</span> <span class="o">=</span> <span class="n">sk</span><span class="o">.</span><span class="na">CreateList</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+            <span class="n">sk</span><span class="o">.</span><span class="na">Print</span><span class="o">(</span><span class="n">head</span><span class="o">);</span>
+            <span class="n">ListNode</span> <span class="n">result</span> <span class="o">=</span> <span class="n">sk</span><span class="o">.</span><span class="na">findKthToTail</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">k</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">==</span><span class="kc">null</span><span class="o">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Null"</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+            <span class="o">}</span>
+ 
+        <span class="o">}</span>
+        <span class="n">scanner</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<hr />
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2017/09/16/1-Algorams3/">剑指offer:链表中倒数第k个节点
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2017/06/11/JavaScript-function/">JavaScript 函数</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2017/09/16/1-Algorams3/">剑指offer:链表中倒数第k个节点</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2017/09/16/1-Algorams2/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2017/09/16/1-Algorams2/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>跳台阶/ 变态跳台阶问题</title>
+    <meta name="description" content="  题目描述  思路题目描述题目来自 [剑指offer] 1, 一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。2, 如果青蛙一次可以跳上1级台阶, 2级台阶…….. n级台阶. 求该青蛙跳上一个n级台阶总共有多少中跳法.思路1, 递归,斐波那契数列2, 递归思路:因为n...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2017/05/16/1-Algorams1/">
+    <link rel="alternate" type="application/rss+xml" title="王者勇胜" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">王者勇胜</a>
+        <small>生活不止眼前的代码和苟且，还有诗和远方！</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>目录
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>标签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>收藏
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/life/">
+                        
+                            <i class="fa fa-heart"></i>我的诗词
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>关于我
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>跳台阶/ 变态跳台阶问题</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-05-16
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#算法和数据结构" title="Category: 算法和数据结构" rel="category">算法和数据结构</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" title="Tag: 数据结构" rel="tag">数据结构</a-->
+        <a href="/tag/#数据结构" title="Tag: 数据结构" rel="tag">数据结构</a>&nbsp;
+    
+        <!--a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a-->
+        <a href="/tag/#Java" title="Tag: Java" rel="tag">Java</a>&nbsp;
+    
+        <!--a href="/tag/#%E5%89%91%E6%8C%87offer" title="Tag: 剑指offer" rel="tag">剑指offer</a-->
+        <a href="/tag/#剑指offer" title="Tag: 剑指offer" rel="tag">剑指offer</a>&nbsp;
+    
+        <!--a href="/tag/#%E9%9D%A2%E8%AF%95" title="Tag: 面试" rel="tag">面试</a-->
+        <a href="/tag/#面试" title="Tag: 面试" rel="tag">面试</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#题目描述" id="markdown-toc-题目描述">题目描述</a></li>
+  <li><a href="#思路" id="markdown-toc-思路">思路</a></li>
+</ul>
+
+<h2 id="题目描述">题目描述</h2>
+
+<p>题目来自 [剑指offer] <br />
+1, 一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
+2, 如果青蛙一次可以跳上1级台阶, 2级台阶…….. n级台阶. 求该青蛙跳上一个n级台阶总共有多少中跳法.</p>
+<h2 id="思路">思路</h2>
+<p>1, 递归,斐波那契数列
+2, 递归思路:
+因为n级台阶，第一步有n种跳法：跳1级、跳2级、到跳n级 * 跳1级，剩下n-1级，则剩下跳法是f(n-1)
+跳2级，剩下n-2级，则剩下跳法是f(n-2) * 所以f(n)=f(n-1)+f(n-2)+…+f(1)
+因为f(n-1)=f(n-2)+f(n-3)+…+f(1)
+所以f(n)=2*f(n-1)
+Java代码如下：</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JumpFloorTest</span> <span class="o">{</span>
+    <span class="cm">/**
+     * 题目描述:
+     * 跳台阶,每次跳一级或者每次跳两级
+     *
+     * 解决方法:递归,斐波那契数列
+     * @param n
+     * @return
+     */</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">jumpFloor</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">){</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span> <span class="o">||</span> <span class="n">n</span><span class="o">==</span><span class="mi">2</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">n</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="nf">jumpFloor</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">jumpFloor</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="o">);</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 题目描述:
+     * 一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
+     *
+     * 解决方法:
+     * 因为n级台阶，第一步有n种跳法：跳1级、跳2级、到跳n级
+     * 跳1级，剩下n-1级，则剩下跳法是f(n-1)
+     * 跳2级，剩下n-2级，则剩下跳法是f(n-2)
+     * 所以f(n)=f(n-1)+f(n-2)+...+f(1)
+     * 因为f(n-1)=f(n-2)+f(n-3)+...+f(1)
+     * 所以f(n)=2*f(n-1)
+     *
+     */</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">jumpFloorII</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">){</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span> <span class="o">||</span> <span class="n">n</span><span class="o">==</span><span class="mi">2</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">n</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">jumpFloorII</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">jumpFloor</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">jumpFloorII</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<hr />
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2017/09/16/1-Algorams3/">剑指offer:链表中倒数第k个节点
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/2017/09/16/1-Algorams2/">剑指offer:链表中倒数第k个节点
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2017/05/06/TreeNode1/">剑指offer：重建二叉树</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2017/05/21/python2/">Python3网络爬虫(一):利用urllib进行简单的网页抓取</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:4000/2017/05/16/1-Algorams1/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:4000/2017/05/16/1-Algorams1/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//wysheng.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             好好学习，天天向上！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/wysheng" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:wyshengcn@163.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>
