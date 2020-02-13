@@ -1,4 +1,4 @@
-              ---
+---
 layout: page
 title: 我的诗词
 permalink: /life/
